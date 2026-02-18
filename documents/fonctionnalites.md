@@ -2,6 +2,11 @@
 
 - Inscription / Connexion
 - Rôles : Client, Partenaire, Administrateur
+- Consulter les services disponibles
+- Effectuer une réservation
+- Annuler une réservation
+- Consulter l'historique de ses reservations
+- Effectuer un paiement en ligne (optionnel)
 
 # Reservations de service
 
@@ -11,11 +16,14 @@
 - Location de vehicule
 - Location de chambre
 - Chauffeur
-- Quotidien : lessive, repassage, room service
+- Room service : lessive, repassage, repas dans la      chambre
 
 # Notifications
 
-- Confirmations, rappels
+- Confirmation de reservation
+- Refus ou validation
+- Rappel de reservation
+- Confirmation de paiement (optionnel)
 
 # Messagerie
 
@@ -24,8 +32,13 @@
 * Partenaires - Administrateur
 
 # Admin 
+## Dashboard admin
 
-- Dashboard admin
+- Gestion des comptes utilisateurs
+- Gestion des services
+- Supervision des reservations
+- Accés aux messages (contact,avis)
 
-# Paiement
+
+# Paiement (suite du projet)
 
