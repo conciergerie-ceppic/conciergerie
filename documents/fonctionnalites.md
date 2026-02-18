@@ -9,10 +9,9 @@
 
 # Reservations de service (MVP)
 
-- Vérification des disponibilités
 - Création de la réservation
-- Envoie d'une notificationau client
-- Paiement en ligne (suite du projet)
+- Annulation de la réservation
+- Envoie d'une notification au client
 
 # Notifications (MVP)
 
