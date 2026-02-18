@@ -1,35 +1,32 @@
-# Utilisateurs
+# Utilisateurs (MVP)
 
 - Inscription / Connexion
-- Rôles : Client, Partenaire, Administrateur
 - Consulter les services disponibles
 - Effectuer une réservation
 - Annuler une réservation
 - Consulter l'historique de ses reservations
 - Effectuer un paiement en ligne (optionnel)
 
-# Reservations de service
+# Reservations de service (MVP)
 
-- Restaurants
-- Spa
-- Voyage
-- Location de vehicule
-- Location de chambre
-- Chauffeur
-- Room service : lessive, repassage, repas dans la      chambre
+- Vérification des disponibilités
+- Création de la réservation
+- Envoie d'une notificationau client
+- Paiement en ligne (suite du projet)
 
-# Notifications
+# Notifications (MVP)
 
 - Confirmation de reservation
-- Refus ou validation
 - Rappel de reservation
 - Confirmation de paiement (optionnel)
 
-# Messagerie
-
-- Contact :
+# Contact (MVP)
 * Clients - Partenaires
 * Partenaires - Administrateur
+
+- Devenir Partenaire (form d'inscription)
+- Donner son avis
+- Contacter l'admin
 
 # Admin 
 ## Dashboard admin
