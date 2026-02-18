@@ -9,6 +9,7 @@
 - address
 - password
 - role
+- avatar
 # Relations:
 # - User 1 --- * Reservation (one-to-many)
 # - User 1 --- * Message (as sender/receiver) (one-to-many)
