@@ -62,3 +62,5 @@
 - date
 # Relations:
 # - Notification * --- 1 User (many-to-one)
+
+![diagramme d'utilisation](image.png)
