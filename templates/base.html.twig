@@ -1,3 +1,4 @@
+    <link rel="stylesheet" href="{{ asset('build/app.css') }}">
 <!DOCTYPE html>
 <html>
     <head>
@@ -12,6 +13,21 @@
         {% endblock %}
     </head>
     <body>
-        {% block body %}{% endblock %}
+       
+        <nav class="flex flex-col items-center w-full fixed text-white">
+            <div class="pt-5 cursor-pointer"><img src="" alt="">logo</div>
+            <ul class="flex gap-10 mt-10 [&_li:hover]:text-white/70">
+                <li><a href="#">Qui sommes-nous ?</a></li>
+                <li><a href="#services">Services</a></li>
+                <li><a href="#contact">Contact</a></li>
+                <li><a href="{{path('app_partner')}}">Nous rejoindre</a></li>
+                <li><a href="{{path('app_member')}}">Devenir membre</a></li>
+                {# <li><a href="{{path('app_login')}}">Accès membre</a></li> #}
+            </ul>
+        </nav>
+
+        {% block body %}
+        {# Home #}
+        {% endblock %}
     </body>
 </html>

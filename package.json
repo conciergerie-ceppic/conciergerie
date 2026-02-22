@@ -1,0 +1,32 @@
+{
+  "name": "conciergerie",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "test": "tests"
+  },
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "npx tailwindcss -i ./assets/styles/app.css -o ./public/build/app.css --watch",
+    "watch": "browser-sync start --proxy 'localhost:8000' --files 'public/build/app.css,templates/**/*.html.twig'"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/conciergerie-ceppic/conciergerie.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/conciergerie-ceppic/conciergerie/issues"
+  },
+  "homepage": "https://github.com/conciergerie-ceppic/conciergerie#readme",
+  "devDependencies": {
+    "autoprefixer": "^10.4.24",
+    "browser-sync": "^3.0.4",
+    "postcss": "^8.5.6",
+    "tailwindcss": "^3.4.3"
+  }
+}
