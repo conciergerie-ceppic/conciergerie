@@ -15,4 +15,12 @@ final class ServiceController extends AbstractController
             'controller_name' => 'ServiceController',
         ]);
     }
+
+    #[Route('/service/{id}', name: 'app_service')]
+    public function detail(): Response
+    {
+        return $this->render('service/index.html.twig', [
+            'controller_name' => 'ServiceController',
+        ]);
+    }
 }
