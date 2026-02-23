@@ -630,9 +630,9 @@ video {
   padding-top: 1.25rem;
 }
 
-.text-white {
+.text-orange-500 {
   --tw-text-opacity: 1;
-  color: rgb(255 255 255 / var(--tw-text-opacity));
+  color: rgb(249 115 22 / var(--tw-text-opacity));
 }
 
 .filter {
