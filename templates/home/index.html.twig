@@ -3,15 +3,63 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
-<section class="min-h-screen bg-[url('/assets/img/hero.png')] bg-cover bg-center">
+<section class="min-h-screen bg-[url('/assets/img/hero.png')] bg-cover bg-center text-white text-[3.5rem]">
+    <h1 class="flex flex-col gap-7 relative left-20 top-32 h-screen justify-center drop-shadow-[0_1px_2px_black] ">Bienvenue dans la <span class="text-[#FDFAE1]">Conciergerie Premium</span></h1>
 </section>
 
-<section id="presentation" class="min-h-screen bg-[url('/assets/img/water.png')] bg-cover bg-center" >
+<section id="presentation" class="min-h-screen bg-[url('/assets/img/water.png')] bg-cover bg-center relative">
+  <img id="boat" src="/assets/img/boat.png" alt="Bateau" class="absolute left-1/2 top-[100px] w-20 z-50 -translate-x-1/2">
+</section>
+
+<script>
+window.addEventListener('scroll', () => {
+  const boat = document.getElementById('boat');
+  const presentation = document.getElementById('presentation');
+  if (!boat || !presentation) return;
+  // Position initiale du bateau
+  const initialTop = 100;
+  // Hauteur max de la section présentation
+  const sectionHeight = presentation.offsetHeight;
+  // Scroll relatif à la section
+  const scrollY = Math.max(window.scrollY - presentation.offsetTop, 0);
+  // Limite le déplacement max à la fin de la section
+  const maxY = sectionHeight - boat.offsetHeight - 120;
+  let y = Math.min(scrollY, maxY);
+  boat.style.transform = `translateX(-50%) translateY(${y}px) rotate(180deg)`;
+});
+</script>
+
+<section id="member" class="flex justify-center text-center [&_div]:w-1/2 [&_div]:p-20 [&_div]:text-2xl text-white">
+<div class="bg-[#261103]/60"><a class="hover:text-white/70" href="">Devenir collaborateur</a>
+</div>
+<div class="text-black"><a class="hover:text-black/60" href="">Devenir membre</a></div>
+<div class="bg-[#261103]/60"><a class="hover:text-white/70" href="">Demander un devis</a></div>
+</section>
+
+<section id="services" class="min-h-screen pt-20">
+<h2 class="text-[4rem] text-center mt-20">Services</h2>
+
+<div class="card-container flex flex-wrap">
+
+{# {% for service in services %} #}
+{# <div class="card w-[24%] bg-[url('/assets/img/{{service.img}}.png')] bg-cover bg-center rounded-2xl shadow-md cursor-pointer hover:scale-103"> #}
+{# <h2 class="">Nom du serice</h2> #}
+{# <p>Details</p> #}
+
+</div>
+
+{# {% endfor %} #}
+
+</div>
 
 </section>
 
-<section id="services" class="min-h-screen">
-Services
+<section id="infos" class="min-h-screen bg-[url('/assets/img/blur.png')] bg-cover bg-center">
+
 </section>
 
+<section id="contact" class="min-h-screen">
+    <h2 class="text-[4rem] text-center mt-20">Contact</h2>
+    
+</section>
 {% endblock %}
