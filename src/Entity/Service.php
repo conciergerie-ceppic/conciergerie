@@ -30,9 +30,6 @@ class Service
     private ?string $address = null;
 
     #[ORM\Column(length: 255, nullable: true)]
-    private ?string $availability = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
     private ?string $link = null;
 
     /**
@@ -40,6 +37,9 @@ class Service
      */
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'service_id')]
     private Collection $reservations;
+
+    #[ORM\ManyToOne(inversedBy: 'services')]
+    private ?Partner $partner = null;
 
     public function __construct()
     {
@@ -99,18 +99,6 @@ class Service
         return $this;
     }
 
-    public function getAvailability(): ?string
-    {
-        return $this->availability;
-    }
-
-    public function setAvailability(?string $availability): static
-    {
-        $this->availability = $availability;
-
-        return $this;
-    }
-
     public function getLink(): ?string
     {
         return $this->link;
@@ -149,6 +137,18 @@ class Service
                 $reservation->setServiceId(null);
             }
         }
+
+        return $this;
+    }
+
+    public function getPartner(): ?Partner
+    {
+        return $this->partner;
+    }
+
+    public function setPartner(?Partner $partner): static
+    {
+        $this->partner = $partner;
 
         return $this;
     }
