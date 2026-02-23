@@ -16,7 +16,7 @@ final class UserController extends AbstractController
         ]);
     }
 
-    #[Route('/user/member', name: 'app_member')]
+    // #[Route('/user/member', name: 'app_member')]
     public function member(): Response
     {
         return $this->render('user/index.html.twig', [
