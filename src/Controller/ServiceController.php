@@ -9,10 +9,11 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ServiceController extends AbstractController
 {
     #[Route('/service/{nom}', name: 'app_service')]
-    public function detail(): Response
+    public function detail(string $nom): Response
     {
         return $this->render('service/index.html.twig', [
-            'controller_name' => 'ServiceController',
+            'nom' => $nom,
         ]);
     }
+
 }
