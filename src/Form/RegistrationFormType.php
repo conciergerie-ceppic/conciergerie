@@ -17,15 +17,10 @@ class RegistrationFormType extends AbstractType
     public function buildForm(FormBuilderInterface $builder, array $options): void
     {
         $builder
+            ->add('first_name')
+            ->add('last_name')
             ->add('email')
-            ->add('agreeTerms', CheckboxType::class, [
-                'mapped' => false,
-                'constraints' => [
-                    new IsTrue(
-                        message: 'You should agree to our terms.',
-                    ),
-                ],
-            ])
+            ->add('password', PasswordType::class)
             ->add('plainPassword', PasswordType::class, [
                 // instead of being set onto the object directly,
                 // this is read and encoded in the controller
@@ -33,13 +28,31 @@ class RegistrationFormType extends AbstractType
                 'attr' => ['autocomplete' => 'new-password'],
                 'constraints' => [
                     new NotBlank(
-                        message: 'Please enter a password',
+                        message: 'Entrez un mot de passe',
                     ),
                     new Length(
                         min: 6,
-                        minMessage: 'Your password should be at least {{ limit }} characters',
+                        minMessage: 'Votre mot de passe doit comporter au moins {{ limit }} caractères.',
                         // max length allowed by Symfony for security reasons
                         max: 4096,
+                    ),
+                ],
+            ])
+            ->add('phone')
+            ->add('address')
+            ->add('member', CheckboxType::class, [
+                'mapped' => false,
+                'required' => false,
+            ])
+            ->add('partner', CheckboxType::class, [
+                'mapped' => false,
+                'required' => false,
+            ])
+            ->add('agreeTerms', CheckboxType::class, [
+                'mapped' => false,
+                'constraints' => [
+                    new IsTrue(
+                        message: "Accepter les conditions d'utilisations.",
                     ),
                 ],
             ])
