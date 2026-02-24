@@ -17,7 +17,7 @@ Comportement : Délègue à son assistant
 Points de frictions : Rapidité de service, a besoin de prestataires proches (geolocalisation importante)
 
 # Persona 3
-Nom : Prestataire
+Nom : Entreprise
 Profession : Restaurant
 Objectif : Augmenter sa clientèle
 Points de frictions : Souhaite avoir un support simple et efficace pour les reservations
