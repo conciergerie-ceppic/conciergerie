@@ -1,0 +1,126 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Register{% endblock %}
+
+{% block body %}
+<div class="h-screen bg-black flex flex-col items-center justify-center">
+    <h1 class="text-[4rem] text-center text-white mb-14 pt-14">
+        Inscription
+    </h1>
+
+    {{ form_start(registrationForm, {
+    'attr': { 'class': 'w-full max-w-4xl px-4' }}) }}
+
+    <div class="flex gap-6 mb-6">
+        <div class="flex-1">
+            {{ form_row(
+            registrationForm.first_name,{
+            'label': 'Prénom',
+            'attr': {
+            'class': 'border border-gray-700 rounded-lg px-4 py-3 text-white bg-transparent placeholder-white/50
+            focus:border-yellow-400 focus:ring focus:ring-yellow-400/30 focus:outline-none shadow-sm w-full',
+            'placeholder': 'Prénom'},'label_attr': { 'class': 'text-white' }}) }}
+        </div>
+
+        <div class="flex-1">
+            {{ form_row(
+            registrationForm.last_name,{
+            'label': 'Nom',
+            'attr': {
+            'class': 'border border-gray-700 rounded-lg px-4 py-3 text-white bg-transparent placeholder-white/50
+            focus:border-yellow-400 focus:ring focus:ring-yellow-400/30 focus:outline-none shadow-sm w-full',
+            'placeholder': 'Nom'},'label_attr': { 'class': 'text-white' }}) }}
+        </div>
+    </div>
+
+    <div class="mb-6">
+        {{ form_row(
+        registrationForm.email,{
+        'label': 'Email',
+        'attr': {
+        'class': 'border border-gray-700 rounded-lg px-4 py-3 text-white bg-transparent placeholder-white/50
+        focus:border-yellow-400 focus:ring focus:ring-yellow-400/30 focus:outline-none shadow-sm w-full',
+        'placeholder': 'Email'},'label_attr': { 'class': 'text-white' }}) }}
+    </div>
+
+    <div class="flex gap-6 mb-6">
+        <div class="flex-1">
+            {{ form_row(
+            registrationForm.password,{
+            'label': 'Mot de passe',
+            'attr': {
+            'class': 'border border-gray-700 rounded-lg px-4 py-3 text-white bg-transparent placeholder-white/50
+            focus:border-yellow-400 focus:ring focus:ring-yellow-400/30 focus:outline-none shadow-sm w-full',
+            'placeholder': 'Mot de passe'},'label_attr': { 'class': 'text-white' }}) }}
+        </div>
+        <div class="flex-1">
+            {{ form_row(
+            registrationForm.plainPassword,{
+            'label': 'Confirmer mot de passe',
+            'attr': {
+            'class': 'border border-gray-700 rounded-lg px-4 py-3 text-white bg-transparent placeholder-white/50
+            focus:border-yellow-400 focus:ring focus:ring-yellow-400/30 focus:outline-none shadow-sm w-full',
+            'placeholder': 'Confirmer mot de passe'},'label_attr': { 'class': 'text-white' }}) }}
+        </div>
+    </div>
+
+    <div class="flex gap-6 mb-6">
+        <div class="flex-1">
+            {{ form_row(
+            registrationForm.phone,{
+            'label': 'Téléphone',
+            'attr': {
+            'class': 'border border-gray-700 rounded-lg px-4 py-3 text-white bg-transparent placeholder-white/50
+            focus:border-yellow-400 focus:ring focus:ring-yellow-400/30 focus:outline-none shadow-sm w-full',
+            'placeholder': 'Téléphone'},'label_attr': { 'class': 'text-white' }}) }}
+        </div>
+        <div class="flex-1">
+            {{ form_row(
+            registrationForm.address,{
+            'label': 'Adresse',
+            'attr': {
+            'class': 'border border-gray-700 rounded-lg px-4 py-3 text-white bg-transparent placeholder-white/50
+            focus:border-yellow-400 focus:ring focus:ring-yellow-400/30 focus:outline-none shadow-sm w-full',
+            'placeholder': 'Adresse'},'label_attr': { 'class': 'text-white' }}) }}
+        </div>
+    </div>
+
+    <div class="flex gap-6 mb-6" '' ;>
+        <div class="flex items-center">
+            {{ form_widget(
+            registrationForm.member,
+            { 'attr': { 'class': 'h-5 w-5 mr-3' } }) }}
+            {{ form_label(registrationForm.member,"Membre",{ 'label_attr': { 'class': 'text-white' }})
+            }}{{ form_errors(registrationForm.member) }}
+        </div>
+
+
+        <div class="flex items-center">
+            {{ form_widget(
+            registrationForm.partner,
+            { 'attr': { 'class': 'h-5 w-5 mr-3' } }) }}
+            {{ form_label(registrationForm.partner,"Partenaire",{ 'label_attr': { 'class': 'text-white' }})
+            }}{{ form_errors(registrationForm.partner) }}
+        </div>
+    </div>
+
+    <div class="flex items-center mb-6">
+        {{ form_widget(
+        registrationForm.agreeTerms,
+        { 'attr': { 'class': 'h-5 w-5 mr-3' } }) }}
+        {{ form_label(registrationForm.agreeTerms,"J'ai pris connaissance de la politique de confidentalité et j'autorise Premium Experience à m'envoyer des informations.",{ 'label_attr': { 'class': 'text-white'
+        }})
+        }}{{ form_errors(registrationForm.agreeTerms) }}
+    </div>
+
+
+    <div class="flex justify-center">
+        <input type="submit"
+            class="bg-yellow-400 text-black font-semibold py-3 px-8 rounded-lg cursor-pointer hover:bg-yellow-500 transition-colors"
+            value="S'inscrire">
+    </div>
+    {{ form_end(registrationForm) }}
+</div>
+
+</div>
+{% endblock %}
