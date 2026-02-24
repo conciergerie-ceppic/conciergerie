@@ -10,4 +10,5 @@ enum ServiceCategory: string
 	case TRAVEL = 'travel';
 	case VEHICLE = 'vehicle';
 	case DRIVER = 'driver';
+	case EVENT = 'event';
 }

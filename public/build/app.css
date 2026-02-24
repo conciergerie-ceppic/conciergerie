@@ -627,6 +627,10 @@ video {
   background-image: url('/assets/img/hero.png');
 }
 
+.bg-\[url\(\'\/assets\/img\/water\.png\'\)\] {
+  background-image: url('/assets/img/water.png');
+}
+
 .bg-cover {
   background-size: cover;
 }
@@ -639,7 +643,7 @@ video {
   padding-top: 1.25rem;
 }
 
-.text-white {
+.text-orange-500 {
   --tw-text-opacity: 1;
   color: rgb(255 255 255 / var(--tw-text-opacity, 1));
 }
