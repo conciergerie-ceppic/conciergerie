@@ -3,13 +3,11 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
-<section class="min-h-screen bg-[url('/assets/img/room.png')] bg-cover bg-center text-white text-[3.5rem]">
-{# <section class="min-h-screen bg-[url('/assets/img/hero.png')] bg-cover bg-center text-white text-[3.5rem]"> #}
-    {# <h1 class="flex flex-col gap-7 relative left-20 top-32 h-screen justify-center drop-shadow-[0_1px_2px_black] ">Bienvenue dans la <span class="text-[#FDFAE1]">Conciergerie Premium</span></h1> #}
-    <h1 class="flex flex-col gap-7 relative left-20 top-56 h-screen justify- drop-shadow-[0_1px_2px_black] ">Bienvenue dans la <span class="text-[#FDFAE1]">Conciergerie Premium</span></h1>
+<section class="min-h-screen bg-[url('/assets/img/room.png')] bg-cover bg-center text-white text-[3.5rem] w-full">
+    <h1 class="flex flex-col gap-7 items-center justify-center h-screen pb-44 drop-shadow-[0_1px_2px_black] text-[5rem] lg:text-[3.5rem]">Bienvenue dans la <span class="text-[#FDFAE1]">Conciergerie Premium</span></h1>
 </section>
 
-<section id="presentation" class="min-h-screen bg-[url('/assets/img/earth.png')] bg-cover bg-center relative">
+<section id="presentation" class="h-[50vh] lg:min-h-screen bg-[url('/assets/img/earth.png')] bg-cover bg-center relative ">
   <img id="boat" src="/assets/img/plane.png" alt="Bateau" class="absolute left-1/2 top-[100px] w-80 z-50 -translate-x-1/2">
 </section>
 
@@ -23,7 +21,7 @@ window.addEventListener('scroll', () => {
   // Hauteur max de la section présentation
   const sectionHeight = presentation.offsetHeight;
   // Scroll relatif à la section
-  const scrollY = Math.max(window.scrollY - presentation.offsetTop, 0);
+  const scrollY = Math.max(window.scrollY - presentation.offsetTop, -150);
   // Limite le déplacement max à la fin de la section
   const maxY = sectionHeight - boat.offsetHeight - 120;
   let y = Math.min(scrollY, maxY);
@@ -31,7 +29,7 @@ window.addEventListener('scroll', () => {
 });
 </script>
 
-<section id="member" class="flex justify-center text-center [&_div]:w-1/2 [&_div]:p-20 [&_div]:text-2xl text-white">
+<section id="member" class="flex justify-center text-center [&_div]:w-1/2 [&_div]:p-20 [&_div]:text-4xl lg:[&_div]:text-2xl text-white ">
 <div class="bg-[#261103]/60"><a class="hover:text-white/70" href="">Devenir collaborateur</a>
 </div>
 <div class="text-black"><a class="hover:text-black/60" href="">Devenir membre</a></div>
@@ -39,7 +37,7 @@ window.addEventListener('scroll', () => {
 </section>
 
 <section id="services" class="min-h-screen pt-20">
-<h2 class="text-[4rem] text-center mt-20">Services</h2>
+<h2 class="text-[5rem] lg:text-[3rem] text-center mt-20 lg:pt-10">Services</h2>
 
 <div class="card-container flex flex-wrap">
 
@@ -56,11 +54,11 @@ window.addEventListener('scroll', () => {
 
 </section>
 
-<section id="infos" class="min-h-screen bg-[url('/assets/img/blur.png')] bg-cover bg-center pt-20 text-white">
-<h2 class="text-[4rem] text-center mt-20">Qui sommes nous ?</h2>
+<section id="infos" class="py-20 bg-[url('/assets/img/blur.png')] bg-cover bg-center lg:min-h-screen  text-white">
+<h2 class="text-[5rem] lg:text-[3rem] text-center mt-20 lg:pt-10">Qui sommes nous ?</h2>
 </br>
-<div class="flex justify-center mt-20">
-  <div class="w-1/2 bg-black/40 rounded-xl p-20 text-2xl">
+<div class="flex justify-center mt-20 px-5">
+  <div class="lg:w-1/2 bg-black/40 rounded-xl p-20 text-5xl lg:text-2xl">
     <h3 class="text-3xl mb-6">Notre mission</h3>
       <p>Premium Conciergerie réinvente un métier d’exception, alliant discrétion, efficacité et empathie. Grâce à un réseau international et des partenaires de confiance, nous offrons à nos membres des services uniques et des avantages exclusifs, pour répondre à chaque demande avec excellence.</p>
   </div>
@@ -68,13 +66,13 @@ window.addEventListener('scroll', () => {
 </div>
 </section>
 
-<section id="contact" class="min-h-screen pt-20">
-    <h2 class="text-[4rem] text-center mt-20">Contact</h2>
+<section id="contact" class="py-20">
+    <h2 class="text-[5rem] lg:text-[3rem] text-center mt-20 lg:pt-10">Contact</h2>
 
-    <div class="  w-full flex flex-col items-center ">
+    <div class=" w-full flex flex-col items-center ">
 
-    <form action="" method="post" class="border rounded-lg p-10 w-1/3 mt-10 text-2xl space-y-5 shadow-md
-    [&_textarea]:w-full [&_textarea]:h-48 [&_textarea]:outline-none [&_textarea]:px-2
+    <form action="" method="post" class="lg:border lg:rounded-lg py-20 px-10 w-full lg:w-1/2 mt-10 lg:text-2xl text-5xl space-y-10 lg:space-y-5 shadow-md
+    [&_textarea]:w-full [&_textarea]:h-48 lg:[&_textarea]:h-32 [&_textarea]:outline-none [&_textarea]:px-
     [&_select]:outline-none [&_select]:cursor-pointer
      [&_input]:w-full [&_input]:outline-none">
       <div><input type="text" placeholder="Entrez votre prénom" name="nom"></div>
@@ -96,7 +94,7 @@ window.addEventListener('scroll', () => {
       <div>
         <textarea name="message" id="message" placeholder="Votre message"></textarea>
       </div>
-      <div class=" bg-black/80 text-white inline px-3 py-1 rounded-md  hover:bg-black/60"><input type="submit" value="Soumettre" class="cursor-pointer"></div>
+      <div class=" bg-black/80 text-white inline py-3 rounded-md hover:bg-black/60"><input type="submit" value="Soumettre" class="cursor-pointer"></div>
     </form>
 
      </div>
