@@ -13,14 +13,14 @@
             {% block importmap %}{{ importmap('app') }}{% endblock %}
         {% endblock %}
     </head>
-    <body style="font-family: 'Advent Pro', sans-serif;" class="text-xl">
+    <body style="font-family: 'Advent Pro', sans-serif;" class="text-xl select-none w-full">
    
-        <nav class="flex flex-col items-center w-full fixed text-white drop-shadow-[0_1px_1px_black] bg-black/10 rounded-b-xl">
-            <div class="pt-5 cursor-pointer flex items-center ">
+        <nav class="flex flex-col items-center w-full fixed text-white drop-shadow-[0_1px_1px_black] bg-black/10 rounded-b-xl z-50">
+            <div class="pt-5 cursor-pointer flex items-center text-5xl">
                 <img src="/assets/img/logo.png" alt="" width="50px">
-                <span class="tracking-wider uppercase">premium experience</span>
+                <span class="tracking-wider uppercase lg:text-xl">premium experience</span>
              </div>
-            <ul class="flex space-x-20 py-8 [&_li:hover]:text-white/70">
+            <ul class="flex space-x-20 py-8 [&_a:hover]:text-white/70 [&_a]:cursor-pointer text-4xl lg:text-2xl">
                 <li><a href="#infos">Qui sommes-nous ?</a></li>
                 <li><a href="#services">Services</a></li>
                 <li><a href="#contact">Contact</a></li>
@@ -30,13 +30,15 @@
                 {# <li><a href="{{path('app_login')}}">Accès membre</a></li> #}
             </ul>
         </nav>
+        <main class="w-full">
 
+       
         {% block body %}
         {# Home #}
         {% endblock %}
-
-        <footer class="h-50 bg-black/80">
-              <p class="text-white text-center py-4">&copy; Ceppic 2026 | Sebastien, Kevin, Benjamin</p>
+ </main>
+        <footer class="py-5 lg:h-50 bg-black/80">
+              <p class="text-white text-center text-2xl lg:text-lg py-4">&copy; Ceppic 2026 | Sebastien, Kevin, Benjamin</p>
         </footer>
     </body>
 </html>
