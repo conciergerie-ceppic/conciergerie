@@ -9,7 +9,8 @@
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "npx tailwindcss -i ./assets/styles/app.css -o ./assets/styles/app.css --watch",
-    "watch": "browser-sync start --proxy 'localhost:8000' --files 'assets/styles/app.css,templates/**/*.html.twig'"
+    "watch": "browser-sync start --proxy 'localhost:8000' --files 'assets/styles/app.css,templates/**/*.html.twig'",
+    "build": "npx tailwindcss -i ./assets/styles/app.css -o ./public/build/app.css"
   },
   "repository": {
     "type": "git",
