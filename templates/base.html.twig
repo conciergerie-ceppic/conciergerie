@@ -7,16 +7,43 @@
     <link rel="icon"
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
     {% block stylesheets %}
     {% endblock %}
     <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
 
     {% block javascripts %}
     {# {% block importmap %}{{ importmap('app') }}{% endblock %} #}
     {% endblock %}
 </head>
 
-<body style="font-family: 'Advent Pro', sans-serif;" class="text-xl select-none w-full min-h-screen flex flex-col">
+<body style="font-family: 'Advent Pro', sans-serif;" class="text-xl select-none w-full min-h-screen flex flex-col relative">
+    
+        <div id="map" class="h-[20rem] w-[20rem] fixed rounded-md bottom-0 right-0 mr-5 mb-20 opacity-90 z-50" ></div>
+        <script>
+            document.addEventListener('DOMContentLoaded', function() {
+                // Récupère les variables Twig
+                const lat = {{ lat  ?? null }};
+                const lon = {{ lon ?? null }};
+                const ville = "{{ ville|e('js') }}";
+
+                // Initialise la carte
+                const map = L.map('map').setView([lat, lon], 13);
+
+                // Ajoute le fond de carte OpenStreetMap
+                L.tileLayer('https://{s}.basemaps.cartocdn.com/dark_all/{z}/{x}/{y}{r}.png', {
+                     attribution: '&copy; OpenStreetMap &copy; CartoDB',
+                     subdomains: 'abcd',
+                     maxZoom: 19
+                }).addTo(map);
+
+                // Ajoute un marqueur
+                L.marker([lat, lon]).addTo(map)
+                    .bindPopup(ville ? ville : 'Vous êtes ici')
+                    .openPopup();
+            });
+        </script>
 
     <nav
         class="flex flex-col items-center w-full fixed text-white drop-shadow-[0_1px_1px_black] bg-black/10 rounded-b-xl z-50">
@@ -24,7 +51,12 @@
             <img src="/assets/img/logo.png" alt="" width="50px">
             <span class="tracking-wider uppercase lg:text-xl">premium experience</span>
         </div>
-        <ul class="flex space-x-20 py-8 [&_a:hover]:text-white/70 [&_a]:cursor-pointer text-4xl lg:text-2xl">
+        <ul class="flex items-center space-x-20 py-8 [&_a:hover]:text-white/70 [&_a]:cursor-pointer text-4xl lg:text-2xl">
+            <div class=" flex items-center text-sm">
+                <img src="/assets/img/icons/location.svg" alt="" class="invert size-5">
+                <span class="pl-1">{{ville}}</span>
+                {# <span>Rouen</span> #}
+            </div>
             <li><a href="#infos">Qui sommes-nous ?</a></li>
             <li>
                 <div class="relative group inline-block">
@@ -67,6 +99,8 @@
         {# Home #}
         {% endblock %}
     </main>
+
+
     <footer class="py-5 lg:h-50 bg-black/80 mt-auto w-full">
         <p class="text-white text-center text-2xl lg:text-lg py-4">&copy; Ceppic 2026 | Sebastien, Kevin, Benjamin</p>
     </footer>
