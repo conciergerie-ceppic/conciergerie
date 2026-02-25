@@ -38,6 +38,7 @@ function afficherCarteEtServices(lat, lon) {
 # OpenStreetMap https://www.openstreetmap.org/#map=6/46.45/2.21
 - API Nominatim -> reverse geocoding aprés avoir obtenu les coordonnées pour nom de la ville, rue, numéro
 - Exemple https://nominatim.openstreetmap.org/reverse?lat=48.8584&lon=2.2945&format=json
+- https://nominatim.openstreetmap.org/reverse?lat=49.3957&lon=1.0671&format=json : 49.39572302281557 ' / ' 1.06718447014636
 
 
 # Calcul de distance entre utilisateur et chaque service

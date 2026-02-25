@@ -4,18 +4,28 @@ namespace App\Controller;
 
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Loader\Configurator\App;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
+use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(): Response
+    public function index(Request $request, HttpClientInterface $hci): Response
     {
         $services = $this->listServices();
+        $session = $request->getSession();
+        $lat = $session->get('lat');
+        $lon = $session->get('lon');
+        $ville = $this->getVille($hci,$lat,$lon);
+          $session->set('ville',$ville);
         return $this->render('home/index.html.twig', [
-            'controller_name' => 'HomeController',
             'services' => $services,
+            'lat' => $lat,
+            'lon' => $lon,
+            'ville' => $ville,
+
         ]);
     }
 
@@ -26,5 +36,28 @@ final class HomeController extends AbstractController
     {
         $list = \App\Enum\ServiceCategory::cases();
         return   $list;
+    }
+
+    // Récupère la location de l'utilisateur via le script js et la stocke dans la session
+    #[Route('/save-location', name: 'save_location')]
+    public function saveLocation(Request $request): Response
+    {
+        $data = json_decode($request->getContent(), true);
+        $lat = $data['lat'] ?? null;
+        $lon = $data['lon'] ?? null;
+
+        $session = $request->getSession();
+        $session->set('lat', $lat);
+        $session->set('lon', $lon);
+
+        return new Response('ok');
+    }
+
+    // API pour définir la ville selon la localisation
+    public function getVille(HttpClientInterface $hci, float $lat, float $lon) {
+        $url = "https://nominatim.openstreetmap.org/reverse?lat=$lat&lon=$lon&format=json";
+        $response = $hci->request('GET', $url);
+        $data = $response->toArray();
+        return $data['address']['town'] ?? null;
     }
 }

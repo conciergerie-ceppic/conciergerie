@@ -3,6 +3,22 @@
 {% block title %}Home{% endblock %}
 
 {% block body %}
+
+<script>
+ if (navigator.geolocation) {
+  navigator.geolocation.getCurrentPosition(function(pos) {
+    fetch('/save-location', {
+      method: 'POST',
+      headers: {'Content-Type': 'application/json'},
+      body: JSON.stringify({
+        lat: pos.coords.latitude,
+        lon: pos.coords.longitude
+      })
+    });
+  });
+}
+</script>
+
 <section class="min-h-screen bg-[url('/assets/img/room.png')] bg-cover bg-center text-white text-[3.5rem] w-full">
     <h1 class="flex flex-col gap-7 items-center justify-center h-screen pb-44 drop-shadow-[0_1px_2px_black] text-[5rem] lg:text-[3.5rem]">Bienvenue dans la <span class="text-[#FDFAE1]">Conciergerie Premium</span></h1>
 </section>
