@@ -19,11 +19,11 @@
 }
 </script>
 
-<section class="min-h-screen bg-[url('/assets/img/room.png')] bg-cover bg-center text-white text-[3.5rem] w-full">
+<section class="min-h-screen bg-[url('/assets/img/hotel-service.png')] bg-cover bg-center text-white text-[3.5rem] w-full">
     <h1 class="flex flex-col gap-7 items-center justify-center h-screen pb-44 drop-shadow-[0_1px_2px_black] text-[5rem] lg:text-[3.5rem]">Bienvenue dans la <span class="text-[#FDFAE1]">Conciergerie Premium</span></h1>
 </section>
 
-<section id="presentation" class="h-[50vh] lg:min-h-screen bg-[url('/assets/img/earth.png')] bg-cover bg-center relative ">
+<section id="presentation" class="h-[50vh] lg:min-h-screen bg-[url('/assets/img/earth-5.png')] bg-cover bg-center relative ">
   <img id="boat" src="/assets/img/plane.png" alt="Bateau" class="absolute left-1/2 top-[100px] w-80 z-50 -translate-x-1/2">
 </section>
 
@@ -46,10 +46,10 @@ window.addEventListener('scroll', () => {
 </script>
 
 <section id="member" class="flex justify-center text-center [&_div]:w-1/2 [&_div]:p-20 [&_div]:text-4xl lg:[&_div]:text-2xl text-white ">
-<div class="bg-[#261103]/60"><a class="hover:text-white/70" href="">Devenir collaborateur</a>
+<div class="bg-[#827364]/40"><a class="hover:text-white/70" href="">Devenir collaborateur</a>
 </div>
 <div class="text-black"><a class="hover:text-black/60" href="">Devenir membre</a></div>
-<div class="bg-[#261103]/60"><a class="hover:text-white/70" href="">Demander un devis</a></div>
+<div class="bg-[#827364]/40"><a class="hover:text-white/70" href="">Demander un devis</a></div>
 </section>
 
 <section id="services" class="min-h-screen pt-20">
@@ -59,7 +59,7 @@ window.addEventListener('scroll', () => {
 
 {% for service in services %}
 
-<div class="card w-[30%] h-[20vh] bg-[url('/assets/img/{{service.value}}-service.png')] bg-cover bg-center rounded-2xl shadow-md cursor-pointer hover:contrast-75" 
+<div class="card w-[30%] h-[20vh] bg-[url('/assets/img/{{service.value}}-service.png')] bg-cover bg-center rounded-sm shadow-md cursor-pointer hover:contrast-75" 
 onclick="window.location.href=`{{ path('app_service', {'nom': service.value}) }}`">
 <h3 class="text-white text-3xl p-3 drop-shadow-[0_4px_2px_black]">{{ service.value|capitalize }}</h3>
 </div>
@@ -70,7 +70,7 @@ onclick="window.location.href=`{{ path('app_service', {'nom': service.value}) }}
 
 </section>
 
-<section id="infos" class="py-20 bg-[url('/assets/img/blur.png')] bg-cover bg-center lg:min-h-screen  text-white">
+<section id="infos" class="py-20 bg-[url('/assets/img/blur-2.png')] bg-cover bg-center lg:min-h-screen  text-white">
 <h2 class="text-[5rem] lg:text-[3rem] text-center mt-20 lg:pt-10">Qui sommes nous ?</h2>
 </br>
 <div class="flex justify-center mt-20 px-5">
