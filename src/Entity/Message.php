@@ -14,13 +14,15 @@ class Message
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'messages')]
+    // ✅ mappedBy correspond à $sentMessages dans User
+    #[ORM\ManyToOne(inversedBy: 'sentMessages')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $sender_id = null;
+    private ?User $sender = null;
 
-    #[ORM\ManyToOne(inversedBy: 'messages')]
+    // ✅ mappedBy correspond à $receivedMessages dans User
+    #[ORM\ManyToOne(inversedBy: 'receivedMessages')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $receiver_id = null;
+    private ?User $receiver = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
@@ -28,56 +30,17 @@ class Message
     #[ORM\Column]
     private ?\DateTimeImmutable $createdAt = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    public function getId(): ?int { return $this->id; }
 
-    public function getSenderId(): ?User
-    {
-        return $this->sender_id;
-    }
+    public function getSender(): ?User { return $this->sender; }
+    public function setSender(?User $sender): static { $this->sender = $sender; return $this; }
 
-    public function setSenderId(?User $sender_id): static
-    {
-        $this->sender_id = $sender_id;
+    public function getReceiver(): ?User { return $this->receiver; }
+    public function setReceiver(?User $receiver): static { $this->receiver = $receiver; return $this; }
 
-        return $this;
-    }
+    public function getContent(): ?string { return $this->content; }
+    public function setContent(string $content): static { $this->content = $content; return $this; }
 
-    public function getReceiverId(): ?User
-    {
-        return $this->receiver_id;
-    }
-
-    public function setReceiverId(?User $receiver_id): static
-    {
-        $this->receiver_id = $receiver_id;
-
-        return $this;
-    }
-
-    public function getContent(): ?string
-    {
-        return $this->content;
-    }
-
-    public function setContent(string $content): static
-    {
-        $this->content = $content;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
-
-        return $this;
-    }
+    public function getCreatedAt(): ?\DateTimeImmutable { return $this->createdAt; }
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static { $this->createdAt = $createdAt; return $this; }
 }

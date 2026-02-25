@@ -13,40 +13,21 @@ class UserFavoritePartner
     #[ORM\Column]
     private ?int $id = null;
 
+    // ✅ $user au lieu de $user_id → colonne "user_id" en BDD
     #[ORM\ManyToOne(inversedBy: 'userFavoritePartners')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user_id = null;
+    private ?User $user = null;
 
+    // ✅ $partner au lieu de $partner_id → colonne "partner_id" en BDD
     #[ORM\ManyToOne(inversedBy: 'userFavoritePartners')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Partner $partner_id = null;
+    private ?Partner $partner = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    public function getId(): ?int { return $this->id; }
 
-    public function getUserId(): ?User
-    {
-        return $this->user_id;
-    }
+    public function getUser(): ?User { return $this->user; }
+    public function setUser(?User $user): static { $this->user = $user; return $this; }
 
-    public function setUserId(?User $user_id): static
-    {
-        $this->user_id = $user_id;
-
-        return $this;
-    }
-
-    public function getPartnerId(): ?Partner
-    {
-        return $this->partner_id;
-    }
-
-    public function setPartnerId(?Partner $partner_id): static
-    {
-        $this->partner_id = $partner_id;
-
-        return $this;
-    }
+    public function getPartner(): ?Partner { return $this->partner; }
+    public function setPartner(?Partner $partner): static { $this->partner = $partner; return $this; }
 }

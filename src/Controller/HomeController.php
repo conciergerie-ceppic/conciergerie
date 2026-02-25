@@ -2,6 +2,7 @@
 
 namespace App\Controller;
 
+use App\Repository\ServiceRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Loader\Configurator\App;
 use Symfony\Component\HttpFoundation\Request;
@@ -11,26 +12,40 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class HomeController extends AbstractController
 {
-    #[Route('/', name: 'app_home')]
-    public function index(Request $request, HttpClientInterface $hci): Response
-    {
-        $services = $this->listServices();
-        $session = $request->getSession();
-        $lat = $session->get('lat');
-        $lon = $session->get('lon');
-        $ville = null;
-        if (is_numeric($lat && $lon)) {
-            $ville = $this->getVille($hci,$lat,$lon);
-            $session->set('ville',$ville);
-        }
-        return $this->render('home/index.html.twig', [
-            'services' => $services,
-            'lat' => $lat,
-            'lon' => $lon,
-            'ville' => $ville,
+   #[Route('/', name: 'app_home')]
+public function index(
+    Request $request,
+    HttpClientInterface $hci,
+    ServiceRepository $serviceRepo
+): Response {
+    $services        = $this->listServices();
+    $session         = $request->getSession();
+    $lat             = $session->get('lat');
+    $lon             = $session->get('lon');
+    $ville           = null;
+    $servicesProches = []; // ✅ Toujours initialisé
 
-        ]);
+    if (is_numeric($lat) && is_numeric($lon)) {
+        $ville = $this->getVille($hci, (float) $lat, (float) $lon);
+        $session->set('ville', $ville);
+
+        $servicesProches = $serviceRepo->findByProximiteAvecDistance(
+            (float) $lat,
+            (float) $lon,
+            10
+        );
+    } else {
+        $ville = $session->get('ville');
     }
+
+    return $this->render('home/index.html.twig', [
+        'services'         => $services,
+        'lat'              => $lat,
+        'lon'              => $lon,
+        'ville'            => $ville,
+        'services_proches' => $servicesProches, // ✅ Toujours un tableau, jamais undefined
+    ]);
+}
 
     /// Autres méthodes
 

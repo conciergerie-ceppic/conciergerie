@@ -23,6 +23,13 @@ doctrine:
         controller_resolver:
             auto_mapping: false
 
+        dql:
+            numeric_functions:
+                ACOS:    App\Doctrine\Function\Acos
+                COS:     App\Doctrine\Function\Cos
+                SIN:     App\Doctrine\Function\Sin
+                RADIANS: App\Doctrine\Function\Radians
+                
 when@test:
     doctrine:
         dbal:

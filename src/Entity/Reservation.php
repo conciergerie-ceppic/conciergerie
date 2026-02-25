@@ -13,40 +13,21 @@ class Reservation
     #[ORM\Column]
     private ?int $id = null;
 
+    // ✅ $user au lieu de $user_id → colonne "user_id" en BDD
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?User $user_id = null;
+    private ?User $user = null;
 
+    // ✅ $service au lieu de $service_id → colonne "service_id" en BDD
     #[ORM\ManyToOne(inversedBy: 'reservations')]
     #[ORM\JoinColumn(nullable: false)]
-    private ?Service $service_id = null;
+    private ?Service $service = null;
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    public function getId(): ?int { return $this->id; }
 
-    public function getUserId(): ?User
-    {
-        return $this->user_id;
-    }
+    public function getUser(): ?User { return $this->user; }
+    public function setUser(?User $user): static { $this->user = $user; return $this; }
 
-    public function setUserId(?User $user_id): static
-    {
-        $this->user_id = $user_id;
-
-        return $this;
-    }
-
-    public function getServiceId(): ?Service
-    {
-        return $this->service_id;
-    }
-
-    public function setServiceId(?Service $service_id): static
-    {
-        $this->service_id = $service_id;
-
-        return $this;
-    }
+    public function getService(): ?Service { return $this->service; }
+    public function setService(?Service $service): static { $this->service = $service; return $this; }
 }

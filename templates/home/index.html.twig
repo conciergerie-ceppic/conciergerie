@@ -14,6 +14,11 @@
         lat: pos.coords.latitude,
         lon: pos.coords.longitude
       })
+    }).then(() => {
+      if (!sessionStorage.getItem('locationSaved')) {
+        sessionStorage.setItem('locationSaved', 'true');
+        location.reload(); {# Recharge pour afficher les services proches #}
+      }
     });
   });
 }
@@ -32,13 +37,9 @@ window.addEventListener('scroll', () => {
   const boat = document.getElementById('boat');
   const presentation = document.getElementById('presentation');
   if (!boat || !presentation) return;
-  // Position initiale du bateau
   const initialTop = 100;
-  // Hauteur max de la section présentation
   const sectionHeight = presentation.offsetHeight;
-  // Scroll relatif à la section
   const scrollY = Math.max(window.scrollY - presentation.offsetTop, -150);
-  // Limite le déplacement max à la fin de la section
   const maxY = sectionHeight - boat.offsetHeight - 120;
   let y = Math.min(scrollY, maxY);
   boat.style.transform = `translateX(-50%) translateY(${y}px) rotate(180deg)`;
@@ -46,74 +47,143 @@ window.addEventListener('scroll', () => {
 </script>
 
 <section id="member" class="flex justify-center text-center [&_div]:w-1/2 [&_div]:p-20 [&_div]:text-4xl lg:[&_div]:text-2xl text-white ">
-<div class="bg-[#261103]/60"><a class="hover:text-white/70" href="">Devenir collaborateur</a>
-</div>
-<div class="text-black"><a class="hover:text-black/60" href="">Devenir membre</a></div>
-<div class="bg-[#261103]/60"><a class="hover:text-white/70" href="">Demander un devis</a></div>
+    <div class="bg-[#261103]/60"><a class="hover:text-white/70" href="">Devenir collaborateur</a></div>
+    <div class="text-black"><a class="hover:text-black/60" href="">Devenir membre</a></div>
+    <div class="bg-[#261103]/60"><a class="hover:text-white/70" href="">Demander un devis</a></div>
 </section>
 
 <section id="services" class="min-h-screen pt-20">
-<h2 class="text-[5rem] lg:text-[3rem] text-center mt-20 lg:pt-10">Services</h2>
+    <h2 class="text-[5rem] lg:text-[3rem] text-center mt-20 lg:pt-10">Services</h2>
 
-<div class="card-container flex flex-wrap gap-3 pt-10 justify-center">
-
-{% for service in services %}
-
-<div class="card w-[30%] h-[20vh] bg-[url('/assets/img/{{service.value}}-service.png')] bg-cover bg-center rounded-2xl shadow-md cursor-pointer hover:contrast-75" 
-onclick="window.location.href=`{{ path('app_service', {'nom': service.value}) }}`">
-<h3 class="text-white text-3xl p-3 drop-shadow-[0_4px_2px_black]">{{ service.value|capitalize }}</h3>
-</div>
-
-{% endfor %}
-
-</div>
-
+    <div class="card-container flex flex-wrap gap-3 pt-10 justify-center">
+        {% for service in services %}
+            <div class="card w-[30%] h-[20vh] bg-[url('/assets/img/{{service.value}}-service.png')] bg-cover bg-center rounded-2xl shadow-md cursor-pointer hover:contrast-75"
+                onclick="window.location.href=`{{ path('app_service', {'nom': service.value}) }}`">
+                <h3 class="text-white text-3xl p-3 drop-shadow-[0_4px_2px_black]">{{ service.value|capitalize }}</h3>
+            </div>
+        {% endfor %}
+    </div>
 </section>
 
-<section id="infos" class="py-20 bg-[url('/assets/img/blur.png')] bg-cover bg-center lg:min-h-screen  text-white">
-<h2 class="text-[5rem] lg:text-[3rem] text-center mt-20 lg:pt-10">Qui sommes nous ?</h2>
-</br>
-<div class="flex justify-center mt-20 px-5">
-  <div class="lg:w-1/2 bg-black/40 rounded-xl p-20 text-5xl lg:text-2xl">
-    <h3 class="text-3xl mb-6">Notre mission</h3>
-      <p>Premium Conciergerie réinvente un métier d’exception, alliant discrétion, efficacité et empathie. Grâce à un réseau international et des partenaires de confiance, nous offrons à nos membres des services uniques et des avantages exclusifs, pour répondre à chaque demande avec excellence.</p>
-  </div>
+{# ── SECTION SERVICES À PROXIMITÉ ── #}
+<section id="proximite" class="min-h-screen pt-20 px-10">
 
-</div>
+    <h2 class="text-[5rem] lg:text-[3rem] text-center mt-20 lg:pt-10">
+        Services à proximité
+        {% if ville %}
+            <span class="text-2xl text-gray-500 block mt-2">📍 {{ ville }}</span>
+        {% endif %}
+    </h2>
+
+    {% if services_proches is not empty %}
+
+        <div class="flex flex-wrap gap-5 pt-10 justify-center">
+            {% for item in services_proches %}
+                <div class="w-[30%] lg:w-[22%] bg-white rounded-2xl shadow-md p-6 flex flex-col gap-3 hover:shadow-xl transition-shadow">
+
+                    {# Icône selon la catégorie #}
+                    <span class="text-4xl">
+                        {% if item.service.category.value == 'restaurant' %}🍽️
+                        {% elseif item.service.category.value == 'parking' %}🅿️
+                        {% elseif item.service.category.value == 'bureau_poste' %}📮
+                        {% else %}📍
+                        {% endif %}
+                    </span>
+
+                    <h3 class="text-2xl lg:text-xl font-semibold">{{ item.service.name }}</h3>
+                    <p class="text-gray-500 text-lg lg:text-sm">{{ item.service.address }}</p>
+
+                    {% if item.service.openingHours %}
+                        <p class="text-gray-400 text-sm">🕐 {{ item.service.openingHours }}</p>
+                    {% endif %}
+
+                    {% if item.service.rating %}
+                        <p class="text-yellow-500 text-sm">⭐ {{ item.service.rating }}/5</p>
+                    {% endif %}
+
+                    {# Badge distance #}
+                    {% if item.distance < 1 %}
+                        <span class="self-start bg-green-100 text-green-700 text-sm font-bold px-3 py-1 rounded-full">
+                            {{ (item.distance * 1000)|round }}m
+                        </span>
+                    {% else %}
+                        <span class="self-start bg-blue-100 text-blue-700 text-sm font-bold px-3 py-1 rounded-full">
+                            {{ item.distance }}km
+                        </span>
+                    {% endif %}
+
+                    {# Lien vers ressource ou partenaire #}
+                    <div class="flex gap-2 mt-auto">
+                        {% if item.service.link %}
+                            <a href="{{ item.service.link }}" target="_blank"
+                               class="text-sm bg-black text-white px-4 py-2 rounded-lg hover:bg-black/70">
+                                Voir en ligne
+                            </a>
+                        {% endif %}
+                        {% if item.service.partner %}
+                            <a href="{{ path('app_partner_show', {id: item.service.partner.id}) }}"
+                               class="text-sm border border-black px-4 py-2 rounded-lg hover:bg-gray-100">
+                                Partenaire
+                            </a>
+                        {% endif %}
+                    </div>
+
+                </div>
+            {% endfor %}
+        </div>
+
+    {% elseif lat and lon %}
+        <p class="text-center text-gray-400 mt-20 text-2xl">😕 Aucun service trouvé dans un rayon de 10 km.</p>
+    {% else %}
+        <p class="text-center text-gray-400 mt-20 text-2xl">📍 Activez votre localisation pour voir les services à proximité.</p>
+    {% endif %}
+
+</section>
+{# ── FIN SECTION SERVICES À PROXIMITÉ ── #}
+
+<section id="infos" class="py-20 bg-[url('/assets/img/blur.png')] bg-cover bg-center lg:min-h-screen text-white">
+    <h2 class="text-[5rem] lg:text-[3rem] text-center mt-20 lg:pt-10">Qui sommes nous ?</h2>
+    </br>
+    <div class="flex justify-center mt-20 px-5">
+        <div class="lg:w-1/2 bg-black/40 rounded-xl p-20 text-5xl lg:text-2xl">
+            <h3 class="text-3xl mb-6">Notre mission</h3>
+            <p>Premium Conciergerie réinvente un métier d'exception, alliant discrétion, efficacité et empathie. Grâce à un réseau international et des partenaires de confiance, nous offrons à nos membres des services uniques et des avantages exclusifs, pour répondre à chaque demande avec excellence.</p>
+        </div>
+    </div>
 </section>
 
 <section id="contact" class="py-20">
     <h2 class="text-[5rem] lg:text-[3rem] text-center mt-20 lg:pt-10">Contact</h2>
 
-    <div class=" w-full flex flex-col items-center ">
-
-    <form action="" method="post" class="lg:border lg:rounded-lg py-20 px-10 w-full lg:w-1/2 mt-10 lg:text-2xl text-5xl space-y-10 lg:space-y-5 shadow-md
-    [&_textarea]:w-full [&_textarea]:h-48 lg:[&_textarea]:h-32 [&_textarea]:outline-none [&_textarea]:px-
-    [&_select]:outline-none [&_select]:cursor-pointer
-     [&_input]:w-full [&_input]:outline-none">
-      <div><input type="text" placeholder="Entrez votre prénom" name="nom"></div>
-      <div><input type="text" placeholder="Entrez votre nom" name="prenom"></div>
-      <div><input type="email" placeholder="Entrez votre addresse mail" name="email"></div>
-      <div><input type="tel" placeholder="Entrez votre numéro de téléphone" name="tel"></div>
-      <div>
-      <select name="sujet" id="sujet">
-          <option value="">Sélectionnez un sujet</option>
-          <option value="remboursement">Demande de remboursement</option>
-          <option value="question">Question sur un service</option>
-          <option value="retour">Retour d'expérience</option>
-          <option value="collaborateur">Devenir collaborateur</option>
-          <option value="membre">Devenir membre</option>
-          <option value="devis">Demande de devis</option>
-          <option value="autre">Autre demande</option>
-      </select>
+    <div class="w-full flex flex-col items-center">
+        <form action="" method="post" class="lg:border lg:rounded-lg py-20 px-10 w-full lg:w-1/2 mt-10 lg:text-2xl text-5xl space-y-10 lg:space-y-5 shadow-md
+        [&_textarea]:w-full [&_textarea]:h-48 lg:[&_textarea]:h-32 [&_textarea]:outline-none [&_textarea]:px-
+        [&_select]:outline-none [&_select]:cursor-pointer
+        [&_input]:w-full [&_input]:outline-none">
+            <div><input type="text" placeholder="Entrez votre prénom" name="nom"></div>
+            <div><input type="text" placeholder="Entrez votre nom" name="prenom"></div>
+            <div><input type="email" placeholder="Entrez votre addresse mail" name="email"></div>
+            <div><input type="tel" placeholder="Entrez votre numéro de téléphone" name="tel"></div>
+            <div>
+                <select name="sujet" id="sujet">
+                    <option value="">Sélectionnez un sujet</option>
+                    <option value="remboursement">Demande de remboursement</option>
+                    <option value="question">Question sur un service</option>
+                    <option value="retour">Retour d'expérience</option>
+                    <option value="collaborateur">Devenir collaborateur</option>
+                    <option value="membre">Devenir membre</option>
+                    <option value="devis">Demande de devis</option>
+                    <option value="autre">Autre demande</option>
+                </select>
+            </div>
+            <div>
+                <textarea name="message" id="message" placeholder="Votre message"></textarea>
+            </div>
+            <div class="bg-black/80 text-white inline py-3 rounded-md hover:bg-black/60">
+                <input type="submit" value="Soumettre" class="cursor-pointer">
+            </div>
+        </form>
     </div>
-      <div>
-        <textarea name="message" id="message" placeholder="Votre message"></textarea>
-      </div>
-      <div class=" bg-black/80 text-white inline py-3 rounded-md hover:bg-black/60"><input type="submit" value="Soumettre" class="cursor-pointer"></div>
-    </form>
-
-     </div>
-    
 </section>
+
 {% endblock %}
