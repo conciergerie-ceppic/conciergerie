@@ -18,48 +18,74 @@
 
 <body style="font-family: 'Advent Pro', sans-serif;" class="text-xl select-none w-full min-h-screen flex flex-col">
 
-    <nav
-        class="flex flex-col items-center w-full fixed text-white drop-shadow-[0_1px_1px_black] bg-black/10 rounded-b-xl z-50">
-        <div class="pt-5 cursor-pointer flex items-center text-5xl" onclick="window.location.href=`{{ path('app_home')}}`">
-            <img src="/assets/img/logo.png" alt="" width="50px">
-            <span class="tracking-wider uppercase lg:text-xl">premium experience</span>
-        </div>
-        <ul class="flex space-x-20 py-8 [&_a:hover]:text-white/70 [&_a]:cursor-pointer text-4xl lg:text-2xl">
-            <li><a href="#infos">Qui sommes-nous ?</a></li>
-            <li>
-                <div class="relative group inline-block">
+  <nav
+    class="flex flex-col items-center w-full fixed text-white drop-shadow-[0_1px_1px_black] bg-black/10 rounded-b-xl z-50">
 
-                    <a href="#services" class="cursor-pointer">
-                        Services
-                    </a>
+    <div class="pt-5 cursor-pointer flex items-center text-5xl"
+         onclick="window.location.href=`{{ path('app_home')}}`">
+        <img src="/assets/img/logo.png" alt="" width="50px">
+        <span class="tracking-wider uppercase lg:text-xl">premium experience</span>
+    </div>
 
-                    <div class="absolute p-6 
-                bg-slate-500/35 rounded shadow-lg
-                opacity-0 
-                group-hover:opacity-100 
-                transition duration-200">
+    <ul class="flex items-center space-x-20 py-8 text-4xl lg:text-2xl">
 
-                        <ul class="[&_li]:cursor-pointer [&_li:hover]:text-white/70 space-y-2">
-                            <li><a href="{{ path('app_service', {'nom': 'hotel'}) }}">Hôtel</a></li>
-                            <li><a href="{{ path('app_service', {'nom': 'restaurant'}) }}">Restauration</a></li>
-                            <li><a href="{{ path('app_service', {'nom': 'spa'}) }}">Spa</a></li>
-                            <li><a href="{{ path('app_service', {'nom': 'driver'}) }}">Chauffeur</a></li>
-                            <li><a href="{{ path('app_service', {'nom': 'event'}) }}">Evenement</a></li>
-                            <li><a href="{{ path('app_service', {'nom': 'travel'}) }}">Voyage</a></li>
-                        </ul>
+        <li>
+            <a class="px-4 py-2 hover:text-white/70" href="#infos">
+                Qui sommes-nous ?
+            </a>
+        </li>
 
-                    </div>
+        <li class="relative group">
+            <a class="px-4 py-2 hover:text-white/70" href="#services">
+                Services
+            </a>
 
-                </div>
-            </li>
-            <li><a href="#contact">Contact</a></li>
-            <li>
-                <div class="relative group inline-block">
-                <a href="{{path('app_register')}}" class="cursor-pointer">Devenir membre</a>              
-            </li>
-            <li><a href="{{path('app_login')}}">Accès membre</a></li>
-        </ul>
-    </nav>
+            <div class="absolute left-0 top-full
+                        hidden group-hover:block
+                        z-50
+                        min-w-[180px]
+                        p-6 bg-slate-500/95 rounded shadow-lg">
+
+                <ul class="space-y-2 text-lg">
+                    <li><a class="block hover:text-white/70"
+                           href="{{ path('app_service', {'nom': 'hotel'}) }}">Hôtel</a></li>
+                    <li><a class="block hover:text-white/70"
+                           href="{{ path('app_service', {'nom': 'restaurant'}) }}">Restauration</a></li>
+                    <li><a class="block hover:text-white/70"
+                           href="{{ path('app_service', {'nom': 'spa'}) }}">Spa</a></li>
+                    <li><a class="block hover:text-white/70"
+                           href="{{ path('app_service', {'nom': 'driver'}) }}">Chauffeur</a></li>
+                    <li><a class="block hover:text-white/70"
+                           href="{{ path('app_service', {'nom': 'event'}) }}">Evenement</a></li>
+                    <li><a class="block hover:text-white/70"
+                           href="{{ path('app_service', {'nom': 'travel'}) }}">Voyage</a></li>
+                </ul>
+
+            </div>
+        </li>
+
+        <li>
+            <a class="px-4 py-2 hover:text-white/70" href="#contact">
+                Contact
+            </a>
+        </li>
+
+        <li>
+            <a class="px-4 py-2 hover:text-white/70"
+               href="{{path('app_register')}}">
+                Devenir membre
+            </a>
+        </li>
+
+        <li>
+            <a class="px-4 py-2 hover:text-white/70"
+               href="{{path('app_login')}}">
+                Accès membre
+            </a>
+        </li>
+
+    </ul>
+</nav>
     <main class="w-full flex-1">
 
 
