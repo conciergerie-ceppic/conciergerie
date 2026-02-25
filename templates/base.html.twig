@@ -45,40 +45,24 @@
             });
         </script>
 
-    <nav
-        class="flex flex-col items-center w-full fixed text-white drop-shadow-[0_1px_1px_black] bg-black/10 rounded-b-xl z-50">
+    <nav class="flex flex-col items-center w-full fixed text-white drop-shadow-[0_1px_1px_black] bg-black/10 rounded-b-xl z-50">
+      
         <div class="pt-5 cursor-pointer flex items-center text-5xl" onclick="window.location.href=`{{ path('app_home')}}`">
             <img src="/assets/img/logo.png" alt="" width="50px">
             <span class="tracking-wider uppercase lg:text-xl">premium experience</span>
         </div>
+
         <ul class="flex items-center space-x-20 py-8 [&_a:hover]:text-white/70 [&_a]:cursor-pointer text-4xl lg:text-2xl">
-            <div class=" flex items-center text-sm">
+           
+            <li class=" flex items-center text-sm">
                 <img src="/assets/img/icons/location.svg" alt="" class="invert size-5">
                 <span class="pl-1">{{ville}}</span>
-                {# <span>Rouen</span> #}
-            </div>
-            <li><a href="#infos">Qui sommes-nous ?</a></li>
-            <li>
-                <div class="relative group inline-block">
+            </li>
 
-    <div class="pt-5 cursor-pointer flex items-center text-5xl"
-         onclick="window.location.href=`{{ path('app_home')}}`">
-        <img src="/assets/img/logo.png" alt="" width="50px">
-        <span class="tracking-wider uppercase lg:text-xl">premium experience</span>
-    </div>
+        <li><a class="px-4 py-2 hover:text-white/70" href="#infos">Qui sommes-nous ?</a></li>
 
-    <ul class="flex items-center space-x-20 py-8 text-4xl lg:text-2xl">
-
-        <li>
-            <a class="px-4 py-2 hover:text-white/70" href="#infos">
-                Qui sommes-nous ?
-            </a>
-        </li>
-
-        <li class="relative group">
-            <a class="px-4 py-2 hover:text-white/70" href="#services">
-                Services
-            </a>
+        <li class="relative group"> 
+            <a class="px-4 py-2 hover:text-white/70" href="#services">Services</a>
 
             <div class="absolute left-0 top-full
                         hidden group-hover:block
@@ -102,42 +86,29 @@
                 </ul>
 
             </div>
+
         </li>
 
-        <li>
-            <a class="px-4 py-2 hover:text-white/70" href="#contact">
-                Contact
-            </a>
-        </li>
+        <li><a class="px-4 py-2 hover:text-white/70" href="#contact">Contact</a></li>
 
-        <li>
-            <a class="px-4 py-2 hover:text-white/70"
-               href="{{path('app_register')}}">
-                Devenir membre
-            </a>
-        </li>
+        <li><a class="px-4 py-2 hover:text-white/70"href="{{path('app_register')}}">Devenir membre</a></li>
 
-        <li>
-            <a class="px-4 py-2 hover:text-white/70"
-               href="{{path('app_login')}}">
-                Accès membre
-            </a>
-        </li>
+        <li><a class="px-4 py-2 hover:text-white/70"  href="{{path('app_login')}}">Accès membre</a></li>
 
     </ul>
+
 </nav>
+
     <main class="w-full flex-1">
-
-
         {% block body %}
         {# Home #}
         {% endblock %}
     </main>
 
-
     <footer class="py-5 lg:h-50 bg-black/80 mt-auto w-full">
         <p class="text-white text-center text-2xl lg:text-lg py-4">&copy; Ceppic 2026 | Sebastien, Kevin, Benjamin</p>
     </footer>
+
 </body>
 
 </html>
