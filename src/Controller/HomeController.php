@@ -18,11 +18,9 @@ final class HomeController extends AbstractController
         $session = $request->getSession();
         $lat = $session->get('lat');
         $lon = $session->get('lon');
-        $ville = null;
-        if (is_numeric($lat && $lon)) {
-            $ville = $this->getVille($hci,$lat,$lon);
-            $session->set('ville',$ville);
-        }
+        $ville = $this->getVille($hci,(float)$lat,(float)$lon);
+        $session->set('ville',$ville);
+        
         return $this->render('home/index.html.twig', [
             'services' => $services,
             'lat' => $lat,
