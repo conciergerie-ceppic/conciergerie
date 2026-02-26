@@ -8,19 +8,20 @@
         href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-    {% block stylesheets %}
-    {% endblock %}
     <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css" />
-
+    
+    {% block stylesheets %}
+    {% endblock %}
     {% block javascripts %}
-    {# {% block importmap %}{{ importmap('app') }}{% endblock %} #}
     {% endblock %}
 </head>
 
-<body style="font-family: 'Advent Pro', sans-serif;" class="text-xl select-none w-full min-h-screen flex flex-col relative">
+<body style="font-family: 'Advent Pro', sans-serif;" class="select-none">
     
-        <div id="map" class="h-[20rem] w-[20rem] fixed rounded-md bottom-0 right-0 mr-5 mb-20 opacity-90 z-50" ></div>
+    
+        <div id="map" class="hidden lg:flex h-[20rem] w-[20rem] fixed rounded-md bottom-0 right-0 mr-5 mb-20 opacity-90 z-50"></div>
+        
         <script>
             document.addEventListener('DOMContentLoaded', function() {
                 // Récupère les variables Twig
@@ -44,18 +45,18 @@
             });
         </script>
 
-    <nav class="flex flex-col items-center w-full fixed text-white drop-shadow-[0_1px_1px_black] bg-black/10 rounded-b-xl z-50">
+    <nav class="flex flex-col items-center w-full fixed text-white text-4xl md:text-3xl lg:text-2xl drop-shadow-[0_1px_1px_black] bg-black/10 rounded-b-xl z-50">
       
-        <div class="pt-5 cursor-pointer flex items-center text-5xl" onclick="window.location.href=`{{ path('app_home')}}`">
+        <div class="p-5 cursor-pointer flex items-center " onclick="window.location.href=`{{ path('app_home')}}`">
             <img src="/assets/img/logo.png" alt="" width="50px">
-            <span class="tracking-wider uppercase lg:text-xl">premium experience</span>
+            <span class="tracking-wider uppercase">premium experience</span>
         </div>
 
-        <ul class="flex items-center space-x-20 py-8 [&_a:hover]:text-white/70 [&_a]:cursor-pointer text-4xl lg:text-2xl">
+        <ul class="hidden lg:flex items-center space-x-10 pb-5 [&_a:hover]:text-white/70 [&_a]:cursor-pointer text-xl ">
            
-            <li class=" flex items-center text-sm">
+            <li class="flex items-center">
                 <img src="/assets/img/icons/location.svg" alt="" class="invert size-5">
-                <span class="pl-1">{{ app.session.get('ville')|default('Inconnu') }}</span>
+                <span class="pl-1 text-sm">{{ app.session.get('ville')|default('Inconnu') }}</span>
             </li>
 
         <li><a class="px-4 py-2 hover:text-white/70" href="#infos">Qui sommes-nous ?</a></li>
@@ -69,7 +70,7 @@
                         min-w-[180px]
                         p-6 bg-slate-500/95 rounded shadow-lg">
 
-                <ul class="space-y-2 text-lg">
+                <ul class="space-y-2">
                     <li><a class="block hover:text-white/70"
                            href="{{ path('app_service', {'nom': 'hotel'}) }}">Hôtel</a></li>
                     <li><a class="block hover:text-white/70"
@@ -105,7 +106,7 @@
     </main>
 
     <footer class="py-5 lg:h-50 bg-black/80 mt-auto w-full">
-        <p class="text-white text-center text-2xl lg:text-lg py-4">&copy; Ceppic 2026 | Sebastien, Kevin, Benjamin</p>
+        <p class="text-white text-center text-xl lg:text-lg py-4">&copy; Ceppic 2026 | Sebastien, Kevin, Benjamin</p>
     </footer>
 
 </body>

@@ -24,7 +24,7 @@ final class HomeController extends AbstractController
         $session->set('ville',$ville);
          $user = $this->getUser();
         $roles = $user ? $user->getRoles() : [];
-       var_dump($roles);
+    // var_dump($roles); // Supprimé pour éviter l'envoi prématuré des headers
         return $this->render('home/index.html.twig', [
             'services' => $services,
             'lat' => $lat,
