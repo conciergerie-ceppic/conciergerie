@@ -29,12 +29,16 @@ final class ServiceController extends AbstractController
         $userLat = (float) $session->get('lat');
         $userLon = (float) $session->get('lon');
 
+        // Tri par proximité si la géoloc est disponible
+        if ($userLat && $userLon) {
+            $services = $this->orderByProximity($services, $userLat, $userLon, $client);
+        }
 
         $coords = $this->convertAdress($services[0]['address'], $client);
-        
+
         return $this->render('service/index.html.twig', [
             'nom' => $nom,
-            'services' => $services,
+            'services' => $services, // contient désormais la clé 'distance'
             'coords' => $coords,
         ]);
     }
@@ -63,7 +67,36 @@ final class ServiceController extends AbstractController
             'lat' => $data[0]['lat'],
             'lon' => $data[0]['lon'],
         ];
-        
+    }
+
+    /**
+     * Trie les services par proximité et ajoute la clé 'distance' à chaque service
+     */
+    private function orderByProximity(
+        array $services,
+        float $userLat,
+        float $userLon,
+        HttpClientInterface $client
+    ): array {
+        foreach ($services as &$service) {
+            $coords = $this->convertAdress($service['address'], $client);
+
+            if ($coords) {
+                $service['distance'] = $this->haversine(
+                    $userLat, $userLon,
+                    (float) $coords['lat'],
+                    (float) $coords['lon']
+                );
+            } else {
+                // Mise en fin de liste si adresse non trouvée
+                $service['distance'] = PHP_FLOAT_MAX;
+            }
+        }
+        unset($service);
+
+        usort($services, fn($a, $b) => $a['distance'] <=> $b['distance']);
+
+        return $services;
     }
 
     /**
@@ -71,7 +104,6 @@ final class ServiceController extends AbstractController
      */
     private function haversine(float $lat1, float $lon1, float $lat2, float $lon2): float
     {
-
         $earthRadius = 6371; // km
 
         $dLat = deg2rad($lat2 - $lat1);
