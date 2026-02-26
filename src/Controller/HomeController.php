@@ -2,6 +2,8 @@
 
 namespace App\Controller;
 
+
+use App\Repository\UserRepository;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\DependencyInjection\Loader\Configurator\App;
 use Symfony\Component\HttpFoundation\Request;
@@ -12,7 +14,7 @@ use Symfony\Contracts\HttpClient\HttpClientInterface;
 final class HomeController extends AbstractController
 {
     #[Route('/', name: 'app_home')]
-    public function index(Request $request, HttpClientInterface $hci): Response
+    public function index(Request $request, HttpClientInterface $hci,UserRepository $ur): Response
     {
         $services = $this->listServices();
         $session = $request->getSession();
@@ -20,7 +22,9 @@ final class HomeController extends AbstractController
         $lon = $session->get('lon');
         $ville = $this->getVille($hci,(float)$lat,(float)$lon);
         $session->set('ville',$ville);
-       
+         $user = $this->getUser();
+        $roles = $user ? $user->getRoles() : [];
+       var_dump($roles);
         return $this->render('home/index.html.twig', [
             'services' => $services,
             'lat' => $lat,
