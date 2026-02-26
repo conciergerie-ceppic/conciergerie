@@ -4,72 +4,80 @@
 
 {% block body %}
 <section class="min-h-screen bg-[url('/assets/img/room.png')] bg-cover bg-center text-white text-[3.5rem] w-full">
-    <h1 class="flex flex-col gap-7 items-center justify-center h-screen pb-44 drop-shadow-[0_1px_2px_black] text-[5rem] lg:text-[3.5rem]">Bienvenue dans la <span class="text-[#FDFAE1]">Conciergerie Premium</span></h1>
+  <h1
+    class="flex flex-col gap-7 items-center justify-center h-screen pb-44 drop-shadow-[0_1px_2px_black] text-[5rem] lg:text-[3.5rem]">
+    Bienvenue dans la <span class="text-[#FDFAE1]">Conciergerie Premium</span></h1>
 </section>
 
-<section id="presentation" class="h-[50vh] lg:min-h-screen bg-[url('/assets/img/earth.png')] bg-cover bg-center relative ">
-  <img id="boat" src="/assets/img/plane.png" alt="Bateau" class="absolute left-1/2 top-[100px] w-80 z-50 -translate-x-1/2">
+<section id="presentation"
+  class="h-[50vh] lg:min-h-screen bg-[url('/assets/img/earth.png')] bg-cover bg-center relative ">
+  <img id="boat" src="/assets/img/plane.png" alt="Bateau"
+    class="absolute left-1/2 top-[100px] w-80 z-50 -translate-x-1/2">
 </section>
 
 <script>
-window.addEventListener('scroll', () => {
-  const boat = document.getElementById('boat');
-  const presentation = document.getElementById('presentation');
-  if (!boat || !presentation) return;
-  // Position initiale du bateau
-  const initialTop = 100;
-  // Hauteur max de la section présentation
-  const sectionHeight = presentation.offsetHeight;
-  // Scroll relatif à la section
-  const scrollY = Math.max(window.scrollY - presentation.offsetTop, -150);
-  // Limite le déplacement max à la fin de la section
-  const maxY = sectionHeight - boat.offsetHeight - 120;
-  let y = Math.min(scrollY, maxY);
-  boat.style.transform = `translateX(-50%) translateY(${y}px) rotate(180deg)`;
-});
+  window.addEventListener('scroll', () => {
+    const boat = document.getElementById('boat');
+    const presentation = document.getElementById('presentation');
+    if (!boat || !presentation) return;
+    // Position initiale du bateau
+    const initialTop = 100;
+    // Hauteur max de la section présentation
+    const sectionHeight = presentation.offsetHeight;
+    // Scroll relatif à la section
+    const scrollY = Math.max(window.scrollY - presentation.offsetTop, -150);
+    // Limite le déplacement max à la fin de la section
+    const maxY = sectionHeight - boat.offsetHeight - 120;
+    let y = Math.min(scrollY, maxY);
+    boat.style.transform = `translateX(-50%) translateY(${y}px) rotate(180deg)`;
+  });
 </script>
 
-<section id="member" class="flex justify-center text-center [&_div]:w-1/2 [&_div]:p-20 [&_div]:text-4xl lg:[&_div]:text-2xl text-white ">
-<div class="bg-[#261103]/60"><a class="hover:text-white/70" href="">Devenir collaborateur</a>
-</div>
-<div class="text-black"><a class="hover:text-black/60" href="">Devenir membre</a></div>
-<div class="bg-[#261103]/60"><a class="hover:text-white/70" href="">Demander un devis</a></div>
+<section id="member"
+  class="flex justify-center text-center [&_div]:w-1/2 [&_div]:p-20 [&_div]:text-4xl lg:[&_div]:text-2xl text-white ">
+  <div class="bg-[#261103]/60"><a class="hover:text-white/70" href="">Devenir collaborateur</a>
+  </div>
+  <div class="text-black"><a class="hover:text-black/60" href="">Devenir membre</a></div>
+  <div class="bg-[#261103]/60"><a class="hover:text-white/70" href="">Demander un devis</a></div>
 </section>
 
 <section id="services" class="min-h-screen pt-20">
-<h2 class="text-[5rem] lg:text-[3rem] text-center mt-20 lg:pt-10">Services</h2>
+  <h2 class="text-[5rem] lg:text-[3rem] text-center mt-20 lg:pt-10">Services</h2>
 
-<div class="card-container flex flex-wrap gap-3 pt-10 justify-center">
+  <div class="card-container flex flex-wrap gap-3 pt-10 justify-center">
 
-{% for service in services %}
+    {% for service in services %}
 
-<div class="card w-[30%] h-[20vh] bg-[url('/assets/img/{{service.value}}-service.png')] bg-cover bg-center rounded-2xl shadow-md cursor-pointer hover:contrast-75" 
-onclick="window.location.href=`{{ path('app_service', {'nom': service.value}) }}`">
-<h3 class="text-white text-3xl p-3 drop-shadow-[0_4px_2px_black]">{{ service.value|capitalize }}</h3>
-</div>
+    <div
+      class="card w-[30%] h-[20vh] bg-[url('/assets/img/{{service.value}}-service.png')] bg-cover bg-center rounded-2xl shadow-md cursor-pointer hover:contrast-75"
+      onclick="window.location.href=`{{ path('app_service', {'nom': service.value}) }}`">
+      <h3 class="text-white text-3xl p-3 drop-shadow-[0_4px_2px_black]">{{ service.value|capitalize }}</h3>
+    </div>
 
-{% endfor %}
+    {% endfor %}
 
-</div>
+  </div>
 
 </section>
 
 <section id="infos" class="py-20 bg-[url('/assets/img/blur.png')] bg-cover bg-center lg:min-h-screen  text-white">
-<h2 class="text-[5rem] lg:text-[3rem] text-center mt-20 lg:pt-10">Qui sommes nous ?</h2>
-</br>
-<div class="flex justify-center mt-20 px-5">
-  <div class="lg:w-1/2 bg-black/40 rounded-xl p-20 text-5xl lg:text-2xl">
-    <h3 class="text-3xl mb-6">Notre mission</h3>
-      <p>Premium Conciergerie réinvente un métier d’exception, alliant discrétion, efficacité et empathie. Grâce à un réseau international et des partenaires de confiance, nous offrons à nos membres des services uniques et des avantages exclusifs, pour répondre à chaque demande avec excellence.</p>
-  </div>
+  <h2 class="text-[5rem] lg:text-[3rem] text-center mt-20 lg:pt-10">Qui sommes nous ?</h2>
+  </br>
+  <div class="flex justify-center mt-20 px-5">
+    <div class="lg:w-1/2 bg-black/40 rounded-xl p-20 text-5xl lg:text-2xl">
+      <h3 class="text-3xl mb-6">Notre mission</h3>
+      <p>Premium Conciergerie réinvente un métier d’exception, alliant discrétion, efficacité et empathie. Grâce à un
+        réseau international et des partenaires de confiance, nous offrons à nos membres des services uniques et des
+        avantages exclusifs, pour répondre à chaque demande avec excellence.</p>
+    </div>
 
-</div>
+  </div>
 </section>
 
 <section id="contact" class="py-20">
-    <h2 class="text-[5rem] lg:text-[3rem] text-center mt-20 lg:pt-10">Contact</h2>
+  <h2 class="text-[5rem] lg:text-[3rem] text-center mt-20 lg:pt-10">Contact</h2>
 
-    <div class=" w-full flex flex-col items-center ">
+  <div class=" w-full flex flex-col items-center ">
 
     <form action="" method="post" class="lg:border lg:rounded-lg py-20 px-10 w-full lg:w-1/2 mt-10 lg:text-2xl text-5xl space-y-10 lg:space-y-5 shadow-md
     [&_textarea]:w-full [&_textarea]:h-48 lg:[&_textarea]:h-32 [&_textarea]:outline-none [&_textarea]:px-
@@ -80,7 +88,7 @@ onclick="window.location.href=`{{ path('app_service', {'nom': service.value}) }}
       <div><input type="email" placeholder="Entrez votre addresse mail" name="email"></div>
       <div><input type="tel" placeholder="Entrez votre numéro de téléphone" name="tel"></div>
       <div>
-      <select name="sujet" id="sujet">
+        <select name="sujet" id="sujet">
           <option value="">Sélectionnez un sujet</option>
           <option value="remboursement">Demande de remboursement</option>
           <option value="question">Question sur un service</option>
@@ -89,15 +97,16 @@ onclick="window.location.href=`{{ path('app_service', {'nom': service.value}) }}
           <option value="membre">Devenir membre</option>
           <option value="devis">Demande de devis</option>
           <option value="autre">Autre demande</option>
-      </select>
-    </div>
+        </select>
+      </div>
       <div>
         <textarea name="message" id="message" placeholder="Votre message"></textarea>
       </div>
-      <div class=" bg-black/80 text-white inline py-3 rounded-md hover:bg-black/60"><input type="submit" value="Soumettre" class="cursor-pointer"></div>
+      <div class=" bg-black/80 text-white inline py-3 rounded-md hover:bg-black/60"><input type="submit"
+          value="Soumettre" class="cursor-pointer"></div>
     </form>
 
-     </div>
-    
+  </div>
+
 </section>
 {% endblock %}
