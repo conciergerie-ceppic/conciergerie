@@ -20,7 +20,7 @@ final class HomeController extends AbstractController
         $lon = $session->get('lon');
         $ville = $this->getVille($hci,(float)$lat,(float)$lon);
         $session->set('ville',$ville);
-        
+       
         return $this->render('home/index.html.twig', [
             'services' => $services,
             'lat' => $lat,
