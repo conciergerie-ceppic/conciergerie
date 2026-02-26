@@ -16,6 +16,16 @@ class ServiceRepository extends ServiceEntityRepository
         parent::__construct($registry, Service::class);
     }
 
+    public function findService($category){
+         return $this->createQueryBuilder("s")
+         ->select("s.id AS id,s.address AS address, s.category As category")
+        ->where("s.category = :category")
+        ->setParameter("category", $category)
+        ->getQuery()
+        ->getArrayResult()
+        ;
+    }
+
 //    /**
 //     * @return Service[] Returns an array of Service objects
 //     */
