@@ -2,7 +2,6 @@
 
 namespace App\Entity;
 
-use App\Enum\ServiceCategory;
 use App\Repository\ServiceRepository;
 use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
@@ -20,17 +19,8 @@ class Service
     #[ORM\Column(length: 255)]
     private ?string $name = null;
 
-    #[ORM\Column(enumType: ServiceCategory::class)]
-    private ?ServiceCategory $category = null;
-
-    #[ORM\Column(type: Types::TEXT)]
+    #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
-
-    #[ORM\Column(length: 255)]
-    private ?string $address = null;
-
-    #[ORM\Column(length: 255, nullable: true)]
-    private ?string $link = null;
 
     /**
      * @var Collection<int, Reservation>
@@ -38,12 +28,16 @@ class Service
     #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'service_id')]
     private Collection $reservations;
 
-    #[ORM\ManyToOne(inversedBy: 'services')]
-    private ?Partner $partner = null;
+    /**
+     * @var Collection<int, Partner>
+     */
+    #[ORM\OneToMany(targetEntity: Partner::class, mappedBy: 'service')]
+    private Collection $partners;
 
     public function __construct()
     {
         $this->reservations = new ArrayCollection();
+        $this->partners = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -59,19 +53,6 @@ class Service
     public function setName(string $name): static
     {
         $this->name = $name;
-
-        return $this;
-    }
-
-    public function getCategory(): ?ServiceCategory
-    {
-        return $this->category;
-    }
-
-    public function setCategory(ServiceCategory $category): static
-    {
-        $this->category = $category;
-
         return $this;
     }
 
@@ -80,34 +61,9 @@ class Service
         return $this->description;
     }
 
-    public function setDescription(string $description): static
+    public function setDescription(?string $description): static
     {
         $this->description = $description;
-
-        return $this;
-    }
-
-    public function getAddress(): ?string
-    {
-        return $this->address;
-    }
-
-    public function setAddress(string $address): static
-    {
-        $this->address = $address;
-
-        return $this;
-    }
-
-    public function getLink(): ?string
-    {
-        return $this->link;
-    }
-
-    public function setLink(?string $link): static
-    {
-        $this->link = $link;
-
         return $this;
     }
 
@@ -125,31 +81,43 @@ class Service
             $this->reservations->add($reservation);
             $reservation->setServiceId($this);
         }
-
         return $this;
     }
 
     public function removeReservation(Reservation $reservation): static
     {
         if ($this->reservations->removeElement($reservation)) {
-            // set the owning side to null (unless already changed)
             if ($reservation->getServiceId() === $this) {
                 $reservation->setServiceId(null);
             }
         }
-
         return $this;
     }
 
-    public function getPartner(): ?Partner
+    /**
+     * @return Collection<int, Partner>
+     */
+    public function getPartners(): Collection
     {
-        return $this->partner;
+        return $this->partners;
     }
 
-    public function setPartner(?Partner $partner): static
+    public function addPartner(Partner $partner): static
     {
-        $this->partner = $partner;
+        if (!$this->partners->contains($partner)) {
+            $this->partners->add($partner);
+            $partner->setService($this);
+        }
+        return $this;
+    }
 
+    public function removePartner(Partner $partner): static
+    {
+        if ($this->partners->removeElement($partner)) {
+            if ($partner->getService() === $this) {
+                $partner->setService(null);
+            }
+        }
         return $this;
     }
 }

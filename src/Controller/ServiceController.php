@@ -18,94 +18,78 @@ final class ServiceController extends AbstractController
         HttpClientInterface $client,
         Request $request
     ): Response {
-        $services = $sr->findService($nom);
+        $service = $sr->findOneBy(['name' => $nom]);
 
-        if (!$services) {
-            throw $this->createNotFoundException();
+        if (!$service) {
+            throw $this->createNotFoundException("Service \"$nom\" introuvable.");
         }
 
-        // Récupération de la géoloc depuis la session (stockée par HomeController)
+        // Si l'utilisateur n'est pas connecté, on affiche juste la description
+        if (!$this->getUser()) {
+            return $this->render('service/description.html.twig', [
+                'service' => $service,
+            ]);
+        }
+
+        // Récupération de la géoloc depuis la session
         $session = $request->getSession();
         $userLat = (float) $session->get('lat');
         $userLon = (float) $session->get('lon');
 
+        // Récupération des partners liés à ce service
+        $partners = $service->getPartners()->toArray();
+
         // Tri par proximité si la géoloc est disponible
         if ($userLat && $userLon) {
-            $services = $this->orderByProximity($services, $userLat, $userLon, $client);
+            $partners = $this->orderByProximity($partners, $userLat, $userLon, $client);
         }
 
-        $coords = $this->convertAdress($services[0]['address'], $client);
-
         return $this->render('service/index.html.twig', [
-            'nom' => $nom,
-            'services' => $services, // contient désormais la clé 'distance'
-            'coords' => $coords,
+            'service' => $service,
+            'partners' => $partners,
         ]);
     }
 
-    /**
-     * Convertit une adresse en coordonnées GPS via Nominatim
-     */
     public function convertAdress(string $address, HttpClientInterface $client): ?array
     {
         $url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q="
             . urlencode($address);
 
         $response = $client->request('GET', $url, [
-            'headers' => [
-                'User-Agent' => 'conciergerie/1.0'
-            ]
+            'headers' => ['User-Agent' => 'conciergerie/1.0']
         ]);
 
         $data = $response->toArray();
 
-        if (empty($data)) {
-            return null;
-        }
-
-        return [
+        return empty($data) ? null : [
             'lat' => $data[0]['lat'],
             'lon' => $data[0]['lon'],
         ];
     }
 
-    /**
-     * Trie les services par proximité et ajoute la clé 'distance' à chaque service
-     */
     private function orderByProximity(
-        array $services,
+        array $partners,
         float $userLat,
         float $userLon,
         HttpClientInterface $client
     ): array {
-        foreach ($services as &$service) {
-            $coords = $this->convertAdress($service['address'], $client);
+        foreach ($partners as &$partner) {
+            $coords = $this->convertAdress($partner->getAddress(), $client);
 
-            if ($coords) {
-                $service['distance'] = $this->haversine(
-                    $userLat, $userLon,
-                    (float) $coords['lat'],
-                    (float) $coords['lon']
-                );
-            } else {
-                // Mise en fin de liste si adresse non trouvée
-                $service['distance'] = PHP_FLOAT_MAX;
-            }
+            $partner->distance = $coords
+                ? $this->haversine($userLat, $userLon, (float) $coords['lat'], (float) $coords['lon'])
+                : PHP_FLOAT_MAX;
         }
-        unset($service);
+        unset($partner);
 
-        usort($services, fn($a, $b) => $a['distance'] <=> $b['distance']);
+        usort($partners, fn($a, $b) => $a->distance <=> $b->distance);
 
-        return $services;
+        return $partners;
     }
 
-    /**
-     * Calcule la distance en km entre deux points GPS (formule Haversine)
-     */
     private function haversine(float $lat1, float $lon1, float $lat2, float $lon2): float
     {
-        $earthRadius = 6371; // km
-
+        $earthRadius = 6371;
         $dLat = deg2rad($lat2 - $lat1);
         $dLon = deg2rad($lon2 - $lon1);
 
