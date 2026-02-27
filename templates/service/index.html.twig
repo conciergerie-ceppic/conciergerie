@@ -14,65 +14,147 @@
     </div>
 
     {% if partners is empty %}
-    <p class="text-center text-white/40 tracking-widest text-sm uppercase mt-20">
-        Aucun établissement trouvé.
-    </p>
+        <p class="text-center text-white/40 tracking-widest text-sm uppercase mt-20">
+            Aucun établissement trouvé.
+        </p>
     {% else %}
-    <ul class="space-y-4">
-        {% for partner in partners %}
-        <li class="group flex items-start gap-6 bg-black/40 hover:bg-black/60 transition-colors duration-300 rounded-xl px-6 py-5 backdrop-blur-sm border border-white/10">
 
-            <div class="text-4xl text-white/20 font-bold w-10 text-right shrink-0 select-none pt-1">
-                {{ loop.index }}
-            </div>
+        {% set hasDistances = distances is not empty %}
 
-            <div class="flex-1 min-w-0">
-                <div class="flex items-start justify-between gap-4 flex-wrap">
-                    <div>
-                        <h2 class="text-white uppercase tracking-widest text-sm font-bold mb-1">
-                            {{ partner.name }}
-                        </h2>
-                        <p class="text-white/50 text-xs tracking-wider uppercase flex items-center gap-1">
-                            <img src="/assets/img/icons/location.svg" alt="" class="invert size-3 opacity-50">
-                            {{ partner.address }}
-                        </p>
-                    </div>
+        {% if hasDistances %}
+        <div class="mb-8 flex flex-wrap justify-center gap-3">
+            <button onclick="filterByDistance('all')" id="filter-all"
+                class="filter-btn px-5 py-2 rounded-lg text-xs tracking-[0.3em] uppercase border border-white/30 text-white bg-white/20 hover:bg-white/30 transition-colors duration-300">
+                Tous
+            </button>
+            <button onclick="filterByDistance(0, 5)" id="filter-0-5"
+                class="filter-btn px-5 py-2 rounded-lg text-xs tracking-[0.3em] uppercase border border-white/10 text-white/60 bg-white/5 hover:bg-white/20 hover:text-white transition-colors duration-300">
+                0 – 5 km
+            </button>
+            <button onclick="filterByDistance(5, 10)" id="filter-5-10"
+                class="filter-btn px-5 py-2 rounded-lg text-xs tracking-[0.3em] uppercase border border-white/10 text-white/60 bg-white/5 hover:bg-white/20 hover:text-white transition-colors duration-300">
+                5 – 10 km
+            </button>
+            <button onclick="filterByDistance(10, 20)" id="filter-10-20"
+                class="filter-btn px-5 py-2 rounded-lg text-xs tracking-[0.3em] uppercase border border-white/10 text-white/60 bg-white/5 hover:bg-white/20 hover:text-white transition-colors duration-300">
+                10 – 20 km
+            </button>
+            <button onclick="filterByDistance(20, 50)" id="filter-20-50"
+                class="filter-btn px-5 py-2 rounded-lg text-xs tracking-[0.3em] uppercase border border-white/10 text-white/60 bg-white/5 hover:bg-white/20 hover:text-white transition-colors duration-300">
+                20 – 50 km
+            </button>
+            <button onclick="filterByDistance(50, 200)" id="filter-50-200"
+                class="filter-btn px-5 py-2 rounded-lg text-xs tracking-[0.3em] uppercase border border-white/10 text-white/60 bg-white/5 hover:bg-white/20 hover:text-white transition-colors duration-300">
+                50 – 200 km
+            </button>
+            <button onclick="filterByDistance(200, 99999)" id="filter-200-99999"
+                class="filter-btn px-5 py-2 rounded-lg text-xs tracking-[0.3em] uppercase border border-white/10 text-white/60 bg-white/5 hover:bg-white/20 hover:text-white transition-colors duration-300">
+                + 200 km
+            </button>
+        </div>
+        {% else %}
+        <div class="mb-8 text-center">
+            <p class="text-white/30 text-xs tracking-[0.3em] uppercase flex items-center justify-center gap-2">
+                <img src="/assets/img/icons/location.svg" alt="" class="invert size-3 opacity-30">
+                Géolocalisation non disponible — distances non calculées
+            </p>
+        </div>
+        {% endif %}
 
-                    {% if partner.distance is defined and partner.distance < 99999 %}
-                    <div class="shrink-0 bg-white/10 rounded-lg px-3 py-1 text-center">
-                        <span class="text-white text-lg font-light">
-                            {{ partner.distance|number_format(1, ',', ' ') }}
-                        </span>
-                        <span class="text-white/40 text-xs ml-1">km</span>
-                    </div>
-                    {% endif %}
+        <p id="no-results" class="hidden text-center text-white/40 tracking-widest text-sm uppercase mt-10">
+            Aucun établissement dans cette tranche de distance.
+        </p>
+
+        <ul id="partners-list" class="space-y-4">
+            {% for partner in partners %}
+            {% set dist = distances[partner.id] ?? null %}
+            <li class="partner-item group flex items-start gap-6 bg-black/40 hover:bg-black/60 transition-colors duration-300 rounded-xl px-6 py-5 backdrop-blur-sm border border-white/10"
+                data-distance="{{ dist ?? 99999 }}">
+
+                <div class="text-4xl text-white/20 font-bold w-10 text-right shrink-0 select-none pt-1 item-index">
+                    {{ loop.index }}
                 </div>
 
-                {% if partner.description %}
-                <p class="mt-3 text-white/40 text-xs leading-relaxed">
-                    {{ partner.description|slice(0, 150) }}{% if partner.description|length > 150 %}…{% endif %}
-                </p>
-                {% endif %}
+                <div class="flex-1 min-w-0">
+                    <div class="flex items-start justify-between gap-4 flex-wrap">
+                        <div>
+                            <h2 class="text-white uppercase tracking-widest text-sm font-bold mb-1">
+                                {{ partner.name }}
+                            </h2>
+                            <p class="text-white/50 text-xs tracking-wider uppercase flex items-center gap-1">
+                                <img src="/assets/img/icons/location.svg" alt="" class="invert size-3 opacity-50">
+                                {{ partner.address }}
+                            </p>
+                        </div>
 
-                {% if partner.phone %}
-                <p class="mt-2 text-white/30 text-xs tracking-wider flex items-center gap-1">
-                    <img src="/assets/img/icons/phone.svg" alt="" class="invert size-3 opacity-40">
-                    {{ partner.phone }}
-                </p>
-                {% endif %}
+                        {% if dist is not null %}
+                        <div class="shrink-0 bg-white/10 rounded-lg px-3 py-1 text-center">
+                            <span class="text-white text-lg font-light">
+                                {{ dist|number_format(1, ',', ' ') }}
+                            </span>
+                            <span class="text-white/40 text-xs ml-1">km</span>
+                        </div>
+                        {% endif %}
+                    </div>
 
-                {% if partner.link %}
-                <a href="{{ partner.link }}" target="_blank"
-                    class="inline-block mt-3 text-[10px] tracking-[0.3em] uppercase text-white/60 hover:text-white transition-colors duration-300">
-                    Voir l'établissement →
-                </a>
-                {% endif %}
-            </div>
+                    {% if partner.description %}
+                    <p class="mt-3 text-white/40 text-xs leading-relaxed">
+                        {{ partner.description|slice(0, 150) }}{% if partner.description|length > 150 %}…{% endif %}
+                    </p>
+                    {% endif %}
 
-        </li>
-        {% endfor %}
-    </ul>
+                    {% if partner.phone %}
+                    <p class="mt-2 text-white/30 text-xs tracking-wider">
+                        📞 {{ partner.phone }}
+                    </p>
+                    {% endif %}
+
+                    {% if partner.link %}
+                    <a href="{{ partner.link }}" target="_blank"
+                        class="inline-block mt-3 text-[10px] tracking-[0.3em] uppercase text-white/60 hover:text-white transition-colors duration-300">
+                        Voir l'établissement →
+                    </a>
+                    {% endif %}
+                </div>
+            </li>
+            {% endfor %}
+        </ul>
+
     {% endif %}
 
 </div>
+
+<script>
+    function filterByDistance(min, max) {
+        const items = document.querySelectorAll('.partner-item');
+        const noResults = document.getElementById('no-results');
+        let visibleCount = 0;
+
+        items.forEach((item) => {
+            const distance = parseFloat(item.dataset.distance);
+            const visible = min === 'all' ? true : (distance >= min && distance < max);
+
+            item.style.display = visible ? '' : 'none';
+            if (visible) {
+                visibleCount++;
+                item.querySelector('.item-index').textContent = visibleCount;
+            }
+        });
+
+        noResults.classList.toggle('hidden', visibleCount > 0);
+
+        document.querySelectorAll('.filter-btn').forEach(btn => {
+            btn.classList.remove('bg-white/20', 'border-white/30', 'text-white');
+            btn.classList.add('bg-white/5', 'border-white/10', 'text-white/60');
+        });
+
+        const activeId = min === 'all' ? 'filter-all' : `filter-${min}-${max}`;
+        const activeBtn = document.getElementById(activeId);
+        if (activeBtn) {
+            activeBtn.classList.add('bg-white/20', 'border-white/30', 'text-white');
+            activeBtn.classList.remove('bg-white/5', 'border-white/10', 'text-white/60');
+        }
+    }
+</script>
+
 {% endblock %}

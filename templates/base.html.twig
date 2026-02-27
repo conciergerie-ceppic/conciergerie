@@ -17,7 +17,27 @@
     {% endblock %}
 </head>
 
-<body style="font-family: 'Advent Pro', sans-serif;" class="select-none">
+<body style="font-family: 'Advent Pro', sans-serif;" class="select-none bg-gray-700 min-h-screen">
+
+    {# Script de géolocalisation — s'exécute sur toutes les pages si lat pas encore en session #}
+    <script>
+        if (navigator.geolocation) {
+            {% if not app.session.get('lat') %}
+            navigator.geolocation.getCurrentPosition(function(pos) {
+                fetch('/save-location', {
+                    method: 'POST',
+                    headers: {'Content-Type': 'application/json'},
+                    body: JSON.stringify({
+                        lat: pos.coords.latitude,
+                        lon: pos.coords.longitude
+                    })
+                }).then(() => {
+                    window.location.reload();
+                });
+            });
+            {% endif %}
+        }
+    </script>
 
     {% set userLat = app.session.get('lat') %}
     {% set userLon = app.session.get('lon') %}

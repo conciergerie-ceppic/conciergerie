@@ -4,20 +4,6 @@
 
 {% block body %}
 
-<script>
- if (navigator.geolocation) {
-  navigator.geolocation.getCurrentPosition(function(pos) {
-    fetch('/save-location', {
-      method: 'POST',
-      headers: {'Content-Type': 'application/json'},
-      body: JSON.stringify({
-        lat: pos.coords.latitude,
-        lon: pos.coords.longitude
-      })
-    });
-  });
-}
-</script>
 
 <section class="min-h-screen bg-[url('/assets/img/hotel-service.png')] bg-cover bg-center text-white w-full">
     <h1 class="flex flex-col items-center justify-center h-screen pb-44 drop-shadow-[0_1px_2px_black] text-[4rem] md:text-[3.7rem] lg:text-[3.5rem]">Bienvenue dans la <span class="text-[#FDFAE1]">Conciergerie Premium</span></h1>
@@ -58,14 +44,11 @@ window.addEventListener('scroll', () => {
 <div class="card-container flex flex-col w-full lg:flex-row lg:flex-wrap gap-3 pt-10 justify-center">
 
 {% for service in services %}
-
-<div class="card w-full lg:w-[30%] h-[20vh] md:h-[30vh] bg-[url('/assets/img/{{service.value}}-service.png')] bg-cover bg-center rounded-sm shadow-md cursor-pointer hover:contrast-75" 
-onclick="window.location.href=`{{ path('app_service', {'nom': service.value}) }}`">
-<h3 class="text-white text-[4rem] md:text-[3rem] lg:text-3xl p-3 drop-shadow-[0_4px_2px_black]">{{ service.value|capitalize }}</h3>
+<div class="card w-full lg:w-[30%] h-[20vh] md:h-[30vh] bg-[url('/assets/img/{{service.name}}-service.png')] bg-cover bg-center rounded-sm shadow-md cursor-pointer hover:contrast-75"
+    onclick="window.location.href=`{{ path('app_service', {'nom': service.name}) }}`">
+    <h3 class="text-white text-[4rem] md:text-[3rem] lg:text-3xl p-3 drop-shadow-[0_4px_2px_black]">{{ service.name|capitalize }}</h3>
 </div>
-
 {% endfor %}
-
 </div>
 
 </section>
