@@ -16,6 +16,16 @@ class PartnerRepository extends ServiceEntityRepository
         parent::__construct($registry, Partner::class);
     }
 
+    public function findPartner($serviceId){
+         return $this->createQueryBuilder("p")
+         ->select("p.id AS id,p.name,p.address AS address, s.name AS serviceName,p.description,p.link")
+        ->join("p.service", "s")
+        ->where("s.id = :serviceId")
+        ->setParameter("serviceId", $serviceId)
+        ->getQuery()
+        ->getArrayResult()
+        ;
+     }
 //    /**
 //     * @return Partner[] Returns an array of Partner objects
 //     */

@@ -7,6 +7,7 @@ use Doctrine\Common\Collections\ArrayCollection;
 use Doctrine\Common\Collections\Collection;
 use Doctrine\ORM\Mapping as ORM;
 
+
 #[ORM\Entity(repositoryClass: PartnerRepository::class)]
 class Partner
 {
@@ -24,22 +25,25 @@ class Partner
     #[ORM\Column(length: 255)]
     private ?string $phone = null;
 
+    #[ORM\Column(type: 'text', nullable: true)]
+    private ?string $description = null;
+
+    #[ORM\Column(length: 255, nullable: true)]
+    private ?string $link = null;
+
+    #[ORM\ManyToOne(targetEntity: Service::class, inversedBy: 'partners')]
+    #[ORM\JoinColumn(name: 'service_id', referencedColumnName: 'id', nullable: true)]
+    private ?Service $service = null;
+
     /**
      * @var Collection<int, UserFavoritePartner>
      */
     #[ORM\OneToMany(targetEntity: UserFavoritePartner::class, mappedBy: 'partner_id')]
     private Collection $userFavoritePartners;
 
-    /**
-     * @var Collection<int, Service>
-     */
-    #[ORM\OneToMany(targetEntity: Service::class, mappedBy: 'partner')]
-    private Collection $services;
-
     public function __construct()
     {
         $this->userFavoritePartners = new ArrayCollection();
-        $this->services = new ArrayCollection();
     }
 
     public function getId(): ?int
@@ -55,7 +59,6 @@ class Partner
     public function setName(string $name): static
     {
         $this->name = $name;
-
         return $this;
     }
 
@@ -67,7 +70,6 @@ class Partner
     public function setAddress(string $address): static
     {
         $this->address = $address;
-
         return $this;
     }
 
@@ -79,7 +81,39 @@ class Partner
     public function setPhone(string $phone): static
     {
         $this->phone = $phone;
+        return $this;
+    }
 
+    public function getDescription(): ?string
+    {
+        return $this->description;
+    }
+
+    public function setDescription(?string $description): static
+    {
+        $this->description = $description;
+        return $this;
+    }
+
+    public function getLink(): ?string
+    {
+        return $this->link;
+    }
+
+    public function setLink(?string $link): static
+    {
+        $this->link = $link;
+        return $this;
+    }
+
+    public function getService(): ?Service
+    {
+        return $this->service;
+    }
+
+    public function setService(?Service $service): static
+    {
+        $this->service = $service;
         return $this;
     }
 
@@ -97,49 +131,16 @@ class Partner
             $this->userFavoritePartners->add($userFavoritePartner);
             $userFavoritePartner->setPartnerId($this);
         }
-
         return $this;
     }
 
     public function removeUserFavoritePartner(UserFavoritePartner $userFavoritePartner): static
     {
         if ($this->userFavoritePartners->removeElement($userFavoritePartner)) {
-            // set the owning side to null (unless already changed)
             if ($userFavoritePartner->getPartnerId() === $this) {
                 $userFavoritePartner->setPartnerId(null);
             }
         }
-
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Service>
-     */
-    public function getServices(): Collection
-    {
-        return $this->services;
-    }
-
-    public function addService(Service $service): static
-    {
-        if (!$this->services->contains($service)) {
-            $this->services->add($service);
-            $service->setPartner($this);
-        }
-
-        return $this;
-    }
-
-    public function removeService(Service $service): static
-    {
-        if ($this->services->removeElement($service)) {
-            // set the owning side to null (unless already changed)
-            if ($service->getPartner() === $this) {
-                $service->setPartner(null);
-            }
-        }
-
         return $this;
     }
 }

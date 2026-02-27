@@ -1,79 +1,78 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Service - {{ nom|capitalize }}{% endblock %}
+{% block title %}Service - {{ service.name|capitalize }}{% endblock %}
 
 {% block body %}
 <div class="min-h-screen pt-52 pb-20 px-6 max-w-4xl mx-auto">
 
-
     <div class="mb-12 text-center">
         <p class="text-xs tracking-[0.4em] text-white/40 uppercase mb-2">Résultats de recherche</p>
         <h1 class="text-6xl uppercase tracking-widest text-white drop-shadow-[0_1px_1px_black] mb-4">
-            {{ nom|capitalize }}
+            {{ service.name|capitalize }}
         </h1>
         <div class="h-px w-32 mx-auto bg-gradient-to-r from-transparent via-white/40 to-transparent"></div>
     </div>
 
-
-    {% if services is empty %}
+    {% if partners is empty %}
     <p class="text-center text-white/40 tracking-widest text-sm uppercase mt-20">
         Aucun établissement trouvé.
     </p>
     {% else %}
     <ul class="space-y-4">
-        {% for service in services %}
-        <li
-            class="group flex items-start gap-6 bg-black/40 hover:bg-black/60 transition-colors duration-300 rounded-xl px-6 py-5 backdrop-blur-sm border border-white/10">
-
+        {% for partner in partners %}
+        <li class="group flex items-start gap-6 bg-black/40 hover:bg-black/60 transition-colors duration-300 rounded-xl px-6 py-5 backdrop-blur-sm border border-white/10">
 
             <div class="text-4xl text-white/20 font-bold w-10 text-right shrink-0 select-none pt-1">
                 {{ loop.index }}
             </div>
 
-
             <div class="flex-1 min-w-0">
                 <div class="flex items-start justify-between gap-4 flex-wrap">
                     <div>
                         <h2 class="text-white uppercase tracking-widest text-sm font-bold mb-1">
-                            {{ service['name'] }}
+                            {{ partner.name }}
                         </h2>
                         <p class="text-white/50 text-xs tracking-wider uppercase flex items-center gap-1">
                             <img src="/assets/img/icons/location.svg" alt="" class="invert size-3 opacity-50">
-                            {{ service['address'] }}
+                            {{ partner.address }}
                         </p>
                     </div>
 
-
-                    {% if service['distance'] is defined and service['distance'] < 99999 %} <div
-                        class="shrink-0 bg-white/10 rounded-lg px-3 py-1 text-center">
+                    {% if partner.distance is defined and partner.distance < 99999 %}
+                    <div class="shrink-0 bg-white/10 rounded-lg px-3 py-1 text-center">
                         <span class="text-white text-lg font-light">
-                            {{ service['distance']|number_format(1, ',', ' ') }}
+                            {{ partner.distance|number_format(1, ',', ' ') }}
                         </span>
                         <span class="text-white/40 text-xs ml-1">km</span>
+                    </div>
+                    {% endif %}
                 </div>
+
+                {% if partner.description %}
+                <p class="mt-3 text-white/40 text-xs leading-relaxed">
+                    {{ partner.description|slice(0, 150) }}{% if partner.description|length > 150 %}…{% endif %}
+                </p>
+                {% endif %}
+
+                {% if partner.phone %}
+                <p class="mt-2 text-white/30 text-xs tracking-wider flex items-center gap-1">
+                    <img src="/assets/img/icons/phone.svg" alt="" class="invert size-3 opacity-40">
+                    {{ partner.phone }}
+                </p>
+                {% endif %}
+
+                {% if partner.link %}
+                <a href="{{ partner.link }}" target="_blank"
+                    class="inline-block mt-3 text-[10px] tracking-[0.3em] uppercase text-white/60 hover:text-white transition-colors duration-300">
+                    Voir l'établissement →
+                </a>
                 {% endif %}
             </div>
 
-
-            {% if service['description'] %}
-            <p class="mt-3 text-white/40 text-xs leading-relaxed">
-                {{ service['description']|slice(0, 150) }}{% if service['description']|length > 150 %}…{% endif %}
-            </p>
-            {% endif %}
-
-
-            {% if service['link'] %}
-            <a href="{{ service['link'] }}" target="_blank"
-                class="inline-block mt-3 text-[10px] tracking-[0.3em] uppercase text-white/60 hover:text-white transition-colors duration-300">
-                Voir l'établissement →
-            </a>
-            {% endif %}
-</div>
-
-</li>
-{% endfor %}
-</ul>
-{% endif %}
+        </li>
+        {% endfor %}
+    </ul>
+    {% endif %}
 
 </div>
 {% endblock %}
