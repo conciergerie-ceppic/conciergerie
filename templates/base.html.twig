@@ -17,18 +17,34 @@
     {% endblock %}
 </head>
 
-<body style="font-family: 'Advent Pro', sans-serif;" class="select-none">
+<body style="font-family: 'Advent Pro', sans-serif;" class="select-none ">
 
     {% set userLat = app.session.get('lat') %}
     {% set userLon = app.session.get('lon') %}
 
     {% if userLat and userLon %}
-        <div id="map" class="hidden lg:flex h-[20rem] w-[20rem] fixed rounded-md bottom-0 right-0 mr-5 mb-20 opacity-90 z-50"></div>
+      
+    <div id="map" class="invisible h-[40rem] w-[40rem] lg:h-[20rem] lg:w-[20rem] fixed rounded-md bottom-0 right-0 mr-5 mb-20 opacity-90 z-50"></div>
+    <button id="toogleMap" class="px-6 py-5 md:text-lg lg:text-sm lg:px-3 lg:py-2 bg-white rounded-md fixed bottom-20 shadow-md w-[20rem] right-5 z-50 cursor-pointer" onclick="toogleMap()">
+     Afficher/Masquer la carte
+    </button>
+
+       <script>
+                const toogleMap = ()=> {
+                    const map = document.getElementById("map");
+                    if (map.classList.contains("invisible")) {
+                        map.classList.remove("invisible");
+                      
+                    } else {
+                        map.classList.add("invisible");
+                    }
+                }
+       </script>
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                const lat = {{ userLat }};
-                const lon = {{ userLon }};
+                const lat = "{{ userLat }}";
+                const lon = "{{ userLon }}";
                 const ville = "{{ app.session.get('ville')|e('js') }}";
 
                 const map = L.map('map').setView([lat, lon], 13);

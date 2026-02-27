@@ -23,8 +23,21 @@
     <h1 class="flex flex-col items-center justify-center h-screen pb-44 drop-shadow-[0_1px_2px_black] text-[4rem] md:text-[3.7rem] lg:text-[3.5rem]">Bienvenue dans la <span class="text-[#FDFAE1]">Conciergerie Premium</span></h1>
 </section>
 
-<section id="presentation" class="h-[50vh] lg:min-h-screen bg-[url('/assets/img/earth-5.png')] bg-cover bg-center relative ">
+<section id="presentation" class="h-[50vh] lg:min-h-screen bg-[url('/assets/img/earth-5.png')] bg-cover bg-center relative 
+[&_h3]:text-6xl text-white [&_p]:text-5xl [&_div]:drop-shadow-[0_1px_4px_black] [&_span]:text-4xl flex justify-center items-center text-center
+[&_span]:font-bold">
+<div>
+  <h3 class="pb-5">Nos chiffres clés</h3>
+  <p><span>98 %</span> de clients satisfaits</p>
+  <p><span>+ 1200</span> demandes traitées par mois</p>
+</div>
+
   <img id="boat" src="/assets/img/plane.png" alt="Bateau" class="absolute left-1/2 top-[100px] w-80 z-50 -translate-x-1/2">
+
+  <div>
+    <h3>Service Disponible</h3>
+    <span>24/7</span>
+  </div>
 </section>
 
 <script>
@@ -71,7 +84,7 @@ onclick="window.location.href=`{{ path('app_service', {'nom': service.value}) }}
 </section>
 
 <section id="infos" class="pt-20  bg-[url('/assets/img/blur-2.png')] bg-cover bg-center lg:min-h-screen text-white mt-5 pb-10 lg:pb-0">
-<h2 class="text-[5rem] lg:text-[3rem] md:text-[3.5rem] text-center lg:pt-10 ">Qui sommes nous ?</h2>
+<h2 class="text-[5rem] lg:text-[3rem] md:text-[3.5rem] text-center lg:pt-10 drop-shadow-[0_1px_2px_black]">Qui sommes nous ?</h2>
 </br>
 <div class="flex justify-center px-5">
   <div class="lg:w-2/3 bg-black/40 rounded-xl p-20 text-5xl lg:text-2xl">
