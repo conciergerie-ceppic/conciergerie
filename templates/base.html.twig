@@ -17,12 +17,12 @@
     {% endblock %}
 </head>
 
-<body style="font-family: 'Advent Pro', sans-serif;" class="select-none bg-gray-700 min-h-screen">
+<body style="font-family: 'Advent Pro', sans-serif;" class="select-none min-h-screen">
 
     {# Script de géolocalisation — s'exécute sur toutes les pages si lat pas encore en session #}
     <script>
         if (navigator.geolocation) {
-            {% if not app.session.get('lat') %}
+            "{% if not app.session.get('lat') %}"
             navigator.geolocation.getCurrentPosition(function(pos) {
                 fetch('/save-location', {
                     method: 'POST',
@@ -35,7 +35,7 @@
                     window.location.reload();
                 });
             });
-            {% endif %}
+            '{% endif %}'
         }
     </script>
 
@@ -43,12 +43,28 @@
     {% set userLon = app.session.get('lon') %}
 
     {% if userLat and userLon %}
-        <div id="map" class="hidden lg:flex h-[20rem] w-[20rem] fixed rounded-md bottom-0 right-0 mr-5 mb-20 opacity-90 z-50"></div>
+      
+    <div id="map" class="invisible h-[40rem] w-[40rem] lg:h-[20rem] lg:w-[20rem] fixed rounded-md bottom-0 right-0 mr-5 mb-20 opacity-90 z-50"></div>
+    <button id="toogleMap" class="px-6 py-5 md:text-lg lg:text-sm lg:px-3 lg:py-2 bg-white rounded-md fixed bottom-20 shadow-md w-[20rem] right-5 z-50 cursor-pointer" onclick="toogleMap()">
+     Afficher/Masquer la carte
+    </button>
+
+       <script>
+                const toogleMap = ()=> {
+                    const map = document.getElementById("map");
+                    if (map.classList.contains("invisible")) {
+                        map.classList.remove("invisible");
+                      
+                    } else {
+                        map.classList.add("invisible");
+                    }
+                }
+       </script>
 
         <script>
             document.addEventListener('DOMContentLoaded', function () {
-                const lat = {{ userLat }};
-                const lon = {{ userLon }};
+                const lat = "{{ userLat }}";
+                const lon = "{{ userLon }}";
                 const ville = "{{ app.session.get('ville')|e('js') }}";
 
                 const map = L.map('map').setView([lat, lon], 13);
@@ -82,13 +98,13 @@
             <li><a class="px-4 py-2 hover:text-white/70" href="#infos">Qui sommes-nous ?</a></li>
 
             <li class="relative group">
-                <a class="px-4 py-2 hover:text-white/70" href="#services">Services</a>
+                <a class="py-2 hover:text-white/70" href="#services">Services</a>
 
                 <div class="absolute left-0 top-full
                             hidden group-hover:block
                             z-50
                             min-w-[180px]
-                            p-6 bg-slate-500/95 rounded shadow-lg">
+                            p-6 bg-black/40 rounded shadow-lg">
                     <ul class="space-y-2">
                         <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'hotel'}) }}">Hôtel</a></li>
                         <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'restaurant'}) }}">Restauration</a></li>
