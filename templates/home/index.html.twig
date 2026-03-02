@@ -41,21 +41,21 @@
 </section>
 
 <script>
-window.addEventListener('scroll', () => {
-  const boat = document.getElementById('boat');
-  const presentation = document.getElementById('presentation');
-  if (!boat || !presentation) return;
-  // Position initiale du bateau
-  const initialTop = 100;
-  // Hauteur max de la section présentation
-  const sectionHeight = presentation.offsetHeight;
-  // Scroll relatif à la section
-  const scrollY = Math.max(window.scrollY - presentation.offsetTop, -150);
-  // Limite le déplacement max à la fin de la section
-  const maxY = sectionHeight - boat.offsetHeight - 120;
-  let y = Math.min(scrollY, maxY);
-  boat.style.transform = `translateX(-50%) translateY(${y}px) rotate(180deg)`;
-});
+  window.addEventListener('scroll', () => {
+    const boat = document.getElementById('boat');
+    const presentation = document.getElementById('presentation');
+    if (!boat || !presentation) return;
+    // Position initiale du bateau
+    const initialTop = 100;
+    // Hauteur max de la section présentation
+    const sectionHeight = presentation.offsetHeight;
+    // Scroll relatif à la section
+    const scrollY = Math.max(window.scrollY - presentation.offsetTop, -150);
+    // Limite le déplacement max à la fin de la section
+    const maxY = sectionHeight - boat.offsetHeight - 120;
+    let y = Math.min(scrollY, maxY);
+    boat.style.transform = `translateX(-50%) translateY(${y}px) rotate(180deg)`;
+  });
 </script>
 
 <section id="member" class="flex flex-col lg:flex-row w-full lg:justify-center text-center lg:[&_div]:w-1/2 [&_div]:p-20 [&_a]:text-5xl lg:[&_a]:text-2xl text-white ">
@@ -84,7 +84,7 @@ onclick="window.location.href=`{{ path('app_service', {'nom': service.value}) }}
 
 {% endif %}
 
-</div>
+  </div>
 
 </section>
 
@@ -97,7 +97,7 @@ onclick="window.location.href=`{{ path('app_service', {'nom': service.value}) }}
       <p class="md:text-[2.5rem] lg:text-[1.5rem]">Premium Conciergerie réinvente un métier d’exception, alliant discrétion, efficacité et empathie. Grâce à un réseau international et des partenaires de confiance, nous offrons à nos membres des services uniques et des avantages exclusifs, pour répondre à chaque demande avec excellence.</p>
   </div>
 
-</div>
+  </div>
 </section>
 
 <section id="contact" class="pt-20">
@@ -123,15 +123,16 @@ onclick="window.location.href=`{{ path('app_service', {'nom': service.value}) }}
           <option value="membre">Devenir membre</option>
           <option id="devis" value="devis">Demande de devis</option>
           <option value="autre">Autre demande</option>
-      </select>
-    </div>
+        </select>
+      </div>
       <div>
         <textarea name="content" id="content" placeholder="Votre message"></textarea>
       </div>
-      <div class=" bg-black/80 text-white inline py-3 rounded-md hover:bg-black/60"><input type="submit" value="Soumettre" class="cursor-pointer"></div>
+      <div class=" bg-black/80 text-white inline py-3 rounded-md hover:bg-black/60"><input type="submit"
+          value="Soumettre" class="cursor-pointer"></div>
     </form>
 
-     </div>
-    
+  </div>
+
 </section>
 {% endblock %}

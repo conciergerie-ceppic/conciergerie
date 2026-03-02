@@ -32,6 +32,27 @@ final class HomeController extends AbstractController
         ]);
     }
 
+    #[Route('/uploadAvatar', name: 'upload_avatar')]
+    public function uploadAvatar(Request $request, UserRepository $userRepository): Response
+    {
+        $avatar = $request->files->get('avatar');
+        // dd($avatar);
+        $directory = $this->getParameter('avatars_directory').'/';
+        // dd($directory);
+        $error = [];
+        $originalName = $avatar->getClientOriginalName();
+        $originalName = explode('.', $originalName);
+        $pathName = $avatar->getPathname();
+        // dd($originalName);
+        // dd($pathName);
+        $image = new \Gumlet\ImageResize($pathName);
+        $image->resizeToWidth(48);
+        $image->save($directory .$originalName[0].".webp", IMAGETYPE_WEBP);
+        
+        // supprimer l'image ou l'uploader dans un catalogue si assez de temps
+        $userRepository->setAvatar($this->getUser()->getId() ,$originalName[0].".webp"); 
+        return $this->redirectToRoute('app_home');
+    }
     /// Autres méthodes
 
     // Récupère la liste des services dans Enum
