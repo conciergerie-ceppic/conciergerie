@@ -4,8 +4,8 @@
 
 {% block body %}
 <div class="border bg-black h-screen flex flex-col items-center justify-center">
-    <form method="post" class="flex flex-col items-center text-white [&_input]:text-white [&_input]:py-1 [&_input]:px-5 gap-3
-     [&_input]:rounded-sm [&_input]:w-[20vw] [&_input]:outline-none [&_input]:border-gray-700 
+    <form method="post" class="flex flex-col items-center text-white [&_input]:text-white [&_input]:py-1 [&_input]:px-3 gap-3
+     [&_input]:w-[20vw] [&_input]:outline-none [&_input]:border-gray-700 [&_input]:border [&_input]:rounded-md
      [&_label]:text-lg  [&_input]:bg-transparent  [&_input]:placeholder-white/50">
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
