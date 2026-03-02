@@ -6,11 +6,18 @@
 
 <div class="w-full min-h-screen bg-black text-white flex justify-center items-center flex-col text-center px-5 ">
 
+    {% if error %}
+<h1 class="text-3xl flex flex-col text-red-600">{{error}} </h1>
+    <a href="{{path('app_home')}}#contact" class="text-yellow-500 no-underline text-2xl mt-5 hover:text-yellow-500/70">Retour au contact</a>
+
+    {% else %}
     <h1 class="text-3xl flex flex-col">Merci {{first_name}}, votre demande de contact a bien été transmise,
         vous allez recevoir une confirmation par mail. <span>Notre équipe prendra contact avec vous au plus vite. </span>
     </h1>
-    
     <a href="{{path('app_home')}}" class="text-yellow-500 no-underline text-2xl mt-5 hover:text-yellow-500/70">Retour à la page d'accueil</a>
+
+    {% endif %}
+    
 
 </div>
 {% endblock %}
