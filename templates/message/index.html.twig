@@ -1,20 +1,16 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}Hello MessageController!{% endblock %}
+{# {% block title %}Confirmation de contact{% endblock %} #}
 
 {% block body %}
-<style>
-    .example-wrapper { margin: 1em auto; max-width: 800px; width: 95%; font: 18px/1.5 sans-serif; }
-    .example-wrapper code { background: #F5F5F5; padding: 2px 6px; }
-</style>
 
-<div class="example-wrapper">
-    <h1>Hello {{ controller_name }}! ✅</h1>
+<div class="w-full min-h-screen bg-black text-white flex justify-center items-center flex-col text-center px-5 ">
 
-    This friendly message is coming from:
-    <ul>
-        <li>Your controller at <code>/Applications/MAMP/htdocs/CEPPIC/PROJET GROUPE/conciergerie/conciergerie/src/Controller/MessageController.php</code></li>
-        <li>Your template at <code>/Applications/MAMP/htdocs/CEPPIC/PROJET GROUPE/conciergerie/conciergerie/templates/message/index.html.twig</code></li>
-    </ul>
+    <h1 class="text-3xl flex flex-col">Merci {{first_name}}, votre demande de contact a bien été transmise,
+        vous allez recevoir une confirmation par mail. <span>Notre équipe prendra contact avec vous au plus vite. </span>
+    </h1>
+    
+    <a href="{{path('app_home')}}" class="text-yellow-500 no-underline text-2xl mt-5 hover:text-yellow-500/70">Retour à la page d'accueil</a>
+
 </div>
 {% endblock %}

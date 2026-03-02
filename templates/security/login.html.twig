@@ -3,21 +3,24 @@
 {% block title %}Log in!{% endblock %}
 
 {% block body %}
-<div class="border bg-black h-screen text-white flex items-center justify-center">
-    <form method="post" class="flex flex-col ">
+<div class="border bg-black h-screen flex items-center justify-center">
+    <form method="post" class="flex flex-col items-center text-white [&_input]:text-white [&_input]:py-1 [&_input]:px-5 gap-3
+     [&_input]:rounded-sm [&_input]:w-[20vw] [&_input]:outline-none [&_input]:border-gray-700 
+     [&_label]:text-lg  [&_input]:bg-transparent  [&_input]:placeholder-white/50">
         {% if error %}
             <div class="alert alert-danger">{{ error.messageKey|trans(error.messageData, 'security') }}</div>
         {% endif %}
 
-        <h1 class="h3 mb-3 font-weight-normal text-center">Please sign in</h1>
-        <label for="username">Email</label>
-        <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control" autocomplete="email" required autofocus>
-        <label for="password">Password</label>
+        <h1 class="h3 mb-3 font-weight-normal text-center text-4xl">Veuillez vous connecter</h1>
+        <label for="username">Addresse Mail</label>
+        <input type="email" value="{{ last_username }}" name="_username" id="username" class="form-control " autocomplete="email" required >
+        <label for="password">Mot de Passe</label>
         <input type="password" name="_password" id="password" class="form-control" autocomplete="current-password" required>
         <input type="hidden" name="_csrf_token" data-controller="csrf-protection" value="{{ csrf_token('authenticate') }}">
-        <button class="btn btn-lg btn-primary" type="submit">
-            Sign in
+        <button class="btn btn-lg btn-primary text-3xl border w-full border-[#FACC14] rounded-md mt-5 hover:bg-[#FACC14]/80" type="submit">
+            Valider
         </button>
     </form>
 </div>
 {% endblock %}
+

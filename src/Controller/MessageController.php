@@ -24,16 +24,18 @@ final class MessageController extends AbstractController
         $email = $data["email"];
         $phone = $data["phone"];
         $subject = $data["subject"];
+        $content = $data["content"];
         $message->setFirstName($first_name);
         $message->setLastName($last_name);
         $message->setEmail($email);
         $message->setPhone($phone);
         $message->setSubject($subject);
+        $message->setContent($content);
         $message->setCreatedAt(new DateTimeImmutable());
         $emi->persist($message);
         $emi->flush();
         return $this->render('message/index.html.twig', [
-            'controller_name' => 'MessageController',
+            'first_name' => $first_name,
         ]);
     }
 }

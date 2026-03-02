@@ -59,10 +59,10 @@ window.addEventListener('scroll', () => {
 </script>
 
 <section id="member" class="flex flex-col lg:flex-row w-full lg:justify-center text-center lg:[&_div]:w-1/2 [&_div]:p-20 [&_a]:text-5xl lg:[&_a]:text-2xl text-white ">
-<div class="bg-[#827364]/40"><a class="hover:text-white/70" href="">Devenir collaborateur</a>
+<div class="bg-[#827364]/40"><a class="hover:text-white/70" href="{{path('app_register')}}">Devenir collaborateur</a>
 </div>
-<div class="text-black"><a class="hover:text-black/60" href="">Devenir membre</a></div>
-<div class="bg-[#827364]/40"><a class="hover:text-white/70" href="">Demander un devis</a></div>
+<div class="text-black"><a class="hover:text-black/60" href="{{path('app_register')}}">Devenir membre</a></div>
+<div class="bg-[#827364]/40"><a class="hover:text-white/70" href="#contact" onclick="document.getElementById('subject').value='devis'">Demander un devis</a></div>
 </section>
 
 <section id="services" class="min-h-screen pt-20">
@@ -116,7 +116,7 @@ onclick="window.location.href=`{{ path('app_service', {'nom': service.value}) }}
           <option value="retour">Retour d'expérience</option>
           <option value="collaborateur">Devenir collaborateur</option>
           <option value="membre">Devenir membre</option>
-          <option value="devis">Demande de devis</option>
+          <option id="devis" value="devis">Demande de devis</option>
           <option value="autre">Autre demande</option>
       </select>
     </div>
