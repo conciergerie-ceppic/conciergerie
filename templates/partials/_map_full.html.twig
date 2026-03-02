@@ -1,0 +1,20 @@
+<div id="mapfull" class="h-[40vh] w-full rounded-md mt-10 z-30 "></div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function () {
+        const lat = "{{ app.session.get('lat') }}";
+        const lon = "{{ app.session.get('lon') }}";
+        const ville = "{{ app.session.get('ville')|e('js') }}";
+
+        const map = L.map('mapfull', { scrollWheelZoom: false }).setView([lat, lon], 13);
+
+        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+            attribution: '&copy; OpenStreetMap contributors',
+            maxZoom: 19
+        }).addTo(map);
+
+        L.marker([lat, lon]).addTo(map)
+            .bindPopup(ville ? ville : 'Vous êtes ici')
+            .openPopup();
+    });
+</script>
