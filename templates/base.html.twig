@@ -17,9 +17,10 @@
     {% endblock %}
 </head>
 
-<body style="font-family: 'Advent Pro', sans-serif;" class="select-none bg-gray-700 min-h-screen">
+{% set isService = app.request.attributes.get('_route') == 'app_service' %}
 
-    {# Script de géolocalisation — s'exécute sur toutes les pages si lat pas encore en session #}
+<body style="font-family: 'Advent Pro', sans-serif;" class="select-none {{ isService ? 'bg-gray-700' : 'bg-white' }} min-h-screen">
+
     <script>
         if (navigator.geolocation) {
             {% if not app.session.get('lat') %}
@@ -61,6 +62,8 @@
                 L.marker([lat, lon]).addTo(map)
                     .bindPopup(ville ? ville : 'Vous êtes ici')
                     .openPopup();
+
+                {% block map_markers %}{% endblock %}
             });
         </script>
     {% endif %}
@@ -114,7 +117,6 @@
 
     <main class="w-full flex-1">
         {% block body %}
-        {# Home #}
         {% endblock %}
     </main>
 

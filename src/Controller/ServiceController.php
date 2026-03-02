@@ -24,7 +24,6 @@ final class ServiceController extends AbstractController
             throw $this->createNotFoundException("Service \"$nom\" introuvable.");
         }
 
-        // Si l'utilisateur n'est pas connecté, on affiche juste la description
         if (!$this->getUser()) {
             return $this->render('service/description.html.twig', [
                 'service' => $service,
@@ -37,16 +36,21 @@ final class ServiceController extends AbstractController
 
         $partners = $service->getPartners()->toArray();
         $distances = [];
+        $partnerCoords = [];
 
         if ($userLat && $userLon) {
             foreach ($partners as $partner) {
                 $coords = $this->convertAdress($partner->getAddress(), $client);
-                $distances[$partner->getId()] = $coords
-                    ? $this->haversine($userLat, $userLon, (float)$coords['lat'], (float)$coords['lon'])
-                    : null;
+
+                if ($coords) {
+                    $partnerCoords[$partner->getId()] = $coords;
+                    $distances[$partner->getId()] = $this->haversine(
+                        $userLat, $userLon,
+                        (float)$coords['lat'], (float)$coords['lon']
+                    );
+                }
             }
 
-            // Trie les partners du plus proche au plus loin
             usort($partners, function($a, $b) use ($distances) {
                 $dA = $distances[$a->getId()] ?? PHP_FLOAT_MAX;
                 $dB = $distances[$b->getId()] ?? PHP_FLOAT_MAX;
@@ -55,9 +59,10 @@ final class ServiceController extends AbstractController
         }
 
         return $this->render('service/index.html.twig', [
-            'service'   => $service,
-            'partners'  => $partners,
-            'distances' => $distances,
+            'service'       => $service,
+            'partners'      => $partners,
+            'distances'     => $distances,
+            'partnerCoords' => $partnerCoords,
         ]);
     }
 
