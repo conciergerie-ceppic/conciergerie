@@ -18,13 +18,19 @@ final class MessageController extends AbstractController
     public function index(Request $req, MessageRepository $MsgRepo, EntityManagerInterface $emi): Response
     {
         $data = $req->request->all();
+         if (!$data ) {
+          $error = "Veuillez renseigner tout les champs";
+          return $this->render("home/index.html.twig", [
+            'error' => $error,
+          ]); 
+         }
         $message = new Message();
-        $first_name = $data["first_name"];
-        $last_name = $data["last_name"];
-        $email = $data["email"];
-        $phone = $data["phone"];
-        $subject = $data["subject"];
-        $content = $data["content"];
+        $first_name = $data["first_name"] ?? '';
+        $last_name = $data["last_name"] ?? '';
+        $email = $data["email"] ?? '';
+        $phone = $data["phone"] ?? '';
+        $subject = $data["subject"] ?? '';
+        $content = $data["content"] ?? '';
         $message->setFirstName($first_name);
         $message->setLastName($last_name);
         $message->setEmail($email);

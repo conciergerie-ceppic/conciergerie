@@ -22,9 +22,7 @@ final class HomeController extends AbstractController
         $lon = $session->get('lon');
         $ville = $this->getVille($hci,(float)$lat,(float)$lon);
         $session->set('ville',$ville);
-         $user = $this->getUser();
-        $roles = $user ? $user->getRoles() : [];
-    // var_dump($roles); // Supprimé pour éviter l'envoi prématuré des headers
+
         return $this->render('home/index.html.twig', [
             'services' => $services,
             'lat' => $lat,
@@ -55,7 +53,7 @@ final class HomeController extends AbstractController
         $session->set('lat', $lat);
         $session->set('lon', $lon);
 
-        return new Response('ok');
+        return $this->redirectToRoute('app_home');
     }
 
     // API pour définir la ville selon la localisation
@@ -65,4 +63,5 @@ final class HomeController extends AbstractController
         $data = $response->toArray();
         return $data['address']['town'] ?? null;
     }
+
 }

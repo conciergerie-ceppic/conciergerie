@@ -70,6 +70,7 @@ window.addEventListener('scroll', () => {
 
 <div class="card-container flex flex-col w-full lg:flex-row lg:flex-wrap gap-3 pt-10 justify-center">
 
+  {% if services is defined %}
 {% for service in services %}
 
 <div class="card w-full lg:w-[30%] h-[20vh] md:h-[30vh] bg-[url('/assets/img/{{service.value}}-service.png')] bg-cover bg-center rounded-sm shadow-md cursor-pointer hover:contrast-75" 
@@ -78,6 +79,10 @@ onclick="window.location.href=`{{ path('app_service', {'nom': service.value}) }}
 </div>
 
 {% endfor %}
+{% else %}
+<h3 class="text-white text-[4rem] md:text-[3rem] lg:text-3xl p-3 drop-shadow-[0_4px_2px_black]">Pas de service disponible</h3>
+
+{% endif %}
 
 </div>
 
