@@ -100,16 +100,16 @@ onclick="window.location.href=`{{ path('app_service', {'nom': service.value}) }}
 
     <div class=" w-full flex flex-col items-center mb-5">
 
-    <form action="" method="post" class="lg:border lg:rounded-lg py-10 px-10 w-full lg:w-2/3 mt-5 lg:text-2xl text-5xl space-y-10 lg:space-y-5 shadow-md
+    <form action="{{path('app_message')}}" method="post" class="lg:border lg:rounded-lg py-10 px-10 w-full lg:w-2/3 mt-5 lg:text-2xl text-5xl space-y-10 lg:space-y-5 shadow-md
     [&_textarea]:w-full [&_textarea]:h-48 lg:[&_textarea]:h-32 [&_textarea]:outline-none [&_textarea]:px-
     [&_select]:outline-none [&_select]:cursor-pointer
      [&_input]:w-full [&_input]:outline-none">
-      <div><input type="text" placeholder="Entrez votre prénom" name="nom"></div>
-      <div><input type="text" placeholder="Entrez votre nom" name="prenom"></div>
+      <div><input type="text" placeholder="Entrez votre prénom" name="first_name"></div>
+      <div><input type="text" placeholder="Entrez votre nom" name="last_name"></div>
       <div><input type="email" placeholder="Entrez votre addresse mail" name="email"></div>
-      <div><input type="tel" placeholder="Entrez votre numéro de téléphone" name="tel"></div>
+      <div><input type="tel" placeholder="Entrez votre numéro de téléphone" name="phone"></div>
       <div>
-      <select name="sujet" id="sujet">
+      <select name="subject" id="subject">
           <option value="">Sélectionnez un sujet</option>
           <option value="remboursement">Demande de remboursement</option>
           <option value="question">Question sur un service</option>
@@ -121,7 +121,7 @@ onclick="window.location.href=`{{ path('app_service', {'nom': service.value}) }}
       </select>
     </div>
       <div>
-        <textarea name="message" id="message" placeholder="Votre message"></textarea>
+        <textarea name="content" id="content" placeholder="Votre message"></textarea>
       </div>
       <div class=" bg-black/80 text-white inline py-3 rounded-md hover:bg-black/60"><input type="submit" value="Soumettre" class="cursor-pointer"></div>
     </form>
