@@ -19,7 +19,7 @@
 
 {% set isService = app.request.attributes.get('_route') == 'app_service' %}
 
-<body style="font-family: 'Advent Pro', sans-serif; {{ isService ? 'background-color: #EEE6D8;' : 'background-color: white;' }}" class="select-none min-h-screen">
+<body style="font-family: 'Advent Pro', sans-serif; {{ isService ? 'background-color: #ECF8F6;' : 'background-color: white;' }}" class="select-none min-h-screen">
 
     <script>
         if (navigator.geolocation) {
@@ -68,7 +68,7 @@
                 const lon = "{{ userLon }}";
                 const ville = "{{ app.session.get('ville')|e('js') }}";
 
-                const map = L.map('map').setView([lat, lon], 13);
+                window.map = L.map('map').setView([lat, lon], 13);
 
                 L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
                     attribution: '&copy; OpenStreetMap contributors',
