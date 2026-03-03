@@ -19,7 +19,7 @@
 
 {% set isService = app.request.attributes.get('_route') == 'app_service' %}
 
-<body style="font-family: 'Advent Pro', sans-serif;" class="select-none {{ isService ? 'bg-gray-700' : 'bg-white' }} min-h-screen">
+<body style="font-family: 'Advent Pro', sans-serif; {{ isService ? 'background-color: #EEE6D8;' : 'background-color: white;' }}" class="select-none min-h-screen">
 
     <script>
         if (navigator.geolocation) {
