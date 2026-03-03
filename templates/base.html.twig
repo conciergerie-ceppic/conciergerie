@@ -82,6 +82,7 @@
                 {% block map_markers %}{% endblock %}
             });
         </script>
+        {% include 'partials/_map.html.twig' %}
     {% endif %}
 
     <nav class="flex flex-col items-center w-full fixed text-white text-4xl md:text-3xl lg:text-2xl drop-shadow-[0_1px_1px_black] bg-black/10 rounded-b-xl z-50">
@@ -98,10 +99,10 @@
                 <span class="pl-1 text-sm">{{ app.session.get('ville')|default('Inconnu') }}</span>
             </li>
 
-            <li><a class="px-4 py-2 hover:text-white/70" href="#infos">Qui sommes-nous ?</a></li>
+            <li><a class="px-4 py-2 hover:text-white/70" href="{{path('app_home')}}#infos">Qui sommes-nous ?</a></li>
 
             <li class="relative group">
-                <a class="py-2 hover:text-white/70" href="#services">Services</a>
+                <a class="py-2 hover:text-white/70" href="{{path('app_home')}}#services">Services</a>
 
                 <div class="absolute left-0 top-full
                             hidden group-hover:block
@@ -119,14 +120,58 @@
                 </div>
             </li>
 
-            <li><a class="px-4 py-2 hover:text-white/70" href="#contact">Contact</a></li>
+            <li><a class="px-4 py-2 hover:text-white/70" href="{{path('app_home')}}#contact">Contact</a></li>
 
-            {% if app.user %}
-                <li><a class="px-4 py-2 hover:text-white/70" href="{{ path('app_logout') }}">Déconnexion</a></li>
-            {% else %}
-                <li><a class="px-4 py-2 hover:text-white/70" href="{{ path('app_register') }}">Devenir membre</a></li>
-                <li><a class="px-4 py-2 hover:text-white/70" href="{{ path('app_login') }}">Accès membre</a></li>
-            {% endif %}
+{% if app.user %}
+
+    <li>
+        <a class="px-4 py-2 hover:text-white/70" href="{{ path('app_logout') }}">
+            Déconnexion
+        </a>
+    </li>
+
+    {% if "ROLE_ADMIN" in app.user.getRoles() %}
+        <li>
+            <a class="px-4 py-2 text-red-500" href="{{ path('admin') }}">
+                Admin
+            </a>
+        </li>
+    {% endif %}
+
+    <div class="inline-flex items-center space-x-3 rounded">
+        <div class="relative group">
+            <img class="size-12 rounded-full"
+                 src="/assets/img/uploads/avatars/{{ app.user.avatar }}"
+                 alt="Avatar">
+
+            <div class="absolute left-0 top-full hidden group-hover:block z-50 min-w-[180px] p-6 bg-slate-500/95 rounded shadow-lg">
+
+                <form method="post" enctype="multipart/form-data" action="{{ path('upload_avatar') }}">
+                    <input type="file" name="avatar">
+                    <button type="submit">
+                        Valider l'avatar
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </div>
+
+{% else %}
+
+    <li>
+        <a class="px-4 py-2 hover:text-white/70" href="{{ path('app_register') }}">
+            Devenir membre
+        </a>
+    </li>
+
+    <li>
+        <a class="px-4 py-2 hover:text-white/70" href="{{ path('app_login') }}">
+            Accès membre
+        </a>
+    </li>
+
+{% endif %}
 
         </ul>
     </nav>
