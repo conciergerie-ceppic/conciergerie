@@ -27,8 +27,6 @@ final class HomeController extends AbstractController
 
         // Récupère les services depuis la BDD
         $services = $sr->findAll();
-        $ville = $this->getVille($hci,(float)$lat,(float)$lon);
-        $session->set('ville',$ville);
 
         return $this->render('home/index.html.twig', [
             'services' => $services,
@@ -42,20 +40,15 @@ final class HomeController extends AbstractController
     public function uploadAvatar(Request $request, UserRepository $userRepository): Response
     {
         $avatar = $request->files->get('avatar');
-        // dd($avatar);
         $directory = $this->getParameter('avatars_directory').'/';
-        // dd($directory);
         $error = [];
         $originalName = $avatar->getClientOriginalName();
         $originalName = explode('.', $originalName);
         $pathName = $avatar->getPathname();
-        // dd($originalName);
-        // dd($pathName);
         $image = new \Gumlet\ImageResize($pathName);
         $image->resizeToWidth(48);
         $image->save($directory .$originalName[0].".webp", IMAGETYPE_WEBP);
         
-        // supprimer l'image ou l'uploader dans un catalogue si assez de temps
         $userRepository->setAvatar($this->getUser()->getId() ,$originalName[0].".webp"); 
         return $this->redirectToRoute('app_home');
     }
@@ -64,7 +57,7 @@ final class HomeController extends AbstractController
     public function listServices()
     {
         $list = \App\Enum\ServiceCategory::cases();
-        return   $list;
+        return $list;
     }
 
     // Récupère la location de l'utilisateur via le script js et la stocke dans la session
@@ -91,6 +84,4 @@ final class HomeController extends AbstractController
         $data = $response->toArray();
         return $data['address']['town'] ?? $data['address']['city'] ?? null;
     }
-}
-
 }
