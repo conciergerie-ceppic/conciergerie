@@ -129,12 +129,12 @@
         </ul>
 
     {% endif %}
-
+{% include 'partials/_map_full.html.twig' %}
 </div>
 
 <script>
     function focusPartner(lat, lon, name, address) {
-        const mapEl = document.getElementById('map');
+        const mapEl = document.getElementById('mapfull');
         if (!mapEl || typeof window.map === "undefined") return;
 
         // Affiche la carte si elle est cachée
@@ -186,6 +186,7 @@
     }
 </script>
 
+
 {% endblock %}
 
 {% block map_markers %}
@@ -198,3 +199,5 @@
         {% endif %}
     {% endfor %}
 {% endblock %}
+
+
