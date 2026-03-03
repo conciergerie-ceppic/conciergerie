@@ -14,45 +14,100 @@ class Message
     #[ORM\Column]
     private ?int $id = null;
 
-    #[ORM\ManyToOne(inversedBy: 'messages')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $sender_id = null;
+    #[ORM\Column]
+    private ?\DateTimeImmutable $createdAt = null;
 
-    #[ORM\ManyToOne(inversedBy: 'messages')]
-    #[ORM\JoinColumn(nullable: false)]
-    private ?User $receiver_id = null;
+    #[ORM\Column(length: 255)]
+    private ?string $first_name = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $last_name = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $email = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $phone = null;
+
+    #[ORM\Column(length: 255)]
+    private ?string $subject = null;
 
     #[ORM\Column(type: Types::TEXT)]
     private ?string $content = null;
-
-    #[ORM\Column]
-    private ?\DateTimeImmutable $createdAt = null;
 
     public function getId(): ?int
     {
         return $this->id;
     }
 
-    public function getSenderId(): ?User
+    public function getCreatedAt(): ?\DateTimeImmutable
     {
-        return $this->sender_id;
+        return $this->createdAt;
     }
 
-    public function setSenderId(?User $sender_id): static
+    public function setCreatedAt(\DateTimeImmutable $createdAt): static
     {
-        $this->sender_id = $sender_id;
+        $this->createdAt = $createdAt;
 
         return $this;
     }
 
-    public function getReceiverId(): ?User
+    public function getFirstName(): ?string
     {
-        return $this->receiver_id;
+        return $this->first_name;
     }
 
-    public function setReceiverId(?User $receiver_id): static
+    public function setFirstName(string $first_name): static
     {
-        $this->receiver_id = $receiver_id;
+        $this->first_name = $first_name;
+
+        return $this;
+    }
+
+    public function getLastName(): ?string
+    {
+        return $this->last_name;
+    }
+
+    public function setLastName(string $last_name): static
+    {
+        $this->last_name = $last_name;
+
+        return $this;
+    }
+
+    public function getEmail(): ?string
+    {
+        return $this->email;
+    }
+
+    public function setEmail(string $email): static
+    {
+        $this->email = $email;
+
+        return $this;
+    }
+
+    public function getPhone(): ?string
+    {
+        return $this->phone;
+    }
+
+    public function setPhone(string $phone): static
+    {
+        $this->phone = $phone;
+
+        return $this;
+    }
+
+    public function getSubject(): ?string
+    {
+        return $this->subject;
+    }
+
+    public function setSubject(string $subject): static
+    {
+        $this->subject = $subject;
 
         return $this;
     }
@@ -65,18 +120,6 @@ class Message
     public function setContent(string $content): static
     {
         $this->content = $content;
-
-        return $this;
-    }
-
-    public function getCreatedAt(): ?\DateTimeImmutable
-    {
-        return $this->createdAt;
-    }
-
-    public function setCreatedAt(\DateTimeImmutable $createdAt): static
-    {
-        $this->createdAt = $createdAt;
 
         return $this;
     }

@@ -27,35 +27,38 @@
 </section>
 
 <script>
-window.addEventListener('scroll', () => {
-  const boat = document.getElementById('boat');
-  const presentation = document.getElementById('presentation');
-  if (!boat || !presentation) return;
-  // Position initiale du bateau
-  const initialTop = 100;
-  // Hauteur max de la section présentation
-  const sectionHeight = presentation.offsetHeight;
-  // Scroll relatif à la section
-  const scrollY = Math.max(window.scrollY - presentation.offsetTop, -150);
-  // Limite le déplacement max à la fin de la section
-  const maxY = sectionHeight - boat.offsetHeight - 120;
-  let y = Math.min(scrollY, maxY);
-  boat.style.transform = `translateX(-50%) translateY(${y}px) rotate(180deg)`;
-});
+  window.addEventListener('scroll', () => {
+    const boat = document.getElementById('boat');
+    const presentation = document.getElementById('presentation');
+    if (!boat || !presentation) return;
+    // Position initiale du bateau
+    const initialTop = 100;
+    // Hauteur max de la section présentation
+    const sectionHeight = presentation.offsetHeight;
+    // Scroll relatif à la section
+    const scrollY = Math.max(window.scrollY - presentation.offsetTop, -150);
+    // Limite le déplacement max à la fin de la section
+    const maxY = sectionHeight - boat.offsetHeight - 120;
+    let y = Math.min(scrollY, maxY);
+    boat.style.transform = `translateX(-50%) translateY(${y}px) rotate(180deg)`;
+  });
 </script>
 
 <section id="member" class="flex flex-col lg:flex-row w-full lg:justify-center text-center lg:[&_div]:w-1/2 [&_div]:p-20 [&_a]:text-5xl lg:[&_a]:text-2xl text-white ">
-<div class="bg-[#827364]/40"><a class="hover:text-white/70" href="">Devenir collaborateur</a>
+<div class="bg-[#827364]/40"><a class="hover:text-white/70" href="{{path('app_register')}}">Devenir collaborateur</a>
 </div>
-<div class="text-black"><a class="hover:text-black/60" href="">Devenir membre</a></div>
-<div class="bg-[#827364]/40"><a class="hover:text-white/70" href="">Demander un devis</a></div>
+<div class="text-black"><a class="hover:text-black/60" href="{{path('app_register')}}">Devenir membre</a></div>
+<div class="bg-[#827364]/40"><a class="hover:text-white/70" href="#contact" onclick="document.getElementById('subject').value='devis'">Demander un devis</a></div>
 </section>
+
+{% include 'partials/_map_full.html.twig' %}
 
 <section id="services" class="min-h-screen pt-20">
 <h2 class="text-[5rem] md:text-[3.5rem] lg:text-[3rem] text-center lg:pt-10">Services</h2>
 
 <div class="card-container flex flex-col w-full lg:flex-row lg:flex-wrap gap-3 pt-10 justify-center">
 
+  {% if services is defined %}
 {% for service in services %}
 <div class="card w-full lg:w-[30%] h-[20vh] md:h-[30vh] bg-[url('/assets/img/{{service.name}}-service.png')] bg-cover bg-center rounded-sm shadow-md cursor-pointer hover:contrast-75"
     onclick="window.location.href=`{{ path('app_service', {'nom': service.name}) }}`">
@@ -63,6 +66,12 @@ window.addEventListener('scroll', () => {
 </div>
 {% endfor %}
 </div>
+{% else %}
+<h3 class="text-white text-[4rem] md:text-[3rem] lg:text-3xl p-3 drop-shadow-[0_4px_2px_black]">Pas de service disponible</h3>
+
+{% endif %}
+
+  </div>
 
 </section>
 
@@ -75,7 +84,7 @@ window.addEventListener('scroll', () => {
       <p class="md:text-[2.5rem] lg:text-[1.5rem]">Premium Conciergerie réinvente un métier d’exception, alliant discrétion, efficacité et empathie. Grâce à un réseau international et des partenaires de confiance, nous offrons à nos membres des services uniques et des avantages exclusifs, pour répondre à chaque demande avec excellence.</p>
   </div>
 
-</div>
+  </div>
 </section>
 
 <section id="contact" class="pt-20">
@@ -83,33 +92,34 @@ window.addEventListener('scroll', () => {
 
     <div class=" w-full flex flex-col items-center mb-5">
 
-    <form action="" method="post" class="lg:border lg:rounded-lg py-10 px-10 w-full lg:w-2/3 mt-5 lg:text-2xl text-5xl space-y-10 lg:space-y-5 shadow-md
+    <form action="{{path('app_message')}}" method="post" class="lg:border lg:rounded-lg py-10 px-10 w-full lg:w-2/3 mt-5 lg:text-2xl text-5xl space-y-10 lg:space-y-5 shadow-md
     [&_textarea]:w-full [&_textarea]:h-48 lg:[&_textarea]:h-32 [&_textarea]:outline-none [&_textarea]:px-
     [&_select]:outline-none [&_select]:cursor-pointer
      [&_input]:w-full [&_input]:outline-none">
-      <div><input type="text" placeholder="Entrez votre prénom" name="nom"></div>
-      <div><input type="text" placeholder="Entrez votre nom" name="prenom"></div>
+      <div><input type="text" placeholder="Entrez votre prénom" name="first_name"></div>
+      <div><input type="text" placeholder="Entrez votre nom" name="last_name"></div>
       <div><input type="email" placeholder="Entrez votre addresse mail" name="email"></div>
-      <div><input type="tel" placeholder="Entrez votre numéro de téléphone" name="tel"></div>
+      <div><input type="tel" placeholder="Entrez votre numéro de téléphone" name="phone"></div>
       <div>
-      <select name="sujet" id="sujet">
+      <select name="subject" id="subject">
           <option value="">Sélectionnez un sujet</option>
           <option value="remboursement">Demande de remboursement</option>
           <option value="question">Question sur un service</option>
           <option value="retour">Retour d'expérience</option>
           <option value="collaborateur">Devenir collaborateur</option>
           <option value="membre">Devenir membre</option>
-          <option value="devis">Demande de devis</option>
+          <option id="devis" value="devis">Demande de devis</option>
           <option value="autre">Autre demande</option>
-      </select>
-    </div>
-      <div>
-        <textarea name="message" id="message" placeholder="Votre message"></textarea>
+        </select>
       </div>
-      <div class=" bg-black/80 text-white inline py-3 rounded-md hover:bg-black/60"><input type="submit" value="Soumettre" class="cursor-pointer"></div>
+      <div>
+        <textarea name="content" id="content" placeholder="Votre message"></textarea>
+      </div>
+      <div class=" bg-black/80 text-white inline py-3 rounded-md hover:bg-black/60"><input type="submit"
+          value="Soumettre" class="cursor-pointer"></div>
     </form>
 
-     </div>
-    
+  </div>
+
 </section>
 {% endblock %}
