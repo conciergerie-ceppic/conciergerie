@@ -23,12 +23,6 @@ class Service
     private ?string $description = null;
 
     /**
-     * @var Collection<int, Reservation>
-     */
-    #[ORM\OneToMany(targetEntity: Reservation::class, mappedBy: 'service_id')]
-    private Collection $reservations;
-
-    /**
      * @var Collection<int, Partner>
      */
     #[ORM\OneToMany(targetEntity: Partner::class, mappedBy: 'service')]
@@ -36,71 +30,18 @@ class Service
 
     public function __construct()
     {
-        $this->reservations = new ArrayCollection();
         $this->partners = new ArrayCollection();
     }
 
-    public function getId(): ?int
-    {
-        return $this->id;
-    }
+    public function getId(): ?int { return $this->id; }
 
-    public function getName(): ?string
-    {
-        return $this->name;
-    }
+    public function getName(): ?string { return $this->name; }
+    public function setName(string $name): static { $this->name = $name; return $this; }
 
-    public function setName(string $name): static
-    {
-        $this->name = $name;
-        return $this;
-    }
+    public function getDescription(): ?string { return $this->description; }
+    public function setDescription(?string $description): static { $this->description = $description; return $this; }
 
-    public function getDescription(): ?string
-    {
-        return $this->description;
-    }
-
-    public function setDescription(?string $description): static
-    {
-        $this->description = $description;
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Reservation>
-     */
-    public function getReservations(): Collection
-    {
-        return $this->reservations;
-    }
-
-    public function addReservation(Reservation $reservation): static
-    {
-        if (!$this->reservations->contains($reservation)) {
-            $this->reservations->add($reservation);
-            $reservation->setServiceId($this);
-        }
-        return $this;
-    }
-
-    public function removeReservation(Reservation $reservation): static
-    {
-        if ($this->reservations->removeElement($reservation)) {
-            if ($reservation->getServiceId() === $this) {
-                $reservation->setServiceId(null);
-            }
-        }
-        return $this;
-    }
-
-    /**
-     * @return Collection<int, Partner>
-     */
-    public function getPartners(): Collection
-    {
-        return $this->partners;
-    }
+    public function getPartners(): Collection { return $this->partners; }
 
     public function addPartner(Partner $partner): static
     {
