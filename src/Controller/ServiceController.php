@@ -24,29 +24,45 @@ final class ServiceController extends AbstractController
             throw $this->createNotFoundException("Service \"$nom\" introuvable.");
         }
 
-        // Si l'utilisateur n'est pas connecté, on affiche juste la description
         if (!$this->getUser()) {
             return $this->render('service/description.html.twig', [
                 'service' => $service,
             ]);
         }
 
-        // Récupération de la géoloc depuis la session
         $session = $request->getSession();
         $userLat = (float) $session->get('lat');
         $userLon = (float) $session->get('lon');
 
-        // Récupération des partners liés à ce service
         $partners = $service->getPartners()->toArray();
+        $distances = [];
+        $partnerCoords = [];
 
-        // Tri par proximité si la géoloc est disponible
         if ($userLat && $userLon) {
-            $partners = $this->orderByProximity($partners, $userLat, $userLon, $client);
+            foreach ($partners as $partner) {
+                $coords = $this->convertAdress($partner->getAddress(), $client);
+
+                if ($coords) {
+                    $partnerCoords[$partner->getId()] = $coords;
+                    $distances[$partner->getId()] = $this->haversine(
+                        $userLat, $userLon,
+                        (float)$coords['lat'], (float)$coords['lon']
+                    );
+                }
+            }
+
+            usort($partners, function($a, $b) use ($distances) {
+                $dA = $distances[$a->getId()] ?? PHP_FLOAT_MAX;
+                $dB = $distances[$b->getId()] ?? PHP_FLOAT_MAX;
+                return $dA <=> $dB;
+            });
         }
 
         return $this->render('service/index.html.twig', [
-            'service' => $service,
-            'partners' => $partners,
+            'service'       => $service,
+            'partners'      => $partners,
+            'distances'     => $distances,
+            'partnerCoords' => $partnerCoords,
         ]);
     }
 
@@ -65,26 +81,6 @@ final class ServiceController extends AbstractController
             'lat' => $data[0]['lat'],
             'lon' => $data[0]['lon'],
         ];
-    }
-
-    private function orderByProximity(
-        array $partners,
-        float $userLat,
-        float $userLon,
-        HttpClientInterface $client
-    ): array {
-        foreach ($partners as &$partner) {
-            $coords = $this->convertAdress($partner->getAddress(), $client);
-
-            $partner->distance = $coords
-                ? $this->haversine($userLat, $userLon, (float) $coords['lat'], (float) $coords['lon'])
-                : PHP_FLOAT_MAX;
-        }
-        unset($partner);
-
-        usort($partners, fn($a, $b) => $a->distance <=> $b->distance);
-
-        return $partners;
     }
 
     private function haversine(float $lat1, float $lon1, float $lat2, float $lon2): float
