@@ -68,10 +68,14 @@
         <ul id="partners-list" class="space-y-4">
             {% for partner in partners %}
             {% set dist = distances[partner.id] ?? null %}
-            <li class="partner-item group flex items-start gap-6 transition-colors duration-300 rounded-xl px-6 py-5 backdrop-blur-sm border border-black/10"
-                style="background-color: #F5F5F5;"
+            {% set coords = partnerCoords[partner.id] ?? null %}
+            <li class="partner-item group flex items-start gap-6 transition-colors duration-300 rounded-xl px-6 py-5 backdrop-blur-sm border border-black/10 cursor-pointer"
+                style="background-color: #E8E8E8;"
                 onmouseover="this.style.backgroundColor='#D4D4D4'"
                 onmouseout="this.style.backgroundColor='#E8E8E8'"
+                {% if coords %}
+                onclick="focusPartner({{ coords.lat }}, {{ coords.lon }}, '{{ partner.name|e('js') }}', '{{ partner.address|e('js') }}')"
+                {% endif %}
                 data-distance="{{ dist ?? 99999 }}">
 
                 <div class="text-4xl text-black/20 font-bold w-10 text-right shrink-0 select-none pt-1 item-index">
@@ -114,6 +118,7 @@
 
                     {% if partner.link %}
                     <a href="{{ partner.link }}" target="_blank"
+                        onclick="event.stopPropagation()"
                         class="inline-block mt-3 text-[10px] tracking-[0.3em] uppercase text-black/60 hover:text-black transition-colors duration-300">
                         Voir l'établissement →
                     </a>
@@ -128,6 +133,27 @@
 </div>
 
 <script>
+    function focusPartner(lat, lon, name, address) {
+        const mapEl = document.getElementById('map');
+        if (!mapEl || typeof window.map === "undefined") return;
+
+        // Affiche la carte si elle est cachée
+        mapEl.classList.remove('invisible');
+
+        // Recentre la map sur le partenaire
+        window.map.setView([lat, lon], 15);
+
+        // Ouvre le popup du marker correspondant
+        window.map.eachLayer(function(layer) {
+            if (layer instanceof L.Marker) {
+                const pos = layer.getLatLng();
+                if (Math.abs(pos.lat - lat) < 0.0001 && Math.abs(pos.lng - lon) < 0.0001) {
+                    layer.openPopup();
+                }
+            }
+        });
+    }
+
     function filterByDistance(min, max) {
         const items = document.querySelectorAll('.partner-item');
         const noResults = document.getElementById('no-results');
