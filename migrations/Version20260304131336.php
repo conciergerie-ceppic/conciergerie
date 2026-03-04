@@ -10,7 +10,7 @@ use Doctrine\Migrations\AbstractMigration;
 /**
  * Auto-generated Migration: Please modify to your needs!
  */
-final class Version20260303131149 extends AbstractMigration
+final class Version20260304131336 extends AbstractMigration
 {
     public function getDescription(): string
     {
@@ -25,11 +25,6 @@ final class Version20260303131149 extends AbstractMigration
         $this->addSql('ALTER TABLE reservation DROP FOREIGN KEY `FK_42C84955D63673B0`');
         $this->addSql('DROP TABLE notification');
         $this->addSql('DROP TABLE reservation');
-        $this->addSql('ALTER TABLE message DROP FOREIGN KEY `FK_B6BD307F6061F7CF`');
-        $this->addSql('ALTER TABLE message DROP FOREIGN KEY `FK_B6BD307FBE20CAB0`');
-        $this->addSql('DROP INDEX IDX_B6BD307F6061F7CF ON message');
-        $this->addSql('DROP INDEX IDX_B6BD307FBE20CAB0 ON message');
-        $this->addSql('ALTER TABLE message ADD first_name VARCHAR(255) NOT NULL, ADD last_name VARCHAR(255) NOT NULL, ADD email VARCHAR(255) NOT NULL, ADD phone VARCHAR(255) NOT NULL, ADD subject VARCHAR(255) NOT NULL, DROP sender_id_id, DROP receiver_id_id');
     }
 
     public function down(Schema $schema): void
@@ -40,10 +35,5 @@ final class Version20260303131149 extends AbstractMigration
         $this->addSql('ALTER TABLE notification ADD CONSTRAINT `FK_BF5476CA9D86650F` FOREIGN KEY (user_id_id) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
         $this->addSql('ALTER TABLE reservation ADD CONSTRAINT `FK_42C849559D86650F` FOREIGN KEY (user_id_id) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
         $this->addSql('ALTER TABLE reservation ADD CONSTRAINT `FK_42C84955D63673B0` FOREIGN KEY (service_id_id) REFERENCES service (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
-        $this->addSql('ALTER TABLE message ADD sender_id_id INT NOT NULL, ADD receiver_id_id INT NOT NULL, DROP first_name, DROP last_name, DROP email, DROP phone, DROP subject');
-        $this->addSql('ALTER TABLE message ADD CONSTRAINT `FK_B6BD307F6061F7CF` FOREIGN KEY (sender_id_id) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
-        $this->addSql('ALTER TABLE message ADD CONSTRAINT `FK_B6BD307FBE20CAB0` FOREIGN KEY (receiver_id_id) REFERENCES user (id) ON UPDATE NO ACTION ON DELETE NO ACTION');
-        $this->addSql('CREATE INDEX IDX_B6BD307F6061F7CF ON message (sender_id_id)');
-        $this->addSql('CREATE INDEX IDX_B6BD307FBE20CAB0 ON message (receiver_id_id)');
     }
 }

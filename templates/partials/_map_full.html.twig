@@ -1,20 +1,21 @@
-<div id="mapfull" class="h-[40vh] w-full rounded-md mt-10 z-30 "></div>
+<div id="mapfull" class="h-[40vh] w-full rounded-md mt-10 z-30"></div>
 
 <script>
-    document.addEventListener('DOMContentLoaded', function () {
-        const lat = "{{ app.session.get('lat') }}";
-        const lon = "{{ app.session.get('lon') }}";
-        const ville = "{{ app.session.get('ville')|e('js') }}";
+    const lat = "{{ app.session.get('lat') }}";
+    const lon = "{{ app.session.get('lon') }}";
+    const ville = "{{ app.session.get('ville')|e('js') }}";
 
-        window.map = L.map('mapfull', { scrollWheelZoom: false }).setView([lat, lon], 13);
+    window.mapFull = L.map('mapfull', { scrollWheelZoom: false }).setView([lat, lon], 13);
 
-        L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-            attribution: '&copy; OpenStreetMap contributors',
-            maxZoom: 19
-        }).addTo(window.map);
+    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+        attribution: '&copy; OpenStreetMap contributors',
+        maxZoom: 19
+    }).addTo(window.mapFull);
 
-        L.marker([lat, lon]).addTo(window.map)
-            .bindPopup(ville ? ville : 'Vous êtes ici')
-            .openPopup();
-    });
+    L.marker([lat, lon]).addTo(window.mapFull)
+        .bindPopup(ville ? ville : 'Vous êtes ici')
+        .openPopup();
+
+    window.mapFullReady = true;
+    document.dispatchEvent(new Event('mapReady'));
 </script>
