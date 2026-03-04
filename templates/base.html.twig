@@ -83,11 +83,7 @@
                 .bindPopup(ville ? ville : 'Vous êtes ici')
                 .openPopup();
 
-            document.dispatchEvent(new Event('mapReady'));
         });
-    </script>
-    <script>
-        {% block map_markers %} {% endblock %}
     </script>
     {% include 'partials/_map.html.twig' %}
     {% endif %}
@@ -201,7 +197,9 @@
         {% block body %}
         {% endblock %}
     </main>
-
+    <script>
+        {% block map_markers %} {% endblock %}
+    </script>
     <footer class="py-5 lg:h-50 bg-black/80 mt-auto w-full">
         <p class="text-white text-center text-xl lg:text-lg py-4">&copy; Ceppic 2026 | Sebastien, Kevin, Benjamin</p>
     </footer>
