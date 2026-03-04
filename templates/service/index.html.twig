@@ -84,7 +84,11 @@
                 onmouseover="this.style.backgroundColor='#D4D4D4'"
                 onmouseout="this.style.backgroundColor='#E8E8E8'"
                 {% if coords %}
-                onclick="focusPartner({{ coords.lat }}, {{ coords.lon }}, '{{ partner.name|e('js') }}', '{{ partner.address|e('js') }}')"
+                data-lat="{{ coords.lat }}"
+                data-lon="{{ coords.lon }}"
+                data-name="{{ partner.name|e('html') }}"
+                data-address="{{ partner.address|e('html') }}"
+                onclick="focusPartner(this)"
                 {% endif %}
                 data-distance="{{ dist ?? 99999 }}">
 
@@ -114,7 +118,6 @@
                             </div>
                             {% endif %}
 
-                            {# Bouton favori (visible uniquement si connecté) #}
                             {% if app.user %}
                             <button
                                 onclick="event.stopPropagation(); toggleFavorite(this, {{ partner.id }})"
@@ -127,7 +130,6 @@
                             </button>
                             {% endif %}
 
-                            {# Bouton partage WhatsApp #}
                             <a href="https://wa.me/?text={{ ('Découvrez ' ~ partner.name ~ ' : ' ~ partner.address ~ (partner.link ? ' - ' ~ partner.link : ''))|url_encode }}"
                                 target="_blank"
                                 onclick="event.stopPropagation()"
@@ -165,7 +167,7 @@
         </ul>
 
     {% endif %}
-{% include 'partials/_map_full.html.twig' %}
+    {% include 'partials/_map_full.html.twig' %}
 </div>
 
 <script>
@@ -186,14 +188,17 @@
             });
     }
 
-    function focusPartner(lat, lon, name, address) {
+    function focusPartner(el) {
+        const lat = parseFloat(el.dataset.lat);
+        const lon = parseFloat(el.dataset.lon);
+
         const mapEl = document.getElementById('mapfull');
-        if (!mapEl || typeof window.map === "undefined") return;
+        if (!mapEl || typeof window.mapFull === "undefined") return;
 
-        mapEl.classList.remove('invisible');
-        window.map.setView([lat, lon], 15);
+        mapEl.scrollIntoView({ behavior: 'smooth' });
+        window.mapFull.setView([lat, lon], 15);
 
-        window.map.eachLayer(function(layer) {
+        window.mapFull.eachLayer(function(layer) {
             if (layer instanceof L.Marker) {
                 const pos = layer.getLatLng();
                 if (Math.abs(pos.lat - lat) < 0.0001 && Math.abs(pos.lng - lon) < 0.0001) {
@@ -235,18 +240,23 @@
     }
 </script>
 
-
 {% endblock %}
 
 {% block map_markers %}
-    {% for partner in partners %}
-        {% set coords = partnerCoords[partner.id] ?? null %}
-        {% if coords %}
-            L.marker([{{ coords.lat }}, {{ coords.lon }}])
-                .addTo(window.map)
-                .bindPopup(`<b>{{ partner.name|e('js') }}</b><br>{{ partner.address|e('js') }}`);
-        {% endif %}
-    {% endfor %}
+    function addMarkers() {
+        {% for partner in partners %}
+            {% set coords = partnerCoords[partner.id] ?? null %}
+            {% if coords %}
+                L.marker([{{ coords.lat }}, {{ coords.lon }}])
+                    .addTo(window.mapFull)
+                    .bindPopup(`<b>{{ partner.name|e('js') }}</b><br>{{ partner.address|e('js') }}`);
+            {% endif %}
+        {% endfor %}
+    }
+
+    if (window.mapFullReady) {
+        addMarkers();
+    } else {
+        document.addEventListener('mapReady', addMarkers);
+    }
 {% endblock %}
-
-

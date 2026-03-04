@@ -84,11 +84,7 @@ L.marker([lat, lon]).addTo(map).bindPopup(ville ? ville : 'Vous êtes ici').open
                 .bindPopup(ville ? ville : 'Vous êtes ici')
                 .openPopup();
 
-            document.dispatchEvent(new Event('mapReady'));
         });
-    </script>
-    <script>
-        {% block map_markers %} {% endblock %}
     </script>
     {% include 'partials/_map.html.twig' %}
     {% endif %}
@@ -203,6 +199,16 @@ L.marker([lat, lon]).addTo(map).bindPopup(ville ? ville : 'Vous êtes ici').open
 				</ul>
 			</nav>
 
+    <main class="w-full flex-1">
+        {% block body %}
+        {% endblock %}
+    </main>
+    <script>
+        {% block map_markers %} {% endblock %}
+    </script>
+    <footer class="py-5 lg:h-50 bg-black/80 mt-auto w-full">
+        <p class="text-white text-center text-xl lg:text-lg py-4">&copy; Ceppic 2026 | Sebastien, Kevin, Benjamin</p>
+    </footer>
 			<div id="mobileMenu"
      class="hidden fixed top-16 left-5 w-48 bg-white text-black flex-col items-start justify-start gap-4 p-4 rounded-lg shadow-md z-[100]">
 
