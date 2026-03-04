@@ -151,9 +151,9 @@ class User implements UserInterface, PasswordAuthenticatedUserInterface
         return $this;
     }
 
-    public function getAvatar(): ?string
+    public function getAvatar(): string
     {
-        return $this->avatar;
+        return $this->avatar ?? 'default-avatar.webp';
     }
 
     public function setAvatar(?string $avatar): static

@@ -53,6 +53,13 @@ final class HomeController extends AbstractController
         return $this->redirectToRoute('app_home');
     }
 
+    #[Route('/deleteAvatar', name: 'delete_avatar')]
+    public function deleteAvatar(UserRepository $userRepository): Response
+    {
+        $userRepository->setAvatar($this->getUser()->getId() ,null); 
+        return $this->redirectToRoute('app_home');
+    }
+
     // Récupère la liste des services dans Enum
     public function listServices()
     {
