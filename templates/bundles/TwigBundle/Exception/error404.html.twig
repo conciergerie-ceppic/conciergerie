@@ -1,0 +1,11 @@
+{% extends 'base.html.twig' %}
+
+{% block title %}Page non trouvée (404){% endblock %}
+
+{% block body %}
+<div class="h-screen flex flex-col items-center justify-center bg-black text-white">
+    <h1 class="text-6xl font-bold mb-6">404</h1>
+    <p class="text-2xl mb-4">Oups, cette page n'existe pas !</p>
+    <a href="/" class="text-yellow-400 underline hover:text-yellow-300">Retour à l'accueil</a>
+</div>
+{% endblock %}
