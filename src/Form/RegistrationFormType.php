@@ -44,7 +44,7 @@ class RegistrationFormType extends AbstractType
             ->add('role', ChoiceType::class, [
                 'mapped' => false,
                 'choices' => [
-                    'Membre' => 'ROLE_MEMBER',
+                    'Membre' => 'ROLE_USER',
                     'Partenaire' => 'ROLE_PARTNER',
                 ],
                 'expanded' => true,
