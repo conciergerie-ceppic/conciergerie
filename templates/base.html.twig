@@ -80,11 +80,17 @@ maxZoom: 19
 
 L.marker([lat, lon]).addTo(map).bindPopup(ville ? ville : 'Vous êtes ici').openPopup();
 
-                
-                    
-            });
-        </script>
-        {% include 'partials/_map.html.twig' %}
+            L.marker([lat, lon]).addTo(map)
+                .bindPopup(ville ? ville : 'Vous êtes ici')
+                .openPopup();
+
+            document.dispatchEvent(new Event('mapReady'));
+        });
+    </script>
+    <script>
+        {% block map_markers %} {% endblock %}
+    </script>
+    {% include 'partials/_map.html.twig' %}
     {% endif %}
 
 			<nav class="flex flex-col items-center w-full fixed text-white text-4xl md:text-3xl lg:text-2xl drop-shadow-[0_1px_1px_black] bg-black/10 rounded-b-xl z-50">
@@ -102,7 +108,8 @@ L.marker([lat, lon]).addTo(map).bindPopup(ville ? ville : 'Vous êtes ici').open
 
             <li class="flex items-center">
                 <img src="/assets/img/icons/location.svg" alt="" class="invert size-5">
-                 <a href="#map" class="pl-1 text-sm cursor-pointer" id="map-link">{{ app.session.get('ville')|default('Inconnu') }}</a>
+                <a href="#map" class="pl-1 text-sm cursor-pointer" id="map-link">{{
+                    app.session.get('ville')|default('Inconnu') }}</a>
             </li>
 
 					<li>
@@ -118,14 +125,24 @@ L.marker([lat, lon]).addTo(map).bindPopup(ville ? ville : 'Vous êtes ici').open
                             min-w-[180px]
                             p-6 bg-black/40 rounded shadow-lg">
                     <ul class="space-y-2">
-                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'hotel'}) }}">Hôtel</a></li>
-                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'restaurant'}) }}">Restauration</a></li>
-                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'spa'}) }}">Spa</a></li>
-                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'driver'}) }}">Chauffeur</a></li>
-                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'event'}) }}">Evenement</a></li>
-                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'travel'}) }}">Voyage</a></li>
-                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'vehicle'}) }}">Location de véhicule</a></li>
-                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'activity'}) }}">Activités</a></li>
+                        <li><a class="block hover:text-white/70"
+                                href="{{ path('app_service', {'nom': 'hotel'}) }}">Hôtel</a></li>
+                        <li><a class="block hover:text-white/70"
+                                href="{{ path('app_service', {'nom': 'restaurant'}) }}">Restauration</a></li>
+                        <li><a class="block hover:text-white/70"
+                                href="{{ path('app_service', {'nom': 'spa'}) }}">Spa</a></li>
+                        <li><a class="block hover:text-white/70"
+                                href="{{ path('app_service', {'nom': 'driver'}) }}">Chauffeur</a></li>
+                        <li><a class="block hover:text-white/70"
+                                href="{{ path('app_service', {'nom': 'event'}) }}">Evenement</a></li>
+                        <li><a class="block hover:text-white/70"
+                                href="{{ path('app_service', {'nom': 'travel'}) }}">Voyage</a></li>
+                        <li><a class="block hover:text-white/70"
+                                href="{{ path('app_service', {'nom': 'vehicle'}) }}">Location de véhicule</a></li>
+                        <li><a class="block hover:text-white/70"
+                                href="{{ path('app_service', {'nom': 'activity'}) }}">Activités</a></li>
+                        <li><a class="block hover:text-white/70"
+                                href="{{ path('app_service', {'nom': 'allservices'}) }}">Tout les services</a></li>
                     </ul>
                 </div>
             </li>
@@ -212,11 +229,11 @@ L.marker([lat, lon]).addTo(map).bindPopup(ville ? ville : 'Vous êtes ici').open
 					<p class="text-white text-center text-xl lg:text-lg py-4">&copy; Ceppic 2026 | Sebastien, Kevin, Benjamin</p>
 				</footer>
 
-        <script>
+    <script>
         document.addEventListener('DOMContentLoaded', function () {
             const mapLink = document.getElementById('map-link');
             if (mapLink) {
-                mapLink.addEventListener('click', function(e) {
+                mapLink.addEventListener('click', function (e) {
                     const hash = this.getAttribute('href').split('#')[1];
                     const target = document.getElementById(hash);
                     if (target) {
@@ -227,7 +244,7 @@ L.marker([lat, lon]).addTo(map).bindPopup(ville ? ville : 'Vous êtes ici').open
                 });
             }
         });
-        </script>
+    </script>
 
 				<script>
 					document.addEventListener("DOMContentLoaded", function () {
@@ -251,4 +268,4 @@ L.marker([lat, lon]).addTo(map).bindPopup(ville ? ville : 'Vous êtes ici').open
 				</script>
 		</body>
 
-	</html>
+</html>

@@ -18,6 +18,47 @@ final class ServiceController extends AbstractController
         HttpClientInterface $client,
         Request $request
     ): Response {
+        if ($nom === 'allservices') {
+    $services = $sr->findAll();
+    $session = $request->getSession();
+    $userLat = (float) $session->get('lat');
+    $userLon = (float) $session->get('lon');
+
+    $allPartners = [];
+    $distances = [];
+    $partnerCoords = [];
+
+    foreach ($services as $service) {
+        foreach ($service->getPartners() as $partner) {
+            $allPartners[] = $partner;
+
+            if ($userLat && $userLon) {
+                $coords = $this->convertAdress($partner->getAddress(), $client);
+                if ($coords) {
+                    $partnerCoords[$partner->getId()] = $coords;
+                    $distances[$partner->getId()] = $this->haversine(
+                        $userLat, $userLon,
+                        (float)$coords['lat'], (float)$coords['lon']
+                    );
+                }
+            }
+        }
+    }
+
+    if ($userLat && $userLon) {
+        usort($allPartners, function($a, $b) use ($distances) {
+            $dA = $distances[$a->getId()] ?? PHP_FLOAT_MAX;
+            $dB = $distances[$b->getId()] ?? PHP_FLOAT_MAX;
+            return $dA <=> $dB;
+        });
+    }
+
+    return $this->render('service/all_services.html.twig', [
+        'partners'      => $allPartners,
+        'distances'     => $distances,
+        'partnerCoords' => $partnerCoords,
+    ]);
+}
         $service = $sr->findOneBy(['name' => $nom]);
 
         if (!$service) {
@@ -45,13 +86,15 @@ final class ServiceController extends AbstractController
                 if ($coords) {
                     $partnerCoords[$partner->getId()] = $coords;
                     $distances[$partner->getId()] = $this->haversine(
-                        $userLat, $userLon,
-                        (float)$coords['lat'], (float)$coords['lon']
+                        $userLat,
+                        $userLon,
+                        (float)$coords['lat'],
+                        (float)$coords['lon']
                     );
                 }
             }
 
-            usort($partners, function($a, $b) use ($distances) {
+            usort($partners, function ($a, $b) use ($distances) {
                 $dA = $distances[$a->getId()] ?? PHP_FLOAT_MAX;
                 $dB = $distances[$b->getId()] ?? PHP_FLOAT_MAX;
                 return $dA <=> $dB;

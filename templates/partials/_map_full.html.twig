@@ -16,5 +16,7 @@
         L.marker([lat, lon]).addTo(window.map)
             .bindPopup(ville ? ville : 'Vous êtes ici')
             .openPopup();
+        document.dispatchEvent(new Event('mapReady'));
     });
+
 </script>
