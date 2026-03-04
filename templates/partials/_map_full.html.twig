@@ -6,14 +6,14 @@
         const lon = "{{ app.session.get('lon') }}";
         const ville = "{{ app.session.get('ville')|e('js') }}";
 
-        const map = L.map('mapfull', { scrollWheelZoom: false }).setView([lat, lon], 13);
+        window.map = L.map('mapfull', { scrollWheelZoom: false }).setView([lat, lon], 13);
 
         L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
             attribution: '&copy; OpenStreetMap contributors',
             maxZoom: 19
-        }).addTo(map);
+        }).addTo(window.map);
 
-        L.marker([lat, lon]).addTo(map)
+        L.marker([lat, lon]).addTo(window.map)
             .bindPopup(ville ? ville : 'Vous êtes ici')
             .openPopup();
     });

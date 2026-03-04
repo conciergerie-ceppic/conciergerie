@@ -19,7 +19,7 @@
 
 {% set isService = app.request.attributes.get('_route') == 'app_service' %}
 
-<body style="font-family: 'Advent Pro', sans-serif; {{ isService ? 'background-color: #ECF8F6;' : 'background-color: white;' }}" class="select-none min-h-screen">
+<body style="font-family: 'Advent Pro', sans-serif;" class="select-none min-h-screen">
 
     <script>
         if (navigator.geolocation) {
@@ -79,7 +79,8 @@
                     .bindPopup(ville ? ville : 'Vous êtes ici')
                     .openPopup();
 
-                {% block map_markers %}{% endblock %}
+                
+                    
             });
         </script>
         {% include 'partials/_map.html.twig' %}
@@ -96,7 +97,7 @@
 
             <li class="flex items-center">
                 <img src="/assets/img/icons/location.svg" alt="" class="invert size-5">
-                <span class="pl-1 text-sm">{{ app.session.get('ville')|default('Inconnu') }}</span>
+                 <a href="#map" class="pl-1 text-sm cursor-pointer" id="map-link">{{ app.session.get('ville')|default('Inconnu') }}</a>
             </li>
 
             <li><a class="px-4 py-2 hover:text-white/70" href="{{path('app_home')}}#infos">Qui sommes-nous ?</a></li>
@@ -116,6 +117,8 @@
                         <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'driver'}) }}">Chauffeur</a></li>
                         <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'event'}) }}">Evenement</a></li>
                         <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'travel'}) }}">Voyage</a></li>
+                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'vehicle'}) }}">Location de véhicule</a></li>
+                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'activity'}) }}">Activités</a></li>
                     </ul>
                 </div>
             </li>
@@ -184,6 +187,23 @@
     <footer class="py-5 lg:h-50 bg-black/80 mt-auto w-full">
         <p class="text-white text-center text-xl lg:text-lg py-4">&copy; Ceppic 2026 | Sebastien, Kevin, Benjamin</p>
     </footer>
+
+        <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const mapLink = document.getElementById('map-link');
+            if (mapLink) {
+                mapLink.addEventListener('click', function(e) {
+                    const hash = this.getAttribute('href').split('#')[1];
+                    const target = document.getElementById(hash);
+                    if (target) {
+                        e.preventDefault();
+                        // Affiche la carte si elle est cachée
+                        target.classList.remove('invisible');
+                    }
+                });
+            }
+        });
+        </script>
 
 </body>
 

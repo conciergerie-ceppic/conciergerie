@@ -15,6 +15,7 @@ final class MessageController extends AbstractController
     #[Route('/message', name: 'app_message')]
     public function index(Request $req, EntityManagerInterface $emi): Response
     {
+        $error = null;
         $data = $req->request->all();
 
             $message = new Message();
