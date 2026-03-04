@@ -4,7 +4,10 @@ INSERT INTO `service` (`id`, `name`, `description`) VALUES
 (3, 'spa', 'Offrez-vous une parenthèse de bien-être absolu. Nos partenaires spas et instituts de beauté vous proposent des soins exclusifs pour vous ressourcer corps et âme.'),
 (4, 'driver', 'Voyagez en toute sérénité avec nos chauffeurs privés professionnels. Ponctualité, discrétion et confort sont les maîtres mots de notre service de transport haut de gamme.'),
 (5, 'event', 'Faites de chaque moment une occasion inoubliable. Soirées privées, événements d\'entreprise, célébrations — nos partenaires organisent des événements sur mesure à la hauteur de vos exigences.'),
-(6, 'travel', 'Partez à la découverte du monde avec nos agences de voyage partenaires. Circuits exclusifs, voyages sur mesure et destinations d\'exception pour des aventures hors du commun.');
+(6, 'travel', 'Partez à la découverte du monde avec nos agences de voyage partenaires. Circuits exclusifs, voyages sur mesure et destinations d\'exception pour des aventures hors du commun.'),
+(7, 'activity', 'Explorez une sélection d\'activités uniques et exclusives pour enrichir votre séjour. Des expériences culturelles aux aventures en plein air, nous avons ce qu\'il vous faut pour vivre des moments mémorables.'),
+(8, 'vehicle', 'Découvrez notre flotte de véhicules de prestige disponibles à la location avec chauffeur. Des limousines élégantes aux voitures de sport, nous avons le véhicule parfait pour chaque occasion.'),
+(9, 'allservices', 'Accédez à l\'ensemble de nos services exclusifs pour une expérience complète et personnalisée. Hôtels, restaurants, spas, transport, événements et voyages — tout ce dont vous avez besoin pour un séjour d\'exception.');
 
 INSERT INTO `partner` (`id`, `name`, `address`, `phone`, `description`, `link`, `service_id`) VALUES
 (1,  'Le Grand Hôtel Paris',        '2 Rue Scribe, 75009 Paris',                '01 40 07 32 32', 'Hôtel 5 étoiles au cœur de Paris, face à l\'Opéra Garnier. Chambres somptueuses et service irréprochable.',          'https://www.legrandhotel.fr',         1),
