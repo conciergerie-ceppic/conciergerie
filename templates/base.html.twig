@@ -1,239 +1,165 @@
 <!DOCTYPE html>
 <html>
 
-	<head>
-		<meta charset="UTF-8">
-		<title>
-			{% block title %}Welcome!
-			{% endblock %}
-		</title>
-		<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
-		<script src="https://cdn.tailwindcss.com"></script>
-		<script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
-		<link href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;700&display=swap" rel="stylesheet">
-		<link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/> {% block stylesheets %}{% endblock %}{% block javascripts %}{% endblock %}
-		</head>
+<head>
+    <meta charset="UTF-8">
+    <title>{% block title %}Welcome!{% endblock %}</title>
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 128 128%22><text y=%221.2em%22 font-size=%2296%22>⚫️</text><text y=%221.3em%22 x=%220.2em%22 font-size=%2276%22 fill=%22%23fff%22>sf</text></svg>">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://unpkg.com/leaflet/dist/leaflet.js"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Advent+Pro:wght@400;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://unpkg.com/leaflet/dist/leaflet.css"/>
+    {% block stylesheets %}{% endblock %}
+    {% block javascripts %}{% endblock %}
+</head>
 
-		{% set isService = app.request.attributes.get('_route') == 'app_service' %}
+{% set isService = app.request.attributes.get('_route') == 'app_service' %}
 
 <body style="font-family: 'Advent Pro', sans-serif;" class="select-none min-h-screen">
 
-			<script>
-				if (navigator.geolocation) {
-"{% if not app.session.get('lat') %}"
-navigator.geolocation.getCurrentPosition(function (pos) {
-fetch('/save-location', {
-method: 'POST',
-headers: {
-'Content-Type': 'application/json'
-},
-body: JSON.stringify(
-{lat: pos.coords.latitude, lon: pos.coords.longitude}
-)
-}).then(() => {
-window.location.reload();
-});
-});
-
-
-'{% endif %}'
-
-}
-			</script>
-
-			{% set userLat = app.session.get('lat') %}
-			{% set userLon = app.session.get('lon') %}
-
-			{% if userLat and userLon %}
-
-				<div id="map" class="invisible h-[40rem] w-[40rem] lg:h-[20rem] lg:w-[20rem] fixed rounded-md bottom-0 right-0 mr-5 mb-20 opacity-90 z-50"></div>
-				<button id="toogleMap" class="px-6 py-5 md:text-lg lg:text-sm lg:px-3 lg:py-2 bg-white rounded-md fixed bottom-20 shadow-md w-[20rem] right-5 z-50 cursor-pointer" onclick="toogleMap()">
-					Afficher/Masquer la carte
-				</button>
-
-				<script>
-					const toogleMap = () => {
-const map = document.getElementById("map");
-if (map.classList.contains("invisible")) {
-map.classList.remove("invisible");
-
-} else {
-map.classList.add("invisible");
-}
-}
-				</script>
-
-				<script>
-					document.addEventListener('DOMContentLoaded', function () {
-const lat = "{{ userLat }}";
-const lon = "{{ userLon }}";
-const ville = "{{ app.session.get('ville')|e('js') }}";
-
-window.map = L.map('map').setView([
-lat, lon
-], 13);
-
-L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-attribution: '&copy; OpenStreetMap contributors',
-maxZoom: 19
-}).addTo(map);
-
-L.marker([lat, lon]).addTo(map).bindPopup(ville ? ville : 'Vous êtes ici').openPopup();
-
-            L.marker([lat, lon]).addTo(map)
-                .bindPopup(ville ? ville : 'Vous êtes ici')
-                .openPopup();
-
-        });
+    <script>
+        if (navigator.geolocation) {
+            "{% if not app.session.get('lat') %}"
+            navigator.geolocation.getCurrentPosition(function (pos) {
+                fetch('/save-location', {
+                    method: 'POST',
+                    headers: { 'Content-Type': 'application/json' },
+                    body: JSON.stringify({ lat: pos.coords.latitude, lon: pos.coords.longitude })
+                }).then(() => { window.location.reload(); });
+            });
+            '{% endif %}'
+        }
     </script>
-    {% include 'partials/_map.html.twig' %}
+
+    {% set userLat = app.session.get('lat') %}
+    {% set userLon = app.session.get('lon') %}
+
+    {% if userLat and userLon %}
+        <div id="map" class="invisible h-[40rem] w-[40rem] lg:h-[20rem] lg:w-[20rem] fixed rounded-md bottom-0 right-0 mr-5 mb-20 opacity-90 z-50"></div>
+        <button id="toogleMap" class="px-6 py-5 md:text-lg lg:text-sm lg:px-3 lg:py-2 bg-white rounded-md fixed bottom-20 shadow-md w-[20rem] right-5 z-50 cursor-pointer" onclick="toogleMap()">
+            Afficher/Masquer la carte
+        </button>
+
+        <script>
+            const toogleMap = () => {
+                const map = document.getElementById("map");
+                if (map.classList.contains("invisible")) {
+                    map.classList.remove("invisible");
+                } else {
+                    map.classList.add("invisible");
+                }
+            }
+        </script>
+
+        <script>
+            document.addEventListener('DOMContentLoaded', function () {
+                const lat = "{{ userLat }}";
+                const lon = "{{ userLon }}";
+                const ville = "{{ app.session.get('ville')|e('js') }}";
+
+                window.map = L.map('map').setView([lat, lon], 13);
+
+                L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
+                    attribution: '&copy; OpenStreetMap contributors',
+                    maxZoom: 19
+                }).addTo(map);
+
+                L.marker([lat, lon]).addTo(map)
+                    .bindPopup(ville ? ville : 'Vous êtes ici')
+                    .openPopup();
+            });
+        </script>
+        {% include 'partials/_map.html.twig' %}
     {% endif %}
 
-			<nav class="flex flex-col items-center w-full fixed text-white text-4xl md:text-3xl lg:text-2xl drop-shadow-[0_1px_1px_black] bg-black/10 rounded-b-xl z-50">
+    <nav class="flex flex-col items-center w-full fixed text-white text-4xl md:text-3xl lg:text-2xl drop-shadow-[0_1px_1px_black] bg-black/10 rounded-b-xl z-50">
 
-				<div class="p-5 cursor-pointer flex items-center" onclick="window.location.href=`{{ path('app_home') }}`">
-					<img src="/assets/img/logo.png" alt="" width="50px">
-					<span class="tracking-wider uppercase">premium experience</span>
-				</div>
+        <div class="p-5 cursor-pointer flex items-center" onclick="window.location.href=`{{ path('app_home') }}`">
+            <img src="/assets/img/logo.png" alt="" width="50px">
+            <span class="tracking-wider uppercase">premium experience</span>
+        </div>
 
-				<button id="burgerBtn" class="lg:hidden text-4xl absolute left-6 top-6">
-    				☰
-				</button>				
+        <button id="burgerBtn" class="lg:hidden text-4xl absolute left-6 top-6">☰</button>
 
-				<ul class="hidden lg:flex items-center space-x-10 pb-5 [&_a:hover]:text-white/70 [&_a]:cursor-pointer text-xl">
+        <ul class="hidden lg:flex items-center space-x-10 pb-5 [&_a:hover]:text-white/70 [&_a]:cursor-pointer text-xl">
 
             <li class="flex items-center">
                 <img src="/assets/img/icons/location.svg" alt="" class="invert size-5">
-                <a href="#map" class="pl-1 text-sm cursor-pointer" id="map-link">{{
-                    app.session.get('ville')|default('Inconnu') }}</a>
+                <a href="#map" class="pl-1 text-sm cursor-pointer" id="map-link">{{ app.session.get('ville')|default('Inconnu') }}</a>
             </li>
 
-					<li>
-						<a class="px-4 py-2 hover:text-white/70" href="{{path('app_home')}}#infos">Qui sommes-nous ?</a>
-					</li>
+            <li><a class="px-4 py-2 hover:text-white/70" href="{{ path('app_home') }}#infos">Qui sommes-nous ?</a></li>
 
-					<li class="relative group">
-						<a class="py-2 hover:text-white/70" href="{{path('app_home')}}#services">Services</a>
-
-                <div class="absolute left-0 top-full
-                            hidden group-hover:block
-                            z-50
-                            min-w-[180px]
-                            p-6 bg-black/40 rounded shadow-lg">
+            <li class="relative group">
+                <a class="py-2 hover:text-white/70" href="{{ path('app_home') }}#services">Services</a>
+                <div class="absolute left-0 top-full hidden group-hover:block z-50 min-w-[180px] p-6 bg-black/40 rounded shadow-lg">
                     <ul class="space-y-2">
-                        <li><a class="block hover:text-white/70"
-                                href="{{ path('app_service', {'nom': 'hotel'}) }}">Hôtel</a></li>
-                        <li><a class="block hover:text-white/70"
-                                href="{{ path('app_service', {'nom': 'restaurant'}) }}">Restauration</a></li>
-                        <li><a class="block hover:text-white/70"
-                                href="{{ path('app_service', {'nom': 'spa'}) }}">Spa</a></li>
-                        <li><a class="block hover:text-white/70"
-                                href="{{ path('app_service', {'nom': 'driver'}) }}">Chauffeur</a></li>
-                        <li><a class="block hover:text-white/70"
-                                href="{{ path('app_service', {'nom': 'event'}) }}">Evenement</a></li>
-                        <li><a class="block hover:text-white/70"
-                                href="{{ path('app_service', {'nom': 'travel'}) }}">Voyage</a></li>
-                        <li><a class="block hover:text-white/70"
-                                href="{{ path('app_service', {'nom': 'vehicle'}) }}">Location de véhicule</a></li>
-                        <li><a class="block hover:text-white/70"
-                                href="{{ path('app_service', {'nom': 'activity'}) }}">Activités</a></li>
-                        <li><a class="block hover:text-white/70"
-                                href="{{ path('app_service', {'nom': 'allservices'}) }}">Tout les services</a></li>
+                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'hotel'}) }}">Hôtel</a></li>
+                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'restaurant'}) }}">Restauration</a></li>
+                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'spa'}) }}">Spa</a></li>
+                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'driver'}) }}">Chauffeur</a></li>
+                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'event'}) }}">Evenement</a></li>
+                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'travel'}) }}">Voyage</a></li>
+                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'vehicle'}) }}">Location de véhicule</a></li>
+                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'activity'}) }}">Activités</a></li>
+                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'allservices'}) }}">Tout les services</a></li>
                     </ul>
                 </div>
             </li>
 
-					<li>
-						<a class="px-4 py-2 hover:text-white/70" href="{{path('app_home')}}#contact">Contact</a>
-					</li>
+            <li><a class="px-4 py-2 hover:text-white/70" href="{{ path('app_home') }}#contact">Contact</a></li>
 
-					{% if app.user %}
+            {% if app.user %}
+                <li><a class="px-4 py-2 hover:text-white/70" href="{{ path('app_logout') }}">Déconnexion</a></li>
+                {% if "ROLE_ADMIN" in app.user.getRoles() %}
+                    <li><a class="px-4 py-2 text-red-500" href="{{ path('admin') }}">Admin</a></li>
+                {% endif %}
+                <div class="inline-flex items-center space-x-3 rounded">
+                    <div class="relative group">
+                        <img class="size-12 rounded-full" src="/assets/img/uploads/avatars/{{ app.user.avatar }}" alt="Avatar">
+                        <div class="absolute left-0 top-full hidden group-hover:block z-50 min-w-[180px] p-6 bg-slate-500/95 rounded shadow-lg">
+                            <form method="post" enctype="multipart/form-data" action="{{ path('upload_avatar') }}">
+                                <input type="file" name="avatar">
+                                <button type="submit">Valider l'avatar</button>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            {% else %}
+                <li><a class="px-4 py-2 hover:text-white/70" href="{{ path('app_register') }}">Devenir membre</a></li>
+                <li><a class="px-4 py-2 hover:text-white/70" href="{{ path('app_login') }}">Accès membre</a></li>
+            {% endif %}
 
-						<li>
-							<a class="px-4 py-2 hover:text-white/70" href="{{ path('app_logout') }}">
-								Déconnexion
-							</a>
-						</li>
+        </ul>
+    </nav>
 
-						{% if "ROLE_ADMIN" in app.user.getRoles() %}
-							<li>
-								<a class="px-4 py-2 text-red-500" href="{{ path('admin') }}">
-									Admin
-								</a>
-							</li>
-						{% endif %}
-
-						<div class="inline-flex items-center space-x-3 rounded">
-							<div class="relative group">
-								<img class="size-12 rounded-full" src="/assets/img/uploads/avatars/{{ app.user.avatar }}" alt="Avatar">
-
-								<div class="absolute left-0 top-full hidden group-hover:block z-50 min-w-[180px] p-6 bg-slate-500/95 rounded shadow-lg">
-
-									<form method="post" enctype="multipart/form-data" action="{{ path('upload_avatar') }}">
-										<input type="file" name="avatar">
-										<button type="submit">
-											Valider l'avatar
-										</button>
-									</form>
-
-								</div>
-							</div>
-						</div>
-
-					{% else %}
-
-						<li>
-							<a class="px-4 py-2 hover:text-white/70" href="{{ path('app_register') }}">
-								Devenir membre
-							</a>
-						</li>
-
-						<li>
-							<a class="px-4 py-2 hover:text-white/70" href="{{ path('app_login') }}">
-								Accès membre
-							</a>
-						</li>
-
-					{% endif %}
-
-				</ul>
-			</nav>
+    {# Menu mobile #}
+    <div id="mobileMenu" class="hidden fixed top-16 left-5 w-48 bg-white text-black flex-col items-start justify-start gap-4 p-4 rounded-lg shadow-md z-[100]">
+        <a href="{{ path('app_home') }}#infos" class="hover:text-gray-700">Qui sommes-nous ?</a>
+        <a href="{{ path('app_home') }}#services" class="hover:text-gray-700">Services</a>
+        <a href="{{ path('app_home') }}#contact" class="hover:text-gray-700">Contact</a>
+        {% if app.user %}
+            <a href="{{ path('app_logout') }}" class="hover:text-gray-700">Déconnexion</a>
+            {% if "ROLE_ADMIN" in app.user.getRoles() %}
+                <a href="{{ path('admin') }}" class="text-red-500 hover:text-red-600">Admin</a>
+            {% endif %}
+        {% else %}
+            <a href="{{ path('app_register') }}" class="hover:text-gray-700">Devenir membre</a>
+            <a href="{{ path('app_login') }}" class="hover:text-gray-700">Accès membre</a>
+        {% endif %}
+    </div>
 
     <main class="w-full flex-1">
-        {% block body %}
-        {% endblock %}
+        {% block body %}{% endblock %}
     </main>
+
     <script>
-        {% block map_markers %} {% endblock %}
+        {% block map_markers %}{% endblock %}
     </script>
+
     <footer class="py-5 lg:h-50 bg-black/80 mt-auto w-full">
         <p class="text-white text-center text-xl lg:text-lg py-4">&copy; Ceppic 2026 | Sebastien, Kevin, Benjamin</p>
     </footer>
-			<div id="mobileMenu"
-     class="hidden fixed top-16 left-5 w-48 bg-white text-black flex-col items-start justify-start gap-4 p-4 rounded-lg shadow-md z-[100]">
-
-    <a href="{{ path('app_home') }}#infos" class="hover:text-gray-700">Qui sommes-nous ?</a>
-    <a href="{{ path('app_home') }}#services" class="hover:text-gray-700">Services</a>
-    <a href="{{ path('app_home') }}#contact" class="hover:text-gray-700">Contact</a>
-
-    {% if app.user %}
-        <a href="{{ path('app_logout') }}" class="hover:text-gray-700">Déconnexion</a>
-        {% if "ROLE_ADMIN" in app.user.getRoles() %}
-            <a href="{{ path('admin') }}" class="text-red-500 hover:text-red-600">Admin</a>
-        {% endif %}
-    {% else %}
-        <a href="{{ path('app_register') }}" class="hover:text-gray-700">Devenir membre</a>
-        <a href="{{ path('app_login') }}" class="hover:text-gray-700">Accès membre</a>
-    {% endif %}
-
-</div>
-
-			<main class="w-full flex-1"> {% block body %}{% endblock %}
-				</main>
-
-				<footer class="py-5 lg:h-50 bg-black/80 mt-auto w-full">
-					<p class="text-white text-center text-xl lg:text-lg py-4">&copy; Ceppic 2026 | Sebastien, Kevin, Benjamin</p>
-				</footer>
 
     <script>
         document.addEventListener('DOMContentLoaded', function () {
@@ -244,7 +170,6 @@ L.marker([lat, lon]).addTo(map).bindPopup(ville ? ville : 'Vous êtes ici').open
                     const target = document.getElementById(hash);
                     if (target) {
                         e.preventDefault();
-                        // Affiche la carte si elle est cachée
                         target.classList.remove('invisible');
                     }
                 });
@@ -252,26 +177,22 @@ L.marker([lat, lon]).addTo(map).bindPopup(ville ? ville : 'Vous êtes ici').open
         });
     </script>
 
-				<script>
-					document.addEventListener("DOMContentLoaded", function () {
+    <script>
+        document.addEventListener("DOMContentLoaded", function () {
+            const burgerBtn = document.getElementById("burgerBtn");
+            const mobileMenu = document.getElementById("mobileMenu");
 
-				const burgerBtn = document.getElementById("burgerBtn");
-				const mobileMenu = document.getElementById("mobileMenu");
+            burgerBtn.addEventListener("click", function () {
+                if (mobileMenu.classList.contains("hidden")) {
+                    mobileMenu.classList.remove("hidden");
+                    mobileMenu.classList.add("flex");
+                } else {
+                    mobileMenu.classList.add("hidden");
+                    mobileMenu.classList.remove("flex");
+                }
+            });
+        });
+    </script>
 
-				burgerBtn.addEventListener("click", function () {
-
-				if (mobileMenu.classList.contains("hidden")) {
-				mobileMenu.classList.remove("hidden");
-				mobileMenu.classList.add("flex");
-				} else {
-				mobileMenu.classList.add("hidden");
-				mobileMenu.classList.remove("flex");
-				}
-
-				});
-
-				});
-				</script>
-		</body>
-
+</body>
 </html>
