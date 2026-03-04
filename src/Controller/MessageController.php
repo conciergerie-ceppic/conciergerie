@@ -52,12 +52,12 @@ final class MessageController extends AbstractController
 
              // Envoi de la confirmation de contact
               $user = new User();
-            $email = (new Email())
+        /*     $email = (new Email())
                 ->from('no-reply@conciergerie.com')
                 ->to($user->getEmail())
                 ->subject('Demande de contact Premium Experience !')
                 ->text('Votre demande de contact a bien été prise en compte. Notre équipe reviendra vers vous au plus vite ! ');
-            $mailer->send($email);
+            $mailer->send($email); */
         }
         return $this->render('message/index.html.twig', [
             'first_name' => $first_name,

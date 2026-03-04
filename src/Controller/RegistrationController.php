@@ -37,13 +37,13 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             // Envoi d'un email de bienvenue
-            $email = (new Email())
+            /* $email = (new Email())
                 ->from('no-reply@conciergerie.com')
                 ->to($user->getEmail())
                 ->subject('Bienvenue sur Premium Experience !')
                 ->text('Votre inscription a bien été prise en compte. Bienvenue !');
             $mailer->send($email);
-
+ */
             return $security->login($user, 'form_login', 'main');
         }
 
