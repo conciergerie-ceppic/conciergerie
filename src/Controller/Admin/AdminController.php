@@ -31,8 +31,6 @@ class AdminController extends AbstractDashboardController
         yield MenuItem::linkToCrud('Users', 'fas fa-user', \App\Entity\User::class);
         yield MenuItem::linkToCrud('Partners', 'fas fa-handshake', \App\Entity\Partner::class);
         yield MenuItem::linkToCrud('Services', 'fas fa-concierge-bell', \App\Entity\Service::class);
-        yield MenuItem::linkToCrud('Reservations', 'fas fa-calendar-check', \App\Entity\Reservation::class);
         yield MenuItem::linkToCrud('Messages', 'fas fa-envelope', \App\Entity\Message::class);
-        yield MenuItem::linkToCrud('Notifications', 'fas fa-bell', \App\Entity\Notification::class);
     }
 }
