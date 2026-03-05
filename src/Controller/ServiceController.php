@@ -15,50 +15,13 @@ final class ServiceController extends AbstractController
     public function detail(
         string $nom,
         ServiceRepository $sr,
-        HttpClientInterface $client,
         Request $request
     ): Response {
+
         if ($nom === 'allservices') {
-    $services = $sr->findAll();
-    $session = $request->getSession();
-    $userLat = (float) $session->get('lat');
-    $userLon = (float) $session->get('lon');
-
-    $allPartners = [];
-    $distances = [];
-    $partnerCoords = [];
-
-    foreach ($services as $service) {
-        foreach ($service->getPartners() as $partner) {
-            $allPartners[] = $partner;
-
-            if ($userLat && $userLon) {
-                $coords = $this->convertAdress($partner->getAddress(), $client);
-                if ($coords) {
-                    $partnerCoords[$partner->getId()] = $coords;
-                    $distances[$partner->getId()] = $this->haversine(
-                        $userLat, $userLon,
-                        (float)$coords['lat'], (float)$coords['lon']
-                    );
-                }
-            }
+            return $this->render('service/all_services.html.twig');
         }
-    }
 
-    if ($userLat && $userLon) {
-        usort($allPartners, function($a, $b) use ($distances) {
-            $dA = $distances[$a->getId()] ?? PHP_FLOAT_MAX;
-            $dB = $distances[$b->getId()] ?? PHP_FLOAT_MAX;
-            return $dA <=> $dB;
-        });
-    }
-
-    return $this->render('service/all_services.html.twig', [
-        'partners'      => $allPartners,
-        'distances'     => $distances,
-        'partnerCoords' => $partnerCoords,
-    ]);
-}
         $service = $sr->findOneBy(['name' => $nom]);
 
         if (!$service) {
@@ -71,70 +34,74 @@ final class ServiceController extends AbstractController
             ]);
         }
 
+        $osmTags = [
+            'hotel'      => ['tourism', 'hotel'],
+            'restaurant' => ['amenity', 'restaurant'],
+            'spa'        => ['leisure', 'spa'],
+            'event'      => ['amenity', 'theatre'],
+            'travel'     => ['tourism', 'travel_agency'],
+            'vehicle'    => ['amenity', 'car_rental'],
+            'activity'   => ['leisure', 'sports_centre'],
+        ];
+
+        $osmTag = $osmTags[$nom] ?? null;
+
         $session = $request->getSession();
-        $userLat = (float) $session->get('lat');
-        $userLon = (float) $session->get('lon');
-
-        $partners = $service->getPartners()->toArray();
-        $distances = [];
-        $partnerCoords = [];
-
-        if ($userLat && $userLon) {
-            foreach ($partners as $partner) {
-                $coords = $this->convertAdress($partner->getAddress(), $client);
-
-                if ($coords) {
-                    $partnerCoords[$partner->getId()] = $coords;
-                    $distances[$partner->getId()] = $this->haversine(
-                        $userLat,
-                        $userLon,
-                        (float)$coords['lat'],
-                        (float)$coords['lon']
-                    );
-                }
-            }
-
-            usort($partners, function ($a, $b) use ($distances) {
-                $dA = $distances[$a->getId()] ?? PHP_FLOAT_MAX;
-                $dB = $distances[$b->getId()] ?? PHP_FLOAT_MAX;
-                return $dA <=> $dB;
-            });
-        }
 
         return $this->render('service/index.html.twig', [
-            'service'       => $service,
-            'partners'      => $partners,
-            'distances'     => $distances,
-            'partnerCoords' => $partnerCoords,
+            'service' => $service,
+            'osmKey'  => $osmTag ? $osmTag[0] : null,
+            'osmVal'  => $osmTag ? $osmTag[1] : null,
+            'userLat' => $session->get('lat'),
+            'userLon' => $session->get('lon'),
         ]);
     }
 
-    public function convertAdress(string $address, HttpClientInterface $client): ?array
-    {
-        $url = "https://nominatim.openstreetmap.org/search?format=json&limit=1&q="
-            . urlencode($address);
+    #[Route('/api/overpass', name: 'api_overpass', methods: ['GET'])]
+    public function overpassProxy(
+        Request $request,
+        HttpClientInterface $client
+    ): Response {
 
-        $response = $client->request('GET', $url, [
-            'headers' => ['User-Agent' => 'conciergerie/1.0']
-        ]);
+        $query = $request->query->get('query');
 
-        $data = $response->toArray();
+        if (!$query) {
+            return $this->json(['error' => 'Missing query'], 400);
+        }
 
-        return empty($data) ? null : [
-            'lat' => $data[0]['lat'],
-            'lon' => $data[0]['lon'],
+        $servers = [
+            'https://overpass.kumi.systems/api/interpreter',
+            'https://overpass-api.de/api/interpreter',
+            'https://overpass.openstreetmap.fr/api/interpreter'
         ];
-    }
 
-    private function haversine(float $lat1, float $lon1, float $lat2, float $lon2): float
-    {
-        $earthRadius = 6371;
-        $dLat = deg2rad($lat2 - $lat1);
-        $dLon = deg2rad($lon2 - $lon1);
+        foreach ($servers as $server) {
 
-        $a = sin($dLat / 2) ** 2
-            + cos(deg2rad($lat1)) * cos(deg2rad($lat2)) * sin($dLon / 2) ** 2;
+            try {
 
-        return $earthRadius * 2 * atan2(sqrt($a), sqrt(1 - $a));
+                $response = $client->request('GET', $server, [
+                    'query' => ['data' => $query],
+                    'timeout' => 50,
+                    'headers' => [
+                        'User-Agent' => 'PremiumExperience/1.0'
+                    ]
+                ]);
+
+                if ($response->getStatusCode() === 200) {
+
+                    return new Response(
+                        $response->getContent(),
+                        200,
+                        ['Content-Type' => 'application/json']
+                    );
+
+                }
+
+            } catch (\Exception $e) {
+                error_log("Overpass $server failed: " . $e->getMessage());
+            }
+        }
+
+        return $this->json(['error' => 'Overpass unavailable'], 503);
     }
 }
