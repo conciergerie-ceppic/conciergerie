@@ -22,6 +22,12 @@ class Service
     #[ORM\Column(type: Types::TEXT, nullable: true)]
     private ?string $description = null;
 
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $osm_key = null;
+
+    #[ORM\Column(length: 50, nullable: true)]
+    private ?string $osm_val = null;
+
     /**
      * @var Collection<int, Partner>
      */
@@ -40,6 +46,12 @@ class Service
 
     public function getDescription(): ?string { return $this->description; }
     public function setDescription(?string $description): static { $this->description = $description; return $this; }
+
+    public function getOsmKey(): ?string { return $this->osm_key; }
+    public function setOsmKey(?string $osm_key): static { $this->osm_key = $osm_key; return $this; }
+
+    public function getOsmVal(): ?string { return $this->osm_val; }
+    public function setOsmVal(?string $osm_val): static { $this->osm_val = $osm_val; return $this; }
 
     public function getPartners(): Collection { return $this->partners; }
 
