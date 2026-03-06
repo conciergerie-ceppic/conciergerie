@@ -4,15 +4,13 @@ namespace App\Controller\Admin;
 
 use App\Entity\Notification;
 use EasyCorp\Bundle\EasyAdminBundle\Controller\AbstractCrudController;
-use EasyCorp\Bundle\EasyAdminBundle\Field\IdField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextEditorField;
-use EasyCorp\Bundle\EasyAdminBundle\Field\TextField;
+use Symfony\Component\Notifier\Notification\Notification as NotifierNotification;
 
 class NotificationCrudController extends AbstractCrudController
 {
     public static function getEntityFqcn(): string
     {
-        return Notification::class;
+        return NotifierNotification::class;
     }
 
     /*

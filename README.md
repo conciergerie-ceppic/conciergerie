@@ -4,6 +4,8 @@ Plateforme web de conciergerie développée avec Symfony.
 
 Voir les documents : 
 
+[Présentation Canva](https://www.canva.com/design/DAHDE5cfKJA/8FLlK-85rn5MvW4xwaUJgA/edit?utm_content=DAHDE5cfKJA&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton)
+
 [Diagramme de classe](documents/diagramme_sql.png)
 [Diagramme de cas d'utilisation](documents/diagramme.png)
 [Fonctionnalités](documents/fonctionnalites.md)
