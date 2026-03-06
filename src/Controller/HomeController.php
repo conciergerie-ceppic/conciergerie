@@ -25,7 +25,6 @@ final class HomeController extends AbstractController
             $session->set('ville', $ville);
         }
 
-        // Récupère les services depuis la BDD
         $services = $sr->findAll();
 
         return $this->render('home/index.html.twig', [
@@ -41,33 +40,24 @@ final class HomeController extends AbstractController
     {
         $avatar = $request->files->get('avatar');
         $directory = $this->getParameter('avatars_directory').'/';
-        $error = [];
         $originalName = $avatar->getClientOriginalName();
         $originalName = explode('.', $originalName);
         $pathName = $avatar->getPathname();
         $image = new \Gumlet\ImageResize($pathName);
         $image->resizeToWidth(48);
         $image->save($directory .$originalName[0].".webp", IMAGETYPE_WEBP);
-        
-        $userRepository->setAvatar($this->getUser()->getId() ,$originalName[0].".webp"); 
+
+        $userRepository->setAvatar($this->getUser()->getId(), $originalName[0].".webp");
         return $this->redirectToRoute('app_home');
     }
 
     #[Route('/deleteAvatar', name: 'delete_avatar')]
     public function deleteAvatar(UserRepository $userRepository): Response
     {
-        $userRepository->setAvatar($this->getUser()->getId() ,null); 
+        $userRepository->setAvatar($this->getUser()->getId(), null);
         return $this->redirectToRoute('app_home');
     }
 
-    // Récupère la liste des services dans Enum
-    public function listServices()
-    {
-        $list = \App\Enum\ServiceCategory::cases();
-        return $list;
-    }
-
-    // Récupère la location de l'utilisateur via le script js et la stocke dans la session
     #[Route('/save-location', name: 'save_location')]
     public function saveLocation(Request $request): Response
     {
@@ -84,11 +74,23 @@ final class HomeController extends AbstractController
 
     public function getVille(HttpClientInterface $hci, float $lat, float $lon): ?string
     {
-        $url = "https://nominatim.openstreetmap.org/reverse?lat=$lat&lon=$lon&format=json";
-        $response = $hci->request('GET', $url, [
-            'headers' => ['User-Agent' => 'conciergerie/1.0']
-        ]);
-        $data = $response->toArray();
-        return $data['address']['town'] ?? $data['address']['city'] ?? null;
+        try {
+            $url = "https://nominatim.openstreetmap.org/reverse?lat=$lat&lon=$lon&format=json";
+            $response = $hci->request('GET', $url, [
+                'headers' => ['User-Agent' => 'conciergerie/1.0'],
+                'timeout' => 5,
+            ]);
+            $data = $response->toArray();
+            return $data['address']['town'] ?? $data['address']['city'] ?? null;
+        } catch (\Exception $e) {
+            // 429 Too Many Requests ou autre erreur réseau → fallback silencieux
+            return $this->getVilleFromSession();
+        }
+    }
+
+    private function getVilleFromSession(): ?string
+    {
+        // Retourne null, la vue affichera "Votre position" par défaut
+        return null;
     }
 }
