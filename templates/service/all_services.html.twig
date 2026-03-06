@@ -3,75 +3,82 @@
 {% block title %}Tous les services{% endblock %}
 
 {% block body %}
+<div class="min-h-screen pt-52 pb-20 px-6 max-w-5xl mx-auto">
 
-<script src="https://cdn.tailwindcss.com"></script>
+    <div class="mb-16 text-center">
+        <p class="text-xs tracking-[0.4em] text-black/40 uppercase mb-2">Notre offre</p>
+        <h1 class="text-6xl uppercase tracking-widest text-black drop-shadow-[0_1px_1px_black] mb-4">
+            Tous les services
+        </h1>
+        <div class="h-px w-32 mx-auto bg-gradient-to-r from-black via-black/40 to-transparent"></div>
+    </div>
 
-<div class="max-w-6xl mx-auto mt-10">
+    <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
 
-<h1 class="text-4xl font-bold mb-10 text-center">
-Tous les services Premium Experience
-</h1>
+        <a href="{{ path('app_service', {'nom': 'hotel'}) }}"
+            class="group flex flex-col items-center gap-4 rounded-xl px-6 py-8 border border-black/10 cursor-pointer transition-colors duration-300 hover:bg-black/5"
+            style="background-color: #E8E8E8;">
+            <span class="text-4xl">🏨</span>
+            <h2 class="text-black uppercase tracking-widest text-sm font-bold">Hôtels</h2>
+            <p class="text-black/50 text-xs tracking-wider text-center">Découvrez les hôtels partenaires autour de vous.</p>
+        </a>
 
-<div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+        <a href="{{ path('app_service', {'nom': 'restaurant'}) }}"
+            class="group flex flex-col items-center gap-4 rounded-xl px-6 py-8 border border-black/10 cursor-pointer transition-colors duration-300 hover:bg-black/5"
+            style="background-color: #E8E8E8;">
+            <span class="text-4xl">🍽️</span>
+            <h2 class="text-black uppercase tracking-widest text-sm font-bold">Restauration</h2>
+            <p class="text-black/50 text-xs tracking-wider text-center">Trouvez les meilleurs restaurants proches.</p>
+        </a>
 
-<a href="/service/hotel"
-class="p-6 bg-white shadow rounded hover:shadow-lg">
+        <a href="{{ path('app_service', {'nom': 'spa'}) }}"
+            class="group flex flex-col items-center gap-4 rounded-xl px-6 py-8 border border-black/10 cursor-pointer transition-colors duration-300 hover:bg-black/5"
+            style="background-color: #E8E8E8;">
+            <span class="text-4xl">💆</span>
+            <h2 class="text-black uppercase tracking-widest text-sm font-bold">Spa & Bien-être</h2>
+            <p class="text-black/50 text-xs tracking-wider text-center">Relaxation et bien-être autour de vous.</p>
+        </a>
 
-<h2 class="text-xl font-bold">Hôtels</h2>
-<p>Découvrez les hôtels partenaires autour de vous.</p>
+        <a href="{{ path('app_service', {'nom': 'driver'}) }}"
+            class="group flex flex-col items-center gap-4 rounded-xl px-6 py-8 border border-black/10 cursor-pointer transition-colors duration-300 hover:bg-black/5"
+            style="background-color: #E8E8E8;">
+            <span class="text-4xl">🚗</span>
+            <h2 class="text-black uppercase tracking-widest text-sm font-bold">Chauffeur</h2>
+            <p class="text-black/50 text-xs tracking-wider text-center">Service de chauffeur privé à votre disposition.</p>
+        </a>
 
-</a>
+        <a href="{{ path('app_service', {'nom': 'event'}) }}"
+            class="group flex flex-col items-center gap-4 rounded-xl px-6 py-8 border border-black/10 cursor-pointer transition-colors duration-300 hover:bg-black/5"
+            style="background-color: #E8E8E8;">
+            <span class="text-4xl">🎭</span>
+            <h2 class="text-black uppercase tracking-widest text-sm font-bold">Évènements</h2>
+            <p class="text-black/50 text-xs tracking-wider text-center">Concerts, spectacles et événements.</p>
+        </a>
 
-<a href="/service/restaurant"
-class="p-6 bg-white shadow rounded hover:shadow-lg">
+        <a href="{{ path('app_service', {'nom': 'travel'}) }}"
+            class="group flex flex-col items-center gap-4 rounded-xl px-6 py-8 border border-black/10 cursor-pointer transition-colors duration-300 hover:bg-black/5"
+            style="background-color: #E8E8E8;">
+            <span class="text-4xl">✈️</span>
+            <h2 class="text-black uppercase tracking-widest text-sm font-bold">Voyages</h2>
+            <p class="text-black/50 text-xs tracking-wider text-center">Agences de voyages partenaires.</p>
+        </a>
 
-<h2 class="text-xl font-bold">Restaurants</h2>
-<p>Trouvez les meilleurs restaurants proches.</p>
+        <a href="{{ path('app_service', {'nom': 'vehicle'}) }}"
+            class="group flex flex-col items-center gap-4 rounded-xl px-6 py-8 border border-black/10 cursor-pointer transition-colors duration-300 hover:bg-black/5"
+            style="background-color: #E8E8E8;">
+            <span class="text-4xl">🚙</span>
+            <h2 class="text-black uppercase tracking-widest text-sm font-bold">Location véhicule</h2>
+            <p class="text-black/50 text-xs tracking-wider text-center">Louez une voiture facilement.</p>
+        </a>
 
-</a>
+        <a href="{{ path('app_service', {'nom': 'activity'}) }}"
+            class="group flex flex-col items-center gap-4 rounded-xl px-6 py-8 border border-black/10 cursor-pointer transition-colors duration-300 hover:bg-black/5"
+            style="background-color: #E8E8E8;">
+            <span class="text-4xl">⚽</span>
+            <h2 class="text-black uppercase tracking-widest text-sm font-bold">Activités</h2>
+            <p class="text-black/50 text-xs tracking-wider text-center">Sports et activités autour de vous.</p>
+        </a>
 
-<a href="/service/spa"
-class="p-6 bg-white shadow rounded hover:shadow-lg">
-
-<h2 class="text-xl font-bold">Spa & Bien-être</h2>
-<p>Relaxation et bien-être autour de vous.</p>
-
-</a>
-
-<a href="/service/event"
-class="p-6 bg-white shadow rounded hover:shadow-lg">
-
-<h2 class="text-xl font-bold">Évènements</h2>
-<p>Concerts, spectacles et événements.</p>
-
-</a>
-
-<a href="/service/travel"
-class="p-6 bg-white shadow rounded hover:shadow-lg">
-
-<h2 class="text-xl font-bold">Voyages</h2>
-<p>Agences de voyages partenaires.</p>
-
-</a>
-
-<a href="/service/vehicle"
-class="p-6 bg-white shadow rounded hover:shadow-lg">
-
-<h2 class="text-xl font-bold">Location véhicule</h2>
-<p>Louez une voiture facilement.</p>
-
-</a>
-
-<a href="/service/activity"
-class="p-6 bg-white shadow rounded hover:shadow-lg">
-
-<h2 class="text-xl font-bold">Activités</h2>
-<p>Sports et activités autour de vous.</p>
-
-</a>
-
+    </div>
 </div>
-
-</div>
-
 {% endblock %}

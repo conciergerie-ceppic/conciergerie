@@ -7,7 +7,6 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
-use Symfony\Contracts\HttpClient\HttpClientInterface;
 
 final class ServiceController extends AbstractController
 {
@@ -17,7 +16,6 @@ final class ServiceController extends AbstractController
         ServiceRepository $sr,
         Request $request
     ): Response {
-
         if ($nom === 'allservices') {
             return $this->render('service/all_services.html.twig');
         }
@@ -44,24 +42,23 @@ final class ServiceController extends AbstractController
             'activity'   => ['leisure', 'sports_centre'],
         ];
 
-        $osmTag = $osmTags[$nom] ?? null;
-
+        $osmTag  = $osmTags[$nom] ?? null;
         $session = $request->getSession();
 
         return $this->render('service/index.html.twig', [
             'service' => $service,
             'osmKey'  => $osmTag ? $osmTag[0] : null,
             'osmVal'  => $osmTag ? $osmTag[1] : null,
+            'michelin' => $nom === 'restaurant', // ⭐ activation Michelin
             'userLat' => $session->get('lat'),
             'userLon' => $session->get('lon'),
         ]);
     }
 
     #[Route('/api/overpass', name: 'api_overpass', methods: ['GET'])]
-    public function overpassProxy(
-        Request $request,
-        HttpClientInterface $client
-    ): Response {
+    public function overpassProxy(Request $request): Response
+    {
+        set_time_limit(60);
 
         $query = $request->query->get('query');
 
@@ -70,37 +67,32 @@ final class ServiceController extends AbstractController
         }
 
         $servers = [
-            'https://overpass.kumi.systems/api/interpreter',
-            'https://overpass-api.de/api/interpreter',
-            'https://overpass.openstreetmap.fr/api/interpreter'
-        ];
+    'https://overpass.kumi.systems/api/interpreter',
+    'https://overpass-api.de/api/interpreter',
+    'https://lz4.overpass-api.de/api/interpreter'
+];
 
-        foreach ($servers as $server) {
+foreach ($servers as $server) {
+    $url = $server . '?data=' . urlencode($query); // ✅ manquant
 
-            try {
+    $ch = curl_init($url); // ✅ manquant
+    curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+    curl_setopt($ch, CURLOPT_TIMEOUT, 15);
+    curl_setopt($ch, CURLOPT_CONNECTTIMEOUT, 5);
+    curl_setopt($ch, CURLOPT_FOLLOWLOCATION, true);
+    curl_setopt($ch, CURLOPT_USERAGENT, 'PremiumExperience/1.0');
+    curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+    curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+    $response  = curl_exec($ch);
+    $httpCode  = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+    $curlError = curl_error($ch);
 
-                $response = $client->request('GET', $server, [
-                    'query' => ['data' => $query],
-                    'timeout' => 50,
-                    'headers' => [
-                        'User-Agent' => 'PremiumExperience/1.0'
-                    ]
-                ]);
+    if ($response && $httpCode === 200) {
+        return new Response($response, 200, ['Content-Type' => 'application/json']);
+    }
 
-                if ($response->getStatusCode() === 200) {
-
-                    return new Response(
-                        $response->getContent(),
-                        200,
-                        ['Content-Type' => 'application/json']
-                    );
-
-                }
-
-            } catch (\Exception $e) {
-                error_log("Overpass $server failed: " . $e->getMessage());
-            }
-        }
+    error_log("Overpass $server failed: HTTP $httpCode, cURL: $curlError");
+}
 
         return $this->json(['error' => 'Overpass unavailable'], 503);
     }

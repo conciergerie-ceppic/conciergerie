@@ -1,129 +1,274 @@
 {% extends 'base.html.twig' %}
 
-{% block title %}{{ service.name }}{% endblock %}
+{% block title %}Service - {{ service.name|capitalize }}{% endblock %}
 
 {% block body %}
+<div class="min-h-screen pt-52 pb-20 px-6 max-w-4xl mx-auto">
 
-<h1 class="text-3xl font-bold text-center mt-6">{{ service.name }}</h1>
+    <div class="mb-12 text-center">
+        <p class="text-xs tracking-[0.4em] text-black/40 uppercase mb-2">Résultats de recherche</p>
+        <h1 class="text-6xl uppercase tracking-widest text-black drop-shadow-[0_1px_1px_black] mb-4">
+            {{ service.name|capitalize }}
+        </h1>
+        <div class="h-px w-32 mx-auto bg-gradient-to-r from-black via-black/40 to-transparent"></div>
+    </div>
 
-<div id="map" style="height:500px;margin-top:20px;"></div>
+    {% if userLat and userLon and osmKey %}
 
-<link
-rel="stylesheet"
-href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
-/>
+    <div class="mb-8 flex flex-wrap justify-center gap-3">
+        <button onclick="filterByDistance('all')" id="filter-all"
+            class="filter-btn px-5 py-2 rounded-lg text-xs tracking-[0.3em] uppercase border border-black/30 text-black bg-black/20 hover:bg-black/30 transition-colors duration-300">
+            Tous
+        </button>
+        <button onclick="filterByDistance(0, 5)" id="filter-0-5"
+            class="filter-btn px-5 py-2 rounded-lg text-xs tracking-[0.3em] uppercase border border-black/10 text-black/60 bg-black/5 hover:bg-black/20 hover:text-black transition-colors duration-300">
+            0 – 5 km
+        </button>
+        <button onclick="filterByDistance(5, 10)" id="filter-5-10"
+            class="filter-btn px-5 py-2 rounded-lg text-xs tracking-[0.3em] uppercase border border-black/10 text-black/60 bg-black/5 hover:bg-black/20 hover:text-black transition-colors duration-300">
+            5 – 10 km
+        </button>
+        <button onclick="filterByDistance(10, 20)" id="filter-10-20"
+            class="filter-btn px-5 py-2 rounded-lg text-xs tracking-[0.3em] uppercase border border-black/10 text-black/60 bg-black/5 hover:bg-black/20 hover:text-black transition-colors duration-300">
+            10 – 20 km
+        </button>
+        <button onclick="filterByDistance(20, 50)" id="filter-20-50"
+            class="filter-btn px-5 py-2 rounded-lg text-xs tracking-[0.3em] uppercase border border-black/10 text-black/60 bg-black/5 hover:bg-black/20 hover:text-black transition-colors duration-300">
+            20 – 50 km
+        </button>
+        <button onclick="filterByDistance(50, 200)" id="filter-50-200"
+            class="filter-btn px-5 py-2 rounded-lg text-xs tracking-[0.3em] uppercase border border-black/10 text-black/60 bg-black/5 hover:bg-black/20 hover:text-black transition-colors duration-300">
+            50 – 200 km
+        </button>
+    </div>
 
-<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"></script>
+    <p id="loading" class="text-center text-black/40 tracking-widest text-sm uppercase mt-10">
+        Chargement des établissements...
+    </p>
+    <p id="no-results" class="hidden text-center text-black/40 tracking-widest text-sm uppercase mt-10">
+        Aucun établissement trouvé.
+    </p>
+
+    <ul id="partners-list" class="space-y-4 mt-6"></ul>
+
+    {% else %}
+    <p class="text-center text-black/40 tracking-widest text-sm uppercase mt-20">
+        Géolocalisation non disponible.
+    </p>
+    {% endif %}
+
+    {% include 'partials/_map_full.html.twig' %}
+</div>
 
 <script>
+    const USER_LAT = {{ userLat ?? 'null' }};
+    const USER_LON = {{ userLon ?? 'null' }};
+    const OSM_KEY = "{{ osmKey }}";
+    const OSM_VAL = "{{ osmVal }}";
+    const RADIUS = 5000;
 
-const userLat = {{ userLat ?? 48.8566 }};
-const userLon = {{ userLon ?? 2.3522 }};
-
-const osmKey = "{{ osmKey }}";
-const osmVal = "{{ osmVal }}";
-
-let map;
-
-/* évite l'erreur "map already initialized" */
-
-if(!window.leafletMap){
-
-    window.leafletMap = L.map('map').setView([userLat, userLon], 13);
-
-    L.tileLayer('https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png', {
-        attribution:'© OpenStreetMap'
-    }).addTo(window.leafletMap);
-
-}
-
-map = window.leafletMap;
-
-L.marker([userLat, userLon])
-.addTo(map)
-.bindPopup("Vous êtes ici")
-.openPopup();
-
-async function fetchWithTimeout(resource, options = {}) {
-
-    const controller = new AbortController();
-    const id = setTimeout(() => controller.abort(), 20000);
-
-    const response = await fetch(resource, {
-        ...options,
-        signal: controller.signal
-    });
-
-    clearTimeout(id);
-
-    if(!response.ok){
-        throw new Error("HTTP " + response.status);
+    function haversine(lat1, lon1, lat2, lon2) {
+        const R = 6371;
+        const dLat = (lat2 - lat1) * Math.PI / 180;
+        const dLon = (lon2 - lon1) * Math.PI / 180;
+        const a = Math.sin(dLat / 2) ** 2 + Math.cos(lat1 * Math.PI / 180) * Math.cos(lat2 * Math.PI / 180) * Math.sin(dLon / 2) ** 2;
+        return R * 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
     }
 
-    return response.json();
-}
-
-async function fetchOverpass(query){
-
-    const url = "/api/overpass?query=" + encodeURIComponent(query);
-
-    try{
-        return await fetchWithTimeout(url);
-    }
-    catch(error){
-        console.error("Erreur Overpass:", error);
-        return null;
-    }
-}
-
-async function loadPartners(){
-
-    if(!osmKey || !osmVal){
-        console.warn("Pas de tag OSM défini");
-        return;
+    async function fetchWithTimeout(url, timeoutMs = 60000) {
+        const controller = new AbortController();
+        const timeoutId = setTimeout(() => controller.abort(), timeoutMs);
+        try {
+            const res = await fetch(url, { signal: controller.signal });
+            clearTimeout(timeoutId);
+            if (!res.ok) throw new Error(`HTTP ${res.status}`);
+            return await res.json();
+        } catch (e) {
+            clearTimeout(timeoutId);
+            throw e;
+        }
     }
 
-    const query = `
-    [out:json][timeout:40];
-    (
-        node[${osmKey}=${osmVal}](around:5000,${userLat},${userLon});
-        way[${osmKey}=${osmVal}](around:5000,${userLat},${userLon});
-        relation[${osmKey}=${osmVal}](around:5000,${userLat},${userLon});
-    );
-    out center 50;
-    `;
-
-    const data = await fetchOverpass(query);
-
-    if(!data || !data.elements){
-        alert("Impossible de charger les partenaires pour le moment.");
-        return;
+    async function fetchOverpass(query) {
+        const url = `/api/overpass?query=${encodeURIComponent(query)}`;
+        return await fetchWithTimeout(url, 60000);
     }
 
-    data.elements.forEach(el => {
+    async function loadPartners() {
+        if (!USER_LAT || !USER_LON || !OSM_KEY) return;
 
-        let lat = el.lat;
-        let lon = el.lon;
+        const query = `
+[out:json][timeout:40];
+(
+  node["{{ osmKey }}"="{{ osmVal }}"](around:20000,{{ userLat }},{{ userLon }});
+  way["{{ osmKey }}"="{{ osmVal }}"](around:20000,{{ userLat }},{{ userLon }});
+  relation["{{ osmKey }}"="{{ osmVal }}"](around:20000,{{ userLat }},{{ userLon }});
 
-        if(!lat && el.center){
-            lat = el.center.lat;
-            lon = el.center.lon;
+  {% if michelin %}
+  node["amenity"="restaurant"]["michelin_stars"](around:20000,{{ userLat }},{{ userLon }});
+  way["amenity"="restaurant"]["michelin_stars"](around:20000,{{ userLat }},{{ userLon }});
+  relation["amenity"="restaurant"]["michelin_stars"](around:20000,{{ userLat }},{{ userLon }});
+  {% endif %}
+);
+out center 50;
+`;
+
+        try {
+            const data = await fetchOverpass(query);
+
+            document.getElementById('loading').classList.add('hidden');
+
+            const elements = data.elements || [];
+
+            if (elements.length === 0) {
+                document.getElementById('no-results').classList.remove('hidden');
+                return;
+            }
+
+            const withDist = elements.map(el => {
+                const lat = el.lat ?? el.center?.lat;
+                const lon = el.lon ?? el.center?.lon;
+                const stars = parseInt(el.tags?.michelin_stars) || 0;
+                return { ...el, lat, lon, stars, dist: (lat && lon) ? haversine(USER_LAT, USER_LON, lat, lon) : 99999 };
+            }).filter(el => el.lat && el.lon)
+                .sort((a, b) => {
+                    if (b.stars !== a.stars) return b.stars - a.stars;
+                    return a.dist - b.dist; // fallback par distance
+                })
+                .slice(0, 5);
+            console.log('Éléments reçus:', elements.length);
+            console.log('Après filtre:', withDist.length);
+            console.log('Premier élément:', withDist[0]);
+            const list = document.getElementById('partners-list');
+            list.innerHTML = '';
+
+            withDist.forEach((el, i) => {
+                const name = el.tags?.name || 'Établissement sans nom';
+                const address = [el.tags?.['addr:housenumber'], el.tags?.['addr:street'], el.tags?.['addr:city']].filter(Boolean).join(' ') || 'Adresse non renseignée';
+                const phone = el.tags?.phone || el.tags?.['contact:phone'] || null;
+                const website = el.tags?.website || el.tags?.['contact:website'] || null;
+                const dist = el.dist.toFixed(1).replace('.', ',');
+                const starsDisplay = el.stars > 0
+                    ? `<span class="text-yellow-500 text-xs ml-2">${'★'.repeat(el.stars)}${'☆'.repeat(Math.max(0, 5 - el.stars))}</span>`
+                    : '';
+
+                const li = document.createElement('li');
+                li.className = 'partner-item group flex items-start gap-6 transition-colors duration-300 rounded-xl px-6 py-5 backdrop-blur-sm border border-black/10 cursor-pointer';
+                li.style.backgroundColor = '#E8E8E8';
+                li.dataset.distance = el.dist;
+                li.dataset.lat = el.lat;
+                li.dataset.lon = el.lon;
+                li.onmouseover = () => li.style.backgroundColor = '#D4D4D4';
+                li.onmouseout = () => li.style.backgroundColor = '#E8E8E8';
+                li.onclick = () => focusPartner(li);
+
+                li.innerHTML = `
+                    <div class="text-4xl text-black/20 font-bold w-10 text-right shrink-0 select-none pt-1 item-index">${i + 1}</div>
+                    <div class="flex-1 min-w-0">
+                        <div class="flex items-start justify-between gap-4 flex-wrap">
+                            <div>
+                                <h2 class="text-black uppercase tracking-widest text-sm font-bold mb-1">${name}${starsDisplay}</h2>
+                                <p class="text-black/50 text-xs tracking-wider uppercase flex items-center gap-1">
+                                    <img src="/assets/img/icons/location.svg" alt="" class="invert size-3 opacity-50">
+                                    ${address}
+                                </p>
+                            </div>
+                            <div class="flex items-center gap-2 shrink-0">
+                                <div class="bg-black/10 rounded-lg px-3 py-1 text-center">
+                                    <span class="text-black text-lg font-light">${dist}</span>
+                                    <span class="text-black/40 text-xs ml-1">km</span>
+                                </div>
+                                <a href="https://wa.me/?text=${encodeURIComponent('Découvrez ' + name + ' : ' + address)}"
+                                    target="_blank" onclick="event.stopPropagation()"
+                                    class="p-2 rounded-lg transition-colors duration-300 hover:bg-black/10"
+                                    title="Partager sur WhatsApp">
+                                    <svg xmlns="http://www.w3.org/2000/svg" class="w-5 h-5 text-green-600" viewBox="0 0 24 24" fill="currentColor">
+                                        <path d="M17.472 14.382c-.297-.149-1.758-.867-2.03-.967-.273-.099-.471-.148-.67.15-.197.297-.767.966-.94 1.164-.173.199-.347.223-.644.075-.297-.15-1.255-.463-2.39-1.475-.883-.788-1.48-1.761-1.653-2.059-.173-.297-.018-.458.13-.606.134-.133.298-.347.446-.52.149-.174.198-.298.298-.497.099-.198.05-.371-.025-.52-.075-.149-.669-1.612-.916-2.207-.242-.579-.487-.5-.669-.51-.173-.008-.371-.01-.57-.01-.198 0-.52.074-.792.372-.272.297-1.04 1.016-1.04 2.479 0 1.462 1.065 2.875 1.213 3.074.149.198 2.096 3.2 5.077 4.487.709.306 1.262.489 1.694.625.712.227 1.36.195 1.871.118.571-.085 1.758-.719 2.006-1.413.248-.694.248-1.289.173-1.413-.074-.124-.272-.198-.57-.347m-5.421 7.403h-.004a9.87 9.87 0 0 1-5.031-1.378l-.361-.214-3.741.982.998-3.648-.235-.374a9.86 9.86 0 0 1-1.51-5.26c.001-5.45 4.436-9.884 9.888-9.884 2.64 0 5.122 1.03 6.988 2.898a9.825 9.825 0 0 1 2.893 6.994c-.003 5.45-4.437 9.884-9.885 9.884m8.413-18.297A11.815 11.815 0 0 0 12.05 0C5.495 0 .16 5.335.157 11.892c0 2.096.547 4.142 1.588 5.945L.057 24l6.305-1.654a11.882 11.882 0 0 0 5.683 1.448h.005c6.554 0 11.89-5.335 11.893-11.893a11.821 11.821 0 0 0-3.48-8.413Z"/>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                        ${phone ? `<p class="mt-2 text-black/30 text-xs tracking-wider">📞 ${phone}</p>` : ''}
+                       ${website ? `<a href="${website}" target="_blank" onclick="event.stopPropagation()" class="inline-block mt-3 text-[10px] tracking-[0.3em] uppercase text-black/60 hover:text-black transition-colors duration-300">Voir le site →</a>` : ''}
+                    </div>
+                `;
+
+                list.appendChild(li);
+
+                if (window.mapFullReady) {
+                    addMarker(el.lat, el.lon, name, address, el.stars);
+                } else {
+                    document.addEventListener('mapReady', () => {
+                        addMarker(el.lat, el.lon, name, address, el.stars);
+                    });
+                }
+
+            } catch (e) {
+                console.error('Erreur Overpass:', e);
+                document.getElementById('loading').textContent = 'Service temporairement indisponible, réessayez.';
+            }
         }
 
-        if(!lat) return;
+    function addMarker(lat, lon, name, address, stars = 0) {
 
-        const name = el.tags?.name ?? "Partenaire";
+            const starsDisplay = stars > 0 ? "⭐".repeat(stars) : "";
 
-        L.marker([lat,lon])
-        .addTo(map)
-        .bindPopup(name);
+            L.marker([lat, lon])
+                .addTo(window.mapFull)
+                .bindPopup(`<b>${name}</b> ${starsDisplay}<br>${address}`);
+        }
 
-    });
+        function focusPartner(el) {
+            const lat = parseFloat(el.dataset.lat);
+            const lon = parseFloat(el.dataset.lon);
+            const mapEl = document.getElementById('mapfull');
+            if (!mapEl || typeof window.mapFull === "undefined") return;
+            mapEl.scrollIntoView({ behavior: 'smooth' });
+            window.mapFull.setView([lat, lon], 15);
+            window.mapFull.eachLayer(function (layer) {
+                if (layer instanceof L.Marker) {
+                    const pos = layer.getLatLng();
+                    if (Math.abs(pos.lat - lat) < 0.0001 && Math.abs(pos.lng - lon) < 0.0001) {
+                        layer.openPopup();
+                    }
+                }
+            });
+        }
 
-}
+        function filterByDistance(min, max) {
+            const items = document.querySelectorAll('.partner-item');
+            const noResults = document.getElementById('no-results');
+            let visibleCount = 0;
 
-loadPartners();
+            items.forEach((item) => {
+                const distance = parseFloat(item.dataset.distance);
+                const inRange = min === 'all' ? true : (distance >= min && distance < max);
+                const show = inRange && visibleCount < 5; // ✅ limite à 5 par filtre
+                item.style.display = show ? '' : 'none';
+                if (show) {
+                    visibleCount++;
+                    item.querySelector('.item-index').textContent = visibleCount;
+                }
+            });
 
+            noResults.classList.toggle('hidden', visibleCount > 0);
+
+            document.querySelectorAll('.filter-btn').forEach(btn => {
+                btn.classList.remove('bg-black/20', 'border-black/30', 'text-black');
+                btn.classList.add('bg-black/5', 'border-black/10', 'text-black/60');
+            });
+
+            const activeId = min === 'all' ? 'filter-all' : `filter-${min}-${max}`;
+            const activeBtn = document.getElementById(activeId);
+            if (activeBtn) {
+                activeBtn.classList.add('bg-black/20', 'border-black/30', 'text-black');
+                activeBtn.classList.remove('bg-black/5', 'border-black/10', 'text-black/60');
+            }
+        }
+
+        loadPartners();
 </script>
 
 {% endblock %}
+
+{% block map_markers %}{% endblock %}
