@@ -19,7 +19,7 @@
 
     <script>
         if (navigator.geolocation) {
-            {% if not app.session.get('lat') %}
+            '{% if not app.session.get("lat") %}'
             navigator.geolocation.getCurrentPosition(function (pos) {
                 fetch('/save-location', {
                     method: 'POST',
@@ -27,7 +27,7 @@
                     body: JSON.stringify({ lat: pos.coords.latitude, lon: pos.coords.longitude })
                 }).then(() => { window.location.reload(); });
             });
-            {% endif %}
+            '{% endif %}'
         }
     </script>
 
@@ -161,7 +161,7 @@
     </main>
 
     <script>
-        {% block map_markers %}{% endblock %}
+        '{% block map_markers %}{% endblock %}'
     </script>
 
     <footer class="py-5 lg:h-50 bg-black/80 mt-auto w-full">
