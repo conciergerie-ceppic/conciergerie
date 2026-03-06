@@ -25,7 +25,7 @@ class UserCrudController extends AbstractCrudController
             TextField::new('email'),
             TextField::new('first_name'),
             TextField::new('last_name'),
-            TextField::new('password'),
+            // TextField::new('password'),
             TextField::new('phone'),
             TextField::new('address'),
             ChoiceField::new('roles')
@@ -38,8 +38,8 @@ class UserCrudController extends AbstractCrudController
                 ->renderExpanded(false),
           
             ImageField::new('avatar')
-                ->setUploadDir('public/uploads/avatars/')
-                ->setBasePath('uploads/avatars/')
+                ->setUploadDir('assets/img/uploads/avatars/')
+                ->setBasePath('assets/img/uploads/avatars/')
                 ->setRequired(false),
         ];
     }
