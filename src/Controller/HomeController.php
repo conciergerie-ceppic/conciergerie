@@ -40,23 +40,28 @@ final class HomeController extends AbstractController
     public function uploadAvatar(Request $request, UserRepository $userRepository): Response
     {
         $avatar = $request->files->get('avatar');
-        $directory = $this->getParameter('avatars_directory').'/';
+        $directory = $this->getParameter('avatars_directory') . '/';
         $error = [];
         $originalName = $avatar->getClientOriginalName();
         $originalName = explode('.', $originalName);
         $pathName = $avatar->getPathname();
         $image = new \Gumlet\ImageResize($pathName);
         $image->resizeToWidth(48);
-        $image->save($directory .$originalName[0].".webp", IMAGETYPE_WEBP);
-        
-        $userRepository->setAvatar($this->getUser()->getId() ,$originalName[0].".webp"); 
+        $image->save($directory . $originalName[0] . ".webp", IMAGETYPE_WEBP);
+
+        /** @var User $user */
+        $user = $this->getUser();
+
+        $userRepository->setAvatar($user->getId(), $originalName[0] . ".webp");
         return $this->redirectToRoute('app_home');
     }
 
     #[Route('/deleteAvatar', name: 'delete_avatar')]
     public function deleteAvatar(UserRepository $userRepository): Response
     {
-        $userRepository->setAvatar($this->getUser()->getId() ,null); 
+        /** @var User $user */
+        $user = $this->getUser();
+        $userRepository->setAvatar($user->getId(), null);
         return $this->redirectToRoute('app_home');
     }
 
