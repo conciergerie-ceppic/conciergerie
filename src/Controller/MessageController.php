@@ -21,14 +21,14 @@ final class MessageController extends AbstractController
         $error = null;
         $data = $req->request->all();
 
-            $message = new Message();
-            $first_name = $data["first_name"] ?? '';
-            $last_name = $data["last_name"] ?? '';
-            $email = $data["email"] ?? '';
-            $phone = $data["phone"] ?? '';
-            $subject = $data["subject"] ?? '';
-            $content = $data["content"] ?? '';
-  
+        $message = new Message();
+        $first_name = $data["first_name"] ?? '';
+        $last_name = $data["last_name"] ?? '';
+        $email = $data["email"] ?? '';
+        $phone = $data["phone"] ?? '';
+        $subject = $data["subject"] ?? '';
+        $content = $data["content"] ?? '';
+
         if (
             empty($first_name) ||
             empty($last_name) ||
@@ -50,14 +50,13 @@ final class MessageController extends AbstractController
             $emi->persist($message);
             $emi->flush();
 
-             // Envoi de la confirmation de contact
-              $user = new User();
-        /*     $email = (new Email())
+            // Envoi de la confirmation de contact
+            $confirmationEmail = (new Email())
                 ->from('no-reply@conciergerie.com')
-                ->to($user->getEmail())
+                ->to($email)
                 ->subject('Demande de contact Premium Experience !')
                 ->text('Votre demande de contact a bien été prise en compte. Notre équipe reviendra vers vous au plus vite ! ');
-            $mailer->send($email); */
+            $mailer->send($confirmationEmail);
         }
         return $this->render('message/index.html.twig', [
             'first_name' => $first_name,

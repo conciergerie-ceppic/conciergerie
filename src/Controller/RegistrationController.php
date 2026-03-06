@@ -26,7 +26,7 @@ class RegistrationController extends AbstractController
         if ($form->isSubmitted() && $form->isValid()) {
             /** @var string $plainPassword */
             $plainPassword = $form->get('plainPassword')->getData();
-
+            $email = $form->get('email')->getData();
             // encode the plain password
             $user->setPassword($userPasswordHasher->hashPassword($user, $plainPassword));
 
@@ -37,13 +37,13 @@ class RegistrationController extends AbstractController
             $entityManager->flush();
 
             // Envoi d'un email de bienvenue
-            /* $email = (new Email())
+            $confirmationEmail = (new Email())
                 ->from('no-reply@conciergerie.com')
-                ->to($user->getEmail())
+                ->to($email)
                 ->subject('Bienvenue sur Premium Experience !')
-                ->text('Votre inscription a bien été prise en compte. Bienvenue !');
-            $mailer->send($email);
- */
+                ->text('Votre inscription a bien été prise en compte.  ');
+            $mailer->send($confirmationEmail);
+ 
             return $security->login($user, 'form_login', 'main');
         }
 

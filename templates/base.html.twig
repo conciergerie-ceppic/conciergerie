@@ -19,7 +19,7 @@
 
     <script>
         if (navigator.geolocation) {
-            {% if not app.session.get('lat') %}
+            '{% if not app.session.get("lat") %}'
             navigator.geolocation.getCurrentPosition(function (pos) {
                 fetch('/save-location', {
                     method: 'POST',
@@ -27,7 +27,7 @@
                     body: JSON.stringify({ lat: pos.coords.latitude, lon: pos.coords.longitude })
                 }).then(() => { window.location.reload(); });
             });
-            {% endif %}
+            '{% endif %}'
         }
     </script>
 
@@ -97,11 +97,11 @@
                         <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'hotel'}) }}">Hôtel</a></li>
                         <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'restaurant'}) }}">Restauration</a></li>
                         <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'spa'}) }}">Spa</a></li>
-                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'driver'}) }}">Chauffeur</a></li>
-                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'event'}) }}">Evenement</a></li>
-                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'travel'}) }}">Voyage</a></li>
-                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'vehicle'}) }}">Location de véhicule</a></li>
-                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'activity'}) }}">Activités</a></li>
+                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'chauffeur'}) }}">Chauffeur</a></li>
+                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'evenement'}) }}">Evenement</a></li>
+                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'voyage'}) }}">Voyage</a></li>
+                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'vehicule'}) }}">Location de véhicule</a></li>
+                        <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'activite'}) }}">Activités</a></li>
                         <li><a class="block hover:text-white/70" href="{{ path('app_service', {'nom': 'allservices'}) }}">Tout les services</a></li>
                     </ul>
                 </div>
@@ -161,7 +161,7 @@
     </main>
 
     <script>
-        {% block map_markers %}{% endblock %}
+        '{% block map_markers %}{% endblock %}'
     </script>
 
     <footer class="py-5 lg:h-50 bg-black/80 mt-auto w-full">
