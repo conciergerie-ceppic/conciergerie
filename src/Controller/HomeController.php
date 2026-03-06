@@ -20,7 +20,7 @@ final class HomeController extends AbstractController
         $lon = $session->get('lon');
 
         $ville = null;
-        if ($lat && $lon) {
+        if (!$lat && $lon) {
             $ville = $this->getVille($hci, (float)$lat, (float)$lon);
             $session->set('ville', $ville);
         }
