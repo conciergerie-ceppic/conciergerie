@@ -7,9 +7,9 @@ enum ServiceCategory: string
 	case HOTEL = 'hotel';
 	case RESTAURANT = 'restaurant';
 	case SPA = 'spa';
-	case TRAVEL = 'travel';
-	case VEHICLE = 'vehicle';
-	case DRIVER = 'driver';
-	case EVENT = 'event';
-	case ACTIVITY = 'activity';
+	case TRAVEL = 'voyage';
+	case VEHICLE = 'vehicule';
+	case DRIVER = 'chauffeur';
+	case EVENT = 'evenement';
+	case ACTIVITY = 'activite';
 }

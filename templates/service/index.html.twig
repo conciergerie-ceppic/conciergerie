@@ -120,7 +120,7 @@
 
                             {% if app.user %}
                             <button
-                                onclick="event.stopPropagation(); toggleFavorite(this, {{ partner.id }})"
+                                onclick="event.stopPropagation(); toggleFavorite(this, '{{ partner.id }}')"
                                 class="favorite-btn p-2 rounded-lg transition-colors duration-300 hover:bg-black/10"
                                 data-partner-id="{{ partner.id }}"
                                 title="{{ isFavorite ? 'Retirer des favoris' : 'Ajouter aux favoris' }}">
