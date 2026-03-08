@@ -1,8 +1,10 @@
 <div id="mapfull" class="h-[40vh] w-full rounded-md mt-10 z-30"></div>
 
 <script>
-    const lat = "{{ app.session.get('lat') }}";
-    const lon = "{{ app.session.get('lon') }}";
+if (!window.mapFull) {
+
+    const lat = parseFloat("{{ app.session.get('lat') }}");
+    const lon = parseFloat("{{ app.session.get('lon') }}");
     const ville = "{{ app.session.get('ville')|e('js') }}";
 
     window.mapFull = L.map('mapfull', { scrollWheelZoom: false }).setView([lat, lon], 13);
@@ -12,10 +14,12 @@
         maxZoom: 19
     }).addTo(window.mapFull);
 
-    L.marker([lat, lon]).addTo(window.mapFull)
-        .bindPopup(ville ? ville : 'Vous êtes ici')
+    L.marker([lat, lon])
+        .addTo(window.mapFull)
+        .bindPopup(ville || "Vous êtes ici")
         .openPopup();
 
     window.mapFullReady = true;
     document.dispatchEvent(new Event('mapReady'));
+}
 </script>
