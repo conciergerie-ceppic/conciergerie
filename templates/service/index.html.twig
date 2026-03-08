@@ -247,6 +247,7 @@
         {% for partner in partners %}
             {% set coords = partnerCoords[partner.id] ?? null %}
             {% if coords %}
+            console.log("Marker:", {{ coords.lat }}, {{ coords.lon }});
                 L.marker([{{ coords.lat }}, {{ coords.lon }}])
                     .addTo(window.mapFull)
                     .bindPopup(`<b>{{ partner.name|e('js') }}</b><br>{{ partner.address|e('js') }}`);
